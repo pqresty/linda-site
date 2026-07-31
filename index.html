@@ -32,7 +32,7 @@ a{color:inherit}
 
 /* ---------- герой ---------- */
 @media (min-width:900px){.hero__img{object-position:50% 50%}}
-.hero{position:relative;height:100vh;height:100svh;min-height:520px;overflow:hidden;display:grid;isolation:isolate}
+.hero{position:relative;z-index:1;background:var(--ink);height:100vh;height:100svh;min-height:520px;overflow:hidden;display:grid;isolation:isolate}
 .hero__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 62%;z-index:0}
 .hero__scrim{position:absolute;inset:0;z-index:1;background:
   linear-gradient(to top,rgba(6,8,11,.95) 0%,rgba(6,8,11,.6) 22%,rgba(6,8,11,.05) 54%),
@@ -51,28 +51,49 @@ a{color:inherit}
 @keyframes cue{0%,100%{transform:scaleY(.45);opacity:.5}50%{transform:scaleY(1);opacity:1}}
 
 /* соцсети */
-.soc{max-width:940px;margin:0 auto;padding:0 var(--gut)}
+.soc{position:relative;z-index:1;background:var(--ink);padding:0 0 clamp(70px,11vh,120px)}
+.soc__in{max-width:940px;margin:0 auto;padding:0 var(--gut)}
 .soc__h{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--ash);margin:0 0 16px}
 .soc__h--2{margin-top:clamp(28px,5vh,52px)}
+.book{display:flex;flex-wrap:wrap;align-items:center;gap:14px 26px;
+  border:1px solid rgba(237,233,225,.14);padding:20px 22px}
+.book__who{font-weight:600;font-size:15px;letter-spacing:.02em}
+.book__c{font-weight:600;font-size:clamp(15px,2vw,19px);letter-spacing:.01em;text-decoration:none;
+  border-bottom:1px solid rgba(237,233,225,.34);transition:.16s;white-space:nowrap}
+.book__c:hover,.book__c:focus-visible{color:var(--ember);border-bottom-color:var(--ember)}
 .soc__l{display:flex;flex-wrap:wrap;gap:1px;background:rgba(237,233,225,.14);
   border:1px solid rgba(237,233,225,.14)}
 .soc__l a{flex:1 1 150px;background:var(--ink);padding:20px 18px;text-decoration:none;
   font-weight:600;font-size:12px;letter-spacing:.18em;text-transform:uppercase;transition:.16s}
 .soc__l a:hover,.soc__l a:focus-visible{background:var(--ember);color:#0B0603}
 
-.top{padding:clamp(26px,4.5vh,46px) var(--gut) clamp(3px,0.5vh,5px);max-width:940px;margin:0 auto}
+.top{position:relative;z-index:1;background:var(--ink);
+  padding:clamp(26px,4.5vh,46px) 0 clamp(3px,0.5vh,5px)}
 .kicker{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--ash);margin:0 0 14px}
-.top h1{margin:0;font-weight:800;font-size:clamp(38px,7.4vw,86px);letter-spacing:-.02em;line-height:1}
+.top h1{max-width:940px;margin:0 auto;padding:0 var(--gut);
+  font-weight:800;font-size:clamp(38px,7.4vw,86px);letter-spacing:-.02em;line-height:1}
 
 /* ---------- афиша на коллаже ---------- */
-.afisha{position:relative;isolation:isolate;padding:clamp(4px,0.6vh,7px) 0 clamp(70px,11vh,120px)}
-.afisha__bg{position:absolute;inset:0;z-index:0;overflow:hidden;
-  background-image:url("assets/collage-sheet.webp");background-size:cover;background-position:center;
-  background-attachment:fixed;filter:grayscale(.55) contrast(1.05)}
-.afisha__bg::after{content:"";position:absolute;inset:0;background:rgba(6,8,11,var(--scrim))}
-.afisha__bg::before{content:"";position:absolute;inset:0;z-index:1;
-  background:linear-gradient(var(--ink),transparent 1.2%,transparent 95%,var(--ink))}
-.afisha__in{position:relative;z-index:2;max-width:940px;margin:0 auto;padding:0 var(--gut)}
+/* Коллаж живёт отдельным закреплённым слоем на всю страницу.
+   Раньше был background-attachment:fixed — браузер перерисовывал его на каждом
+   кадре прокрутки, отсюда подёргивание. position:fixed уходит на композитор
+   и при скролле не перерисовывается вовсе. Заодно работает на iOS, который
+   background-attachment:fixed игнорирует. */
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(6,8,11,var(--scrim)),rgba(6,8,11,var(--scrim))),
+                   url("assets/collage-sheet.webp");
+  background-size:cover,cover;background-position:center,center;
+  filter:grayscale(.55) contrast(1.05)}
+
+.afisha{position:relative;z-index:1;isolation:isolate;
+  padding:clamp(72px,9vh,100px) 0 clamp(70px,11vh,120px)}
+/* мягкие края вместо резаной линии: тушуем сверху и снизу на фиксированную
+   высоту, а не на процент от секции — иначе край гуляет от её длины */
+.afisha::before,.afisha::after{content:"";position:absolute;left:0;right:0;height:64px;
+  z-index:2;pointer-events:none}
+.afisha::before{top:0;background:linear-gradient(var(--ink),rgba(6,8,11,0))}
+.afisha::after{bottom:0;background:linear-gradient(rgba(6,8,11,0),var(--ink))}
+.afisha__in{position:relative;z-index:3;max-width:940px;margin:0 auto;padding:0 var(--gut)}
 
 .mon{margin-bottom:clamp(30px,5vh,52px)}
 /* месяц закрепляется у верха, пока идут его концерты, и уезжает со своим блоком */
@@ -111,18 +132,19 @@ span.row__v{border-bottom:0}
 .row__b--off:hover{background:none;border-color:rgba(237,233,225,.24);color:var(--ash)}
 .row--soon .row__d,.row--tbd .row__d{color:var(--ash)}
 
-.tbc{position:relative;z-index:2;max-width:940px;margin:0 auto;padding:clamp(30px,5vh,54px) var(--gut) 0;
+.tbc{position:relative;z-index:3;max-width:940px;margin:0 auto;padding:clamp(30px,5vh,54px) var(--gut) 0;
   display:flex;align-items:center;gap:18px}
 .tbc span{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--ash);white-space:nowrap}
 .tbc i{flex:1;height:1px;background:linear-gradient(90deg,rgba(237,233,225,.3),transparent)}
 
-.foot{max-width:940px;margin:0 auto;padding:34px var(--gut) 150px;color:var(--ash);font-size:12px;line-height:1.85}
 
 @media (max-width:820px){
   /* на узком экране cover раздувает полотно до одной колонки кадров —
      берём лёгкий лист и мельчим до текстуры */
-  .afisha__bg{background-image:url("assets/collage-sheet-sm.webp");
-    background-size:620px auto;background-repeat:repeat;background-attachment:scroll}
+  .bg{background-image:linear-gradient(rgba(6,8,11,var(--scrim)),rgba(6,8,11,var(--scrim))),
+        url("assets/collage-sheet-sm.webp");
+      background-size:auto,620px auto;background-repeat:no-repeat,repeat}
+  .afisha::before,.afisha::after{height:44px}
   /* фон здесь едет вместе с контентом, повторить его на липкой плашке нечем —
      оставляем ей глухую заливку, иначе стык будет рваным */
   .mon__h::before{background-image:none;background-color:var(--ink);filter:none}
@@ -141,6 +163,8 @@ span.row__v{border-bottom:0}
 </style>
 </head>
 <body>
+
+<div class="bg" aria-hidden="true"></div>
 
 <section class="hero">
   <picture>
@@ -181,7 +205,6 @@ span.row__v{border-bottom:0}
 </header>
 
 <section class="afisha">
-  <div class="afisha__bg" aria-hidden="true"></div>
   <div class="afisha__in">
 <div class="mon">
   <h2 class="mon__h">Август</h2>
@@ -347,6 +370,7 @@ span.row__v{border-bottom:0}
 </section>
 
 <nav class="soc">
+  <div class="soc__in">
   <p class="soc__h">Официальные страницы</p>
   <div class="soc__l">
     <a href="https://vk.com/linda_official" target="_blank" rel="noopener noreferrer">ВКонтакте</a>
@@ -354,9 +378,11 @@ span.row__v{border-bottom:0}
   </div>
 
   <p class="soc__h soc__h--2">Букинг и райдер</p>
-  <div class="soc__l">
-    <a href="tel:+79151528223">+7 915 152-82-23 · Михаил</a>
-    <a href="https://t.me/pqresty" target="_blank" rel="noopener noreferrer">Telegram @pqresty</a>
+  <div class="book">
+    <b class="book__who">Михаил</b>
+    <a class="book__c" href="tel:+79151528223">+7 915 152-82-23</a>
+    <a class="book__c" href="https://t.me/pqresty" target="_blank" rel="noopener noreferrer">@pqresty</a>
+  </div>
   </div>
 </nav>
 
