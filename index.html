@@ -142,12 +142,12 @@ span.row__v{border-bottom:0}
   /* на узком экране cover раздувает полотно до одной колонки кадров —
      берём лёгкий лист и мельчим до текстуры */
   .bg{background-image:linear-gradient(rgba(6,8,11,var(--scrim)),rgba(6,8,11,var(--scrim))),
-        url("assets/collage-sheet-sm.webp");
-      background-size:auto,620px auto;background-repeat:no-repeat,repeat}
+        url("assets/collage-sheet-sm.webp")}
   .afisha::before,.afisha::after{height:44px}
   /* фон здесь едет вместе с контентом, повторить его на липкой плашке нечем —
      оставляем ей глухую заливку, иначе стык будет рваным */
-  .mon__h::before{background-image:none;background-color:var(--ink);filter:none}
+  .mon__h::before{background-image:linear-gradient(rgba(6,8,11,var(--scrim)),rgba(6,8,11,var(--scrim))),
+                   url("assets/collage-sheet-sm.webp")}
 
   /* дата слева, название по центру, кнопка справа от названия — в две строки */
   .row{grid-template-columns:46px minmax(0,1fr) auto;gap:3px 12px;align-items:center;
