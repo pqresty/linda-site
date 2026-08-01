@@ -128,6 +128,9 @@ a{color:inherit}
 .row__m{font-size:13px;letter-spacing:.13em;text-transform:uppercase;color:var(--ash);line-height:1.45}
 .row__c{display:grid;gap:4px;min-width:0;font-weight:600;font-size:clamp(20px,2.7vw,31px);
   letter-spacing:-.01em;line-height:1.1}
+.row__city{display:block}
+.row__f{font-style:normal;font-size:.46em;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ember);margin-left:.6em;vertical-align:middle;white-space:nowrap}
 .row__v{font-weight:500;font-size:clamp(13.5px,1.6vw,16px);color:#A8B0BA;letter-spacing:.01em;
   text-decoration:none;justify-self:start;border-bottom:1px solid rgba(168,176,186,.34);transition:.16s}
 a.row__v:hover,a.row__v:focus-visible{color:var(--halo);border-bottom-color:var(--halo)}
@@ -152,8 +155,6 @@ span.row__v{border-bottom:0}
      берём лёгкий лист и мельчим до текстуры */
   .bg{background-image:linear-gradient(rgba(6,8,11,var(--scrim)),rgba(6,8,11,var(--scrim))),
         url("assets/collage-sheet-sm.webp")}
-  /* при полной высоте телефон уже кадра и обрезает крайних музыкантов */
-  .hero{height:79vh;height:79svh}
   .afisha::before,.afisha::after{height:30px}
   .afisha{padding-top:40px}
   .top{padding-top:16px}
@@ -168,6 +169,10 @@ span.row__v{border-bottom:0}
   .strip{display:block}
 
   /* дата слева, название по центру, кнопка справа от названия — в две строки */
+  .book{flex-wrap:nowrap;gap:14px;padding:18px 14px}
+  .book__c{font-size:11.5px;letter-spacing:.1em}
+  .book__who{font-size:11.5px;letter-spacing:.1em}
+
   .row{grid-template-columns:46px minmax(0,1fr) auto;gap:3px 12px;align-items:center;
        padding:11px 12px;margin:0 -12px}
   .row__d{grid-column:1;grid-row:1 / span 2;font-size:25px}
@@ -230,43 +235,43 @@ span.row__v{border-bottom:0}
   <div class="row">
     <span class="row__d">05</span>
     <span class="row__m">ср · 20:00</span>
-    <span class="row__c">Москва<a class="row__v" href="https://petter.su/" target="_blank" rel="noopener noreferrer">Petter</a></span>
+    <span class="row__c"><span class="row__city">Москва</span><a class="row__v" href="https://petter.su/" target="_blank" rel="noopener noreferrer">Petter</a></span>
     <a class="row__b" href="https://iframeab-pre2535.intickets.ru/seance/72518164/" target="_blank" rel="noopener noreferrer">Билеты</a>
   </div>
   <div class="row">
     <span class="row__d">06</span>
     <span class="row__m">чт · 20:00</span>
-    <span class="row__c">Москва<a class="row__v" href="https://www.16tons.ru/" target="_blank" rel="noopener noreferrer">16 Тонн</a></span>
+    <span class="row__c"><span class="row__city">Москва</span><a class="row__v" href="https://www.16tons.ru/" target="_blank" rel="noopener noreferrer">16 Тонн</a></span>
     <a class="row__b" href="https://www.16tons.ru/concert/2026-linda-06aug/" target="_blank" rel="noopener noreferrer">Билеты</a>
   </div>
-  <div class="row row--tbd">
+  <div class="row">
     <span class="row__d">20</span>
-    <span class="row__m">чт</span>
-    <span class="row__c">Гатчина<a class="row__v" href="https://groove.estate/" target="_blank" rel="noopener noreferrer">Поместье Грув</a></span>
-    <span class="row__b row__b--off">Скоро</span>
+    <span class="row__m">чт · 20:30</span>
+    <span class="row__c"><span class="row__city">Гатчина</span><a class="row__v" href="https://groove-events.ru/" target="_blank" rel="noopener noreferrer">Поместье Грув</a></span>
+    <a class="row__b" href="https://groove-events.ru/events/6a69dfded8543650992d035c" target="_blank" rel="noopener noreferrer">Билеты</a>
   </div>
   <div class="row">
     <span class="row__d">21</span>
     <span class="row__m">пт · 20:00</span>
-    <span class="row__c">Москва<a class="row__v" href="https://academjazzclub.ru/" target="_blank" rel="noopener noreferrer">Академ Джаз Клуб</a></span>
+    <span class="row__c"><span class="row__city">Москва</span><a class="row__v" href="https://academjazzclub.ru/" target="_blank" rel="noopener noreferrer">Академ Джаз Клуб</a></span>
     <a class="row__b" href="https://academjazzclub.ru/events/939/" target="_blank" rel="noopener noreferrer">Билеты</a>
   </div>
   <div class="row">
     <span class="row__d">27</span>
     <span class="row__m">чт · 21:00</span>
-    <span class="row__c">Москва<a class="row__v" href="https://petter.su/" target="_blank" rel="noopener noreferrer">Petter</a></span>
+    <span class="row__c"><span class="row__city">Москва</span><a class="row__v" href="https://petter.su/" target="_blank" rel="noopener noreferrer">Petter</a></span>
     <a class="row__b" href="https://rolld.ru/event/linda-2026-08-27/tickets" target="_blank" rel="noopener noreferrer">Билеты</a>
   </div>
   <div class="row">
     <span class="row__d">30</span>
     <span class="row__m">вс</span>
-    <span class="row__c">Конаев<a class="row__v" href="https://familyfest.kz/" target="_blank" rel="noopener noreferrer">Family Rock Fest — ASP Arena</a></span>
+    <span class="row__c"><span class="row__city">Конаев<i class="row__f">Казахстан</i></span><a class="row__v" href="https://familyfest.kz/" target="_blank" rel="noopener noreferrer">Family Rock Fest — ASP Arena</a></span>
     <a class="row__b" href="https://familyfest.kz/tc-events/family-rock-festival-2026/" target="_blank" rel="noopener noreferrer">Билеты</a>
   </div>
   <div class="row">
     <span class="row__d">31</span>
     <span class="row__m">пн · 20:00</span>
-    <span class="row__c">Москва<a class="row__v" href="https://cruisefest.moscow/" target="_blank" rel="noopener noreferrer">Теплоход, Северный речной вокзал</a></span>
+    <span class="row__c"><span class="row__city">Москва</span><a class="row__v" href="https://cruisefest.moscow/" target="_blank" rel="noopener noreferrer">Теплоход, Северный речной вокзал</a></span>
     <a class="row__b" href="https://cruisefest.moscow/linda2026" target="_blank" rel="noopener noreferrer">Билеты</a>
   </div>
 </div>
@@ -275,43 +280,43 @@ span.row__v{border-bottom:0}
   <div class="row">
     <span class="row__d">11</span>
     <span class="row__m">пт · 20:00</span>
-    <span class="row__c">Москва<a class="row__v" href="https://rodnya.rest/" target="_blank" rel="noopener noreferrer">Родня</a></span>
+    <span class="row__c"><span class="row__city">Москва</span><a class="row__v" href="https://rodnya.rest/" target="_blank" rel="noopener noreferrer">Родня</a></span>
     <a class="row__b" href="https://rodnya.rest/concerts/linda/" target="_blank" rel="noopener noreferrer">Билеты</a>
   </div>
   <div class="row">
     <span class="row__d">18</span>
     <span class="row__m">пт · 20:00</span>
-    <span class="row__c">Москва<a class="row__v" href="https://academjazzclub.ru/" target="_blank" rel="noopener noreferrer">Академ Джаз Клуб</a></span>
+    <span class="row__c"><span class="row__city">Москва</span><a class="row__v" href="https://academjazzclub.ru/" target="_blank" rel="noopener noreferrer">Академ Джаз Клуб</a></span>
     <a class="row__b" href="https://academjazzclub.ru/events/940/" target="_blank" rel="noopener noreferrer">Билеты</a>
   </div>
   <div class="row">
     <span class="row__d">19</span>
     <span class="row__m">сб · 20:00</span>
-    <span class="row__c">Москва<a class="row__v" href="https://modnaya-sreda.ru/" target="_blank" rel="noopener noreferrer">Модная среда 1823</a></span>
+    <span class="row__c"><span class="row__city">Москва</span><a class="row__v" href="https://modnaya-sreda.ru/" target="_blank" rel="noopener noreferrer">Модная среда 1823</a></span>
     <a class="row__b" href="https://moscow.qtickets.events/246667-linda-puteshestvie-v-mir-teney-i-sveta" target="_blank" rel="noopener noreferrer">Билеты</a>
   </div>
   <div class="row">
     <span class="row__d">25</span>
     <span class="row__m">пт · 20:00</span>
-    <span class="row__c">Химки<a class="row__v" href="https://ruki.club/" target="_blank" rel="noopener noreferrer">Руки Вверх! Бар</a></span>
+    <span class="row__c"><span class="row__city">Химки</span><a class="row__v" href="https://ruki.club/" target="_blank" rel="noopener noreferrer">Руки Вверх! Бар</a></span>
     <a class="row__b" href="https://rolld.ru/event/linda-chimki/tickets" target="_blank" rel="noopener noreferrer">Билеты</a>
   </div>
   <div class="row">
     <span class="row__d">26</span>
     <span class="row__m">сб · 19:30</span>
-    <span class="row__c">Рязань<a class="row__v" href="https://ryazan.rvbar.ru/" target="_blank" rel="noopener noreferrer">Руки Вверх! Бар (ex. Deep)</a></span>
+    <span class="row__c"><span class="row__city">Рязань</span><a class="row__v" href="https://ryazan.rvbar.ru/" target="_blank" rel="noopener noreferrer">Руки Вверх! Бар (ex. Deep)</a></span>
     <a class="row__b" href="https://ryazan.rvbar.ru/poster/linda-vse-hity/" target="_blank" rel="noopener noreferrer">Билеты</a>
   </div>
   <div class="row">
     <span class="row__d">27</span>
     <span class="row__m">вс · 21:00</span>
-    <span class="row__c">Москва<a class="row__v" href="https://petter.su/" target="_blank" rel="noopener noreferrer">Petter</a></span>
+    <span class="row__c"><span class="row__city">Москва</span><a class="row__v" href="https://petter.su/" target="_blank" rel="noopener noreferrer">Petter</a></span>
     <a class="row__b" href="https://rolld.ru/event/linda-2026-09-27/tickets" target="_blank" rel="noopener noreferrer">Билеты</a>
   </div>
   <div class="row">
     <span class="row__d">30</span>
     <span class="row__m">ср · 20:00</span>
-    <span class="row__c">Екатеринбург<a class="row__v" href="https://ekb.maximilians.ru/" target="_blank" rel="noopener noreferrer">Максимилианс</a></span>
+    <span class="row__c"><span class="row__city">Екатеринбург</span><a class="row__v" href="https://ekb.maximilians.ru/" target="_blank" rel="noopener noreferrer">Максимилианс</a></span>
     <a class="row__b" href="https://ekb.maximilians.ru/linda-2026/" target="_blank" rel="noopener noreferrer">Билеты</a>
   </div>
 </div>
@@ -320,67 +325,67 @@ span.row__v{border-bottom:0}
   <div class="row">
     <span class="row__d">01</span>
     <span class="row__m">чт · 21:00</span>
-    <span class="row__c">Челябинск<a class="row__v" href="https://chel.maximilians.ru/" target="_blank" rel="noopener noreferrer">Максимилианс</a></span>
+    <span class="row__c"><span class="row__city">Челябинск</span><a class="row__v" href="https://chel.maximilians.ru/" target="_blank" rel="noopener noreferrer">Максимилианс</a></span>
     <a class="row__b" href="https://chel.maximilians.ru/linda-2026/" target="_blank" rel="noopener noreferrer">Билеты</a>
   </div>
   <div class="row">
     <span class="row__d">03</span>
     <span class="row__m">сб · 19:30</span>
-    <span class="row__c">Москва<a class="row__v" href="https://strogino.rvbar.ru/" target="_blank" rel="noopener noreferrer">Руки Вверх! Бар — Строгино</a></span>
+    <span class="row__c"><span class="row__city">Москва</span><a class="row__v" href="https://strogino.rvbar.ru/" target="_blank" rel="noopener noreferrer">Руки Вверх! Бар — Строгино</a></span>
     <a class="row__b" href="https://strogino.rvbar.ru/poster/linda/" target="_blank" rel="noopener noreferrer">Билеты</a>
   </div>
   <div class="row">
     <span class="row__d">09</span>
     <span class="row__m">пт · 20:00</span>
-    <span class="row__c">Москва<a class="row__v" href="https://www.16tons.ru/" target="_blank" rel="noopener noreferrer">16 Тонн</a></span>
+    <span class="row__c"><span class="row__city">Москва</span><a class="row__v" href="https://www.16tons.ru/" target="_blank" rel="noopener noreferrer">16 Тонн</a></span>
     <a class="row__b" href="https://www.16tons.ru/concert/2026-linda-09oct/" target="_blank" rel="noopener noreferrer">Билеты</a>
   </div>
   <div class="row">
     <span class="row__d">16</span>
     <span class="row__m">пт · 20:00</span>
-    <span class="row__c">Москва<a class="row__v" href="https://academjazzclub.ru/" target="_blank" rel="noopener noreferrer">Академ Джаз Клуб</a></span>
+    <span class="row__c"><span class="row__city">Москва</span><a class="row__v" href="https://academjazzclub.ru/" target="_blank" rel="noopener noreferrer">Академ Джаз Клуб</a></span>
     <a class="row__b" href="https://academjazzclub.ru/events/1244/" target="_blank" rel="noopener noreferrer">Билеты</a>
   </div>
   <div class="row row--soon">
     <span class="row__d">18</span>
     <span class="row__m">вс</span>
-    <span class="row__c">Минск<a class="row__v" href="https://ruki.club/" target="_blank" rel="noopener noreferrer">Руки Вверх! Бар</a></span>
+    <span class="row__c"><span class="row__city">Минск<i class="row__f">Беларусь</i></span><a class="row__v" href="https://ruki.club/" target="_blank" rel="noopener noreferrer">Руки Вверх! Бар</a></span>
     <span class="row__b row__b--off">Скоро</span>
   </div>
   <div class="row">
     <span class="row__d">21</span>
     <span class="row__m">ср · 20:00</span>
-    <span class="row__c">Казань<a class="row__v" href="https://kazan.maximilians.ru/" target="_blank" rel="noopener noreferrer">Максимилианс</a></span>
+    <span class="row__c"><span class="row__city">Казань</span><a class="row__v" href="https://kazan.maximilians.ru/" target="_blank" rel="noopener noreferrer">Максимилианс</a></span>
     <a class="row__b" href="https://kazan.maximilians.ru/linda-2026/" target="_blank" rel="noopener noreferrer">Билеты</a>
   </div>
   <div class="row">
     <span class="row__d">22</span>
     <span class="row__m">чт · 20:00</span>
-    <span class="row__c">Самара<a class="row__v" href="https://samara.maximilians.ru/" target="_blank" rel="noopener noreferrer">Максимилианс</a></span>
+    <span class="row__c"><span class="row__city">Самара</span><a class="row__v" href="https://samara.maximilians.ru/" target="_blank" rel="noopener noreferrer">Максимилианс</a></span>
     <a class="row__b" href="https://samara.maximilians.ru/linda-2026/" target="_blank" rel="noopener noreferrer">Билеты</a>
   </div>
   <div class="row">
     <span class="row__d">23</span>
     <span class="row__m">пт · 20:00</span>
-    <span class="row__c">Королёв<a class="row__v" href="https://www.clubduplex.ru/" target="_blank" rel="noopener noreferrer">Duplex</a></span>
+    <span class="row__c"><span class="row__city">Королёв</span><a class="row__v" href="https://www.clubduplex.ru/" target="_blank" rel="noopener noreferrer">Duplex</a></span>
     <a class="row__b" href="https://www.clubduplex.ru/linda2310" target="_blank" rel="noopener noreferrer">Билеты</a>
   </div>
   <div class="row">
     <span class="row__d">24</span>
     <span class="row__m">сб · 20:00</span>
-    <span class="row__c">Санкт-Петербург<a class="row__v" href="https://aurora.fm/" target="_blank" rel="noopener noreferrer">Аврора Концерт Холл</a></span>
+    <span class="row__c"><span class="row__city">Санкт-Петербург</span><a class="row__v" href="https://aurora.fm/" target="_blank" rel="noopener noreferrer">Аврора Концерт Холл</a></span>
     <a class="row__b" href="https://aurora.fm/linda" target="_blank" rel="noopener noreferrer">Билеты</a>
   </div>
   <div class="row">
     <span class="row__d">25</span>
     <span class="row__m">вс · 19:00</span>
-    <span class="row__c">Великий Новгород<a class="row__v" href="https://serdcevn.ru/" target="_blank" rel="noopener noreferrer">Сердце</a></span>
+    <span class="row__c"><span class="row__city">Великий Новгород</span><a class="row__v" href="https://serdcevn.ru/" target="_blank" rel="noopener noreferrer">Сердце</a></span>
     <a class="row__b" href="https://nov.ticketland.ru/kluby/klub-serdce-nn/linda-velikiy-novgorod/t_20261025_1900_p_28908163/" target="_blank" rel="noopener noreferrer">Билеты</a>
   </div>
   <div class="row">
     <span class="row__d">29</span>
     <span class="row__m">чт · 21:00</span>
-    <span class="row__c">Москва<a class="row__v" href="https://petter.su/" target="_blank" rel="noopener noreferrer">Petter</a></span>
+    <span class="row__c"><span class="row__city">Москва</span><a class="row__v" href="https://petter.su/" target="_blank" rel="noopener noreferrer">Petter</a></span>
     <a class="row__b" href="https://rolld.ru/event/linda-2026-10-29/tickets" target="_blank" rel="noopener noreferrer">Билеты</a>
   </div>
 </div>
