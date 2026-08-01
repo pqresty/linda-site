@@ -37,23 +37,26 @@ a{color:inherit}
 /* ---------- герой ---------- */
 /* Фон прозрачный: под героем тот же закреплённый коллаж, что и под афишей.
    Низ фотографии не обрывается чёрной полосой, а растворяется прямо в нём.
+   Пока первый экран на месте, у снимка нет никакой растушёвки — он лежит
+   во всю площадь как есть. Переход отдан прокрутке: герой закреплён
+   (sticky) и на первом экране прокрутки растворяется на месте, открывая
+   тот же коллаж, а следом снизу поднимается афиша. Ни движущегося стыка,
+   ни чёрной перебивки.
+
    Снимок здесь — фон блока и в WebP, а не <img> с AVIF, и это вынужденно:
-   слой под маской остаётся пустым, если картинка в нём AVIF и ещё не
+   слой с прозрачностью остаётся пустым, если картинка в нём AVIF и ещё не
    декодирована к моменту первой отрисовки. Проверено на холодной загрузке:
-   с AVIF первый экран чёрный, с WebP растворение работает. Плата за это —
-   лишние ~190 КБ на десктопе и ~110 КБ на телефоне. */
-.hero{position:relative;z-index:1;height:100vh;height:100svh;min-height:520px;overflow:hidden;display:grid;isolation:isolate}
+   с AVIF первый экран чёрный, с WebP всё в порядке. */
+.hero{position:sticky;top:0;z-index:1;height:100vh;height:100svh;min-height:520px;
+  overflow:hidden;display:grid;isolation:isolate;will-change:opacity}
 .hero__ph{position:absolute;inset:0;z-index:0;
   background-position:center;background-size:cover;background-repeat:no-repeat;
   background-image:url("assets/hero/hero-tall-1200.webp")}
+/* затемнение только под подпись: низ уже не уходит в чёрное, потому что
+   растворять снимок в него больше не нужно */
 .hero__scrim{position:absolute;inset:0;z-index:1;background:
-  linear-gradient(to top,rgba(6,8,11,.95) 0%,rgba(6,8,11,.6) 22%,rgba(6,8,11,.05) 54%),
-  linear-gradient(100deg,rgba(6,8,11,.6) 0%,rgba(6,8,11,.12) 42%,transparent 70%)}
-/* растворение снимка и его затемнения — одной и той же маской, иначе
-   на стыке останется висеть полупрозрачная чёрная плёнка */
-.hero__ph,.hero__scrim{
-  -webkit-mask-image:linear-gradient(to bottom,#000 0,#000 56%,rgba(0,0,0,.5) 80%,transparent 100%);
-          mask-image:linear-gradient(to bottom,#000 0,#000 56%,rgba(0,0,0,.5) 80%,transparent 100%)}
+  linear-gradient(to top,rgba(6,8,11,.7) 0%,rgba(6,8,11,.4) 17%,rgba(6,8,11,.04) 46%),
+  linear-gradient(100deg,rgba(6,8,11,.55) 0%,rgba(6,8,11,.1) 42%,transparent 70%)}
 @media (min-width:900px){.hero__ph{background-image:url("assets/hero/hero-wide-1600.webp")}}
 @media (min-width:1500px),(min-width:900px) and (min-resolution:1.5dppx){
   .hero__ph{background-image:url("assets/hero/hero-wide-2880.webp")}
@@ -177,14 +180,6 @@ span.row__v{border-bottom:0}
         url("assets/collage-sheet-sm.webp")}
   .afisha::after{height:30px}
   .afisha{padding-top:40px}
-  /* Экран у телефона уже кадра, и cover срезал бы бока — а по бокам крайние
-     музыканты. Поэтому здесь снимок вписан по ширине: высоту задаёт его же
-     пропорция, ниже начинается коллаж. На коротких экранах высоту ограничивает
-     max-height, и тогда cover всё-таки подрезает — но только там, где иначе
-     фото заняло бы весь экран без остатка. */
-  /* затемнение повторяет ту же коробку, иначе его маска обрывается не там,
-     где кончается снимок, и на стыке остаётся тёмная ступенька */
-  .hero__ph,.hero__scrim{inset:0 0 auto 0;height:auto;aspect-ratio:2950/5241;max-height:82svh}
   .top{padding-top:16px}
   /* фон здесь едет вместе с контентом, повторить его на липкой плашке нечем —
      оставляем ей глухую заливку, иначе стык будет рваным */
@@ -447,6 +442,36 @@ span.row__v{border-bottom:0}
   sync(); upd();
   addEventListener('scroll', upd, {passive:true});
   addEventListener('resize', function(){ sync(); upd(); });
+})();
+
+// Растворение героя на прокрутке. Гасим и снимок, и подпись целиком: герой
+// закреплён, поэтому стыка, который мог бы поехать, тут просто нет. К концу
+// первого экрана он уже невидим — иначе висел бы поверх афиши и перехватывал
+// нажатия на ссылку «Афиша».
+(function(){
+  var hero = document.querySelector('.hero');
+  if (!hero) return;
+  var last = -1;
+
+  // Считаем прямо в обработчике, без requestAnimationFrame: scrollY и
+  // innerHeight не заставляют браузер пересчитывать раскладку, а opacity
+  // меняется на композиторе. Зато эффект не зависит от того, отдаёт ли
+  // вкладка кадры.
+  function paint(){
+    // на всякий случай подстраховываемся от нулевой высоты: если вкладка
+    // отдаёт 0, без нижней границы герой исчезал бы от первого же пикселя
+    var vh = innerHeight || document.documentElement.clientHeight || 700,
+        span = Math.max(240, vh * 0.8),
+        o = 1 - Math.min(1, scrollY / span);
+    if (o === last) return;
+    last = o;
+    hero.style.opacity = o;
+    hero.style.visibility = o > 0 ? '' : 'hidden';
+  }
+
+  paint();
+  addEventListener('scroll', paint, {passive:true});
+  addEventListener('resize', paint);
 })();
 </script>
 </body>
