@@ -95,6 +95,14 @@ a{color:inherit}
 .afisha::after{bottom:0;background:linear-gradient(rgba(6,8,11,0),var(--ink))}
 .afisha__in{position:relative;z-index:3;max-width:940px;margin:0 auto;padding:0 var(--gut)}
 
+.strip{display:none;position:fixed;inset:0;z-index:4;pointer-events:none;opacity:0;
+  background-image:linear-gradient(rgba(6,8,11,var(--scrim)),rgba(6,8,11,var(--scrim))),
+                   url("assets/collage-sheet-sm.webp");
+  background-size:cover,cover;background-position:center,center;
+  filter:grayscale(.55) contrast(1.05);
+  clip-path:inset(0 0 calc(100% - var(--plate-h,64px)) 0)}
+.strip.on{opacity:1}
+
 .mon{margin-bottom:clamp(30px,5vh,52px)}
 /* месяц закрепляется у верха, пока идут его концерты, и уезжает со своим блоком */
 .mon__h{position:sticky;top:0;z-index:5;
@@ -124,7 +132,8 @@ a{color:inherit}
   text-decoration:none;justify-self:start;border-bottom:1px solid rgba(168,176,186,.34);transition:.16s}
 a.row__v:hover,a.row__v:focus-visible{color:var(--halo);border-bottom-color:var(--halo)}
 span.row__v{border-bottom:0}
-.row__b{display:inline-block;text-decoration:none;padding:13px 26px;font-weight:600;font-size:12.5px;
+.row__b{display:inline-flex;align-items:center;justify-content:center;min-width:9.5em;
+  text-decoration:none;padding:13px 20px;font-weight:600;font-size:12.5px;
   letter-spacing:.18em;text-transform:uppercase;border:1px solid rgba(237,233,225,.46);
   white-space:nowrap;transition:.16s}
 .row__b:hover,.row__b:focus-visible{background:var(--ember);border-color:var(--ember);color:#0B0603}
@@ -143,11 +152,20 @@ span.row__v{border-bottom:0}
      берём лёгкий лист и мельчим до текстуры */
   .bg{background-image:linear-gradient(rgba(6,8,11,var(--scrim)),rgba(6,8,11,var(--scrim))),
         url("assets/collage-sheet-sm.webp")}
-  .afisha::before,.afisha::after{height:44px}
+  /* при полной высоте телефон уже кадра и обрезает крайних музыкантов */
+  .hero{height:79vh;height:79svh}
+  .afisha::before,.afisha::after{height:30px}
+  .afisha{padding-top:40px}
+  .top{padding-top:16px}
   /* фон здесь едет вместе с контентом, повторить его на липкой плашке нечем —
      оставляем ей глухую заливку, иначе стык будет рваным */
-  .mon__h::before{background-image:linear-gradient(rgba(6,8,11,var(--scrim)),rgba(6,8,11,var(--scrim))),
-                   url("assets/collage-sheet-sm.webp")}
+  /* На телефоне приём с background-attachment:fixed не работает: он считает
+     от макетного окна, которое не меняется при появлении адресной строки,
+     а слой коллажа — от видимого. Плюс iOS его игнорирует.
+     Поэтому здесь плашка прозрачная, а строки перекрывает .strip —
+     обычный position:fixed с тем же фоном, обрезанный по высоте плашки. */
+  .mon__h::before{display:none}
+  .strip{display:block}
 
   /* дата слева, название по центру, кнопка справа от названия — в две строки */
   .row{grid-template-columns:46px minmax(0,1fr) auto;gap:3px 12px;align-items:center;
@@ -206,6 +224,7 @@ span.row__v{border-bottom:0}
 
 <section class="afisha">
   <div class="afisha__in">
+    <div class="strip" aria-hidden="true"></div>
 <div class="mon">
   <h2 class="mon__h">Август</h2>
   <div class="row">
@@ -388,5 +407,29 @@ span.row__v{border-bottom:0}
 
 
 
+<script>
+(function(){
+  var strip = document.querySelector('.strip'),
+      af    = document.querySelector('.afisha'),
+      mon   = document.querySelector('.mon__h');
+  if (!strip || !af) return;
+
+  function sync(){
+    if (mon) document.documentElement.style.setProperty(
+      '--plate-h', Math.round(mon.getBoundingClientRect().height) + 'px');
+  }
+
+  // полоса перекрывает строки ровно там, где висит название месяца:
+  // включаем, пока афиша перекрывает верхнюю кромку экрана
+  function upd(){
+    var r = af.getBoundingClientRect();
+    strip.classList.toggle('on', r.top <= 0 && r.bottom > 80);
+  }
+
+  sync(); upd();
+  addEventListener('scroll', upd, {passive:true});
+  addEventListener('resize', function(){ sync(); upd(); });
+})();
+</script>
 </body>
 </html>
