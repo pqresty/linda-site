@@ -94,7 +94,7 @@ a{color:inherit}
 
 /* заголовок стоит уже на коллаже — чёрной перебивки между фото и афишей нет */
 .top{position:relative;z-index:1;
-  padding:clamp(26px,4.5vh,46px) 0 clamp(3px,0.5vh,5px)}
+  padding:clamp(13px,2.25vh,23px) 0 clamp(2px,0.25vh,3px)}
 .kicker{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--ash);margin:0 0 14px}
 .top h1{max-width:940px;margin:0 auto;padding:0 var(--gut);
   font-weight:800;font-size:clamp(38px,7.4vw,86px);letter-spacing:-.02em;line-height:1}
@@ -112,7 +112,7 @@ a{color:inherit}
   filter:grayscale(.55) contrast(1.05)}
 
 .afisha{position:relative;z-index:1;isolation:isolate;
-  padding:clamp(72px,9vh,100px) 0 clamp(70px,11vh,120px)}
+  padding:clamp(36px,4.5vh,50px) 0 clamp(70px,11vh,120px)}
 /* сверху тушевать нечего: коллаж идёт сплошняком от самого героя.
    Осталась нижняя растушёвка — там секция уходит в чернильный блок соцсетей */
 .afisha::after{content:"";position:absolute;left:0;right:0;bottom:0;height:64px;
@@ -179,9 +179,17 @@ span.row__v{border-bottom:0}
      берём лёгкий лист и мельчим до текстуры */
   .bg{background-image:linear-gradient(rgba(6,8,11,var(--scrim)),rgba(6,8,11,var(--scrim))),
         url("assets/collage-sheet-sm.webp")}
+  /* На телефоне кадр дорощен снизу, поэтому под группой стало больше тёмного
+     поля — знаку есть куда вырасти. Мешал ему только указатель «Афиша»,
+     стоявший на одной высоте; опускаем указатель под строку подписи, и знак
+     занимает всю колонку набора — от поля до поля, как шапка. */
+  .cue{bottom:14px}
+  .hero .logo{width:calc(100vw - var(--gut) * 2)}
+  .hero__tag{font-size:10px;letter-spacing:.26em}
+
   .afisha::after{height:30px}
-  .afisha{padding-top:40px}
-  .top{padding-top:16px}
+  .afisha{padding-top:20px}
+  .top{padding-top:8px}
   /* фон здесь едет вместе с контентом, повторить его на липкой плашке нечем —
      оставляем ей глухую заливку, иначе стык будет рваным */
   /* На телефоне приём с background-attachment:fixed не работает: он считает
@@ -447,36 +455,46 @@ span.row__v{border-bottom:0}
 
 // [hero-fade] — метка для transitions.py: он вырезает этот блок целиком,
 // от метки до конца функции, и подставляет свой с переключателем вариантов.
-// Снимок уезжает вверх обычным ходом и гаснет с первого же движения. Длина
-// растворения выбрана не на глаз: заголовок «Афиша» лежит сразу под героем
-// и полностью выходит на экран примерно через свою высоту с отступом — это
-// около 90 px. К этому моменту герой уже должен быть невидим, иначе логотип
-// и заголовок какое-то время идут друг по другу. Гасим весь герой целиком:
-// иначе логотип пережил бы снимок, а невидимая ссылка «Афиша» продолжала бы
-// перехватывать нажатия.
+//
+// Снимок уезжает вверх обычным ходом, а растворяется ровно за то время, пока
+// из-под нижней кромки выходит слово «Афиша»: начали, когда показалась его
+// верхушка, закончили, когда оно вышло целиком. Границы не забиты числами,
+// а сняты с самого заголовка — поменяется кегль или отступ, и растворение
+// подстроится само. Гасим весь герой целиком: иначе логотип пережил бы
+// снимок, а невидимая ссылка «Афиша» продолжала бы перехватывать нажатия.
 (function(){
-  var hero = document.querySelector('.hero');
-  if (!hero) return;
-  var last = -1;
+  var hero = document.querySelector('.hero'),
+      word = document.querySelector('.top h1');
+  if (!hero || !word) return;
+  var last = -1, from = 0, span = 1;
 
-  // Считаем прямо в обработчике, без requestAnimationFrame: scrollY и
-  // innerHeight не заставляют браузер пересчитывать раскладку, а opacity
-  // меняется на композиторе. Зато эффект не зависит от того, отдаёт ли
-  // вкладка кадры.
+  function measure(){
+    var r  = word.getBoundingClientRect(),
+        vh = innerHeight || document.documentElement.clientHeight || 700;
+    // r.top + scrollY — положение слова в документе, от прокрутки не зависит
+    from = r.top + scrollY - vh;
+    span = Math.max(1, r.height);
+  }
+
+  // Считаем прямо в обработчике, без requestAnimationFrame: scrollY не
+  // заставляет браузер пересчитывать раскладку, а opacity меняется на
+  // композиторе. Зато эффект не зависит от того, отдаёт ли вкладка кадры.
   function paint(){
-    // подстраховка от нулевой высоты: если вкладка отдаёт 0, без нижней
-    // границы герой исчезал бы от первого же пикселя прокрутки
-    var vh = innerHeight || document.documentElement.clientHeight || 700,
-        o  = 1 - Math.min(1, scrollY / Math.max(80, vh * 0.1));
+    var o = 1 - Math.min(1, Math.max(0, (scrollY - from) / span));
     if (o === last) return;
     last = o;
     hero.style.opacity = o;
     hero.style.visibility = o > 0 ? '' : 'hidden';
   }
 
-  paint();
+  function sync(){ measure(); last = -1; paint(); }
+
+  sync();
   addEventListener('scroll', paint, {passive:true});
-  addEventListener('resize', paint);
+  addEventListener('resize', sync);
+  // шрифт подгружается позже разметки и меняет высоту заголовка — пересняли
+  addEventListener('load', sync);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(sync);
 })();
 </script>
 </body>
