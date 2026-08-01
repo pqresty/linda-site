@@ -10,17 +10,17 @@
      предзагрузка здесь не роскошь, а то, что держит первый экран. -->
 <link rel="preload" as="image" type="image/webp" fetchpriority="high"
       media="(min-width:1500px),(min-width:900px) and (min-resolution:1.5dppx)"
-      href="assets/hero/hero-wide-2880.webp">
+      href="assets/hero/hero-wide-2880.webp?v=3a067f53">
 <link rel="preload" as="image" type="image/webp" fetchpriority="high"
       media="(min-width:900px) and (max-width:1499px) and (max-resolution:1.49dppx)"
-      href="assets/hero/hero-wide-1600.webp">
+      href="assets/hero/hero-wide-1600.webp?v=f5c9dabf">
 <link rel="preload" as="image" type="image/webp" fetchpriority="high"
       media="(max-width:899px)"
-      href="assets/hero/hero-tall-1200.webp">
+      href="assets/hero/hero-tall-1200.webp?v=44528096">
 <style>
-@font-face{font-family:"Jost";src:url("assets/fonts/Jost-500.woff2") format("woff2");font-weight:500;font-display:swap}
-@font-face{font-family:"Jost";src:url("assets/fonts/Jost-600.woff2") format("woff2");font-weight:600;font-display:swap}
-@font-face{font-family:"Jost";src:url("assets/fonts/Jost-800.woff2") format("woff2");font-weight:800;font-display:swap}
+@font-face{font-family:"Jost";src:url("assets/fonts/Jost-500.woff2?v=0e535fec") format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"Jost";src:url("assets/fonts/Jost-600.woff2?v=c4267d18") format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Jost";src:url("assets/fonts/Jost-800.woff2?v=163c76bc") format("woff2");font-weight:800;font-display:swap}
 
 :root{
   --ink:#06080B; --stone:#131A22; --bone:#EDE9E1; --ash:#79828D;
@@ -52,15 +52,15 @@ a{color:inherit}
   overflow:hidden;display:grid;isolation:isolate;will-change:opacity}
 .hero__ph{position:absolute;inset:0;z-index:0;
   background-position:center;background-size:cover;background-repeat:no-repeat;
-  background-image:url("assets/hero/hero-tall-1200.webp")}
+  background-image:url("assets/hero/hero-tall-1200.webp?v=44528096")}
 /* затемнение только под подпись: низ уже не уходит в чёрное, потому что
    растворять снимок в него больше не нужно */
 .hero__scrim{position:absolute;inset:0;z-index:1;background:
   linear-gradient(to top,rgba(6,8,11,.7) 0%,rgba(6,8,11,.4) 17%,rgba(6,8,11,.04) 46%),
   linear-gradient(100deg,rgba(6,8,11,.55) 0%,rgba(6,8,11,.1) 42%,transparent 70%)}
-@media (min-width:900px){.hero__ph{background-image:url("assets/hero/hero-wide-1600.webp")}}
+@media (min-width:900px){.hero__ph{background-image:url("assets/hero/hero-wide-1600.webp?v=f5c9dabf")}}
 @media (min-width:1500px),(min-width:900px) and (min-resolution:1.5dppx){
-  .hero__ph{background-image:url("assets/hero/hero-wide-2880.webp")}
+  .hero__ph{background-image:url("assets/hero/hero-wide-2880.webp?v=3a067f53")}
 }
 .hero__txt{position:relative;z-index:2;align-self:end;justify-items:start;display:grid;
   gap:clamp(13px,2.2vh,22px);padding:0 var(--gut) clamp(52px,9vh,104px)}
@@ -107,7 +107,7 @@ a{color:inherit}
    background-attachment:fixed игнорирует. */
 .bg{position:fixed;inset:0;z-index:0;pointer-events:none;
   background-image:linear-gradient(rgba(6,8,11,var(--scrim)),rgba(6,8,11,var(--scrim))),
-                   url("assets/collage-sheet.webp");
+                   url("assets/collage-sheet.webp?v=b339bdab");
   background-size:cover,cover;background-position:center,center;
   filter:grayscale(.55) contrast(1.05)}
 
@@ -121,7 +121,7 @@ a{color:inherit}
 
 .strip{display:none;position:fixed;inset:0;z-index:4;pointer-events:none;opacity:0;
   background-image:linear-gradient(rgba(6,8,11,var(--scrim)),rgba(6,8,11,var(--scrim))),
-                   url("assets/collage-sheet-sm.webp");
+                   url("assets/collage-sheet-sm.webp?v=ef34bc57");
   background-size:cover,cover;background-position:center,center;
   filter:grayscale(.55) contrast(1.05);
   clip-path:inset(0 0 calc(100% - var(--plate-h,64px)) 0)}
@@ -139,7 +139,7 @@ a{color:inherit}
    и стыка не видно. */
 .mon__h::before{content:"";position:absolute;inset:0;z-index:-1;
   background-image:linear-gradient(rgba(6,8,11,var(--scrim)),rgba(6,8,11,var(--scrim))),
-                   url("assets/collage-sheet.webp");
+                   url("assets/collage-sheet.webp?v=b339bdab");
   background-size:cover,cover;background-position:center,center;
   background-attachment:fixed,fixed;
   filter:grayscale(.55) contrast(1.05)}
@@ -178,14 +178,22 @@ span.row__v{border-bottom:0}
   /* на узком экране cover раздувает полотно до одной колонки кадров —
      берём лёгкий лист и мельчим до текстуры */
   .bg{background-image:linear-gradient(rgba(6,8,11,var(--scrim)),rgba(6,8,11,var(--scrim))),
-        url("assets/collage-sheet-sm.webp")}
+        url("assets/collage-sheet-sm.webp?v=ef34bc57")}
   /* На телефоне кадр дорощен снизу, поэтому под группой стало больше тёмного
      поля — знаку есть куда вырасти. Мешал ему только указатель «Афиша»,
-     стоявший на одной высоте; опускаем указатель под строку подписи, и знак
-     занимает всю колонку набора — от поля до поля, как шапка. */
-  .cue{bottom:14px}
+     стоявший на одной высоте; знак занимает всю колонку набора — от поля до
+     поля, как шапка. */
   .hero .logo{width:calc(100vw - var(--gut) * 2)}
   .hero__tag{font-size:10px;letter-spacing:.26em}
+  /* Слово у указателя убрано с глаз: тем же кеглем и цветом, что и подпись,
+     да ещё в одну с ней строку, оно читалось её продолжением. Осталась
+     пульсирующая черта по центру — она ни с чем не сливается и понятна без
+     подписи, тем более что раздел ниже так и называется. Для читалок экрана
+     слово на месте, просто спрятано. */
+  .cue{left:50%;right:auto;transform:translateX(-50%);bottom:16px}
+  .cue span{position:absolute;width:1px;height:1px;overflow:hidden;
+    clip-path:inset(50%);white-space:nowrap}
+  .cue i{height:36px}
 
   .afisha::after{height:30px}
   .afisha{padding-top:20px}
