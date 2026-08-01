@@ -5,14 +5,18 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ЛИNДА — официальный сайт</title>
 <meta name="description" content="Линда — официальный сайт. Афиша концертов, билеты, площадки.">
-<link rel="preload" as="image" type="image/avif" media="(min-width:900px)"
-      href="assets/hero/hero-wide-1600.avif"
-      imagesrcset="assets/hero/hero-wide-1600.avif 1600w, assets/hero/hero-wide-2880.avif 2880w"
-      imagesizes="100vw">
-<link rel="preload" as="image" type="image/avif" media="(max-width:899px)"
-      href="assets/hero/hero-tall-800.avif"
-      imagesrcset="assets/hero/hero-tall-800.avif 800w, assets/hero/hero-tall-1200.avif 1200w"
-      imagesizes="100vw">
+<!-- Ровно те же файлы и те же условия, что и в CSS ниже: иначе браузер
+     скачает картинку дважды. Фон блока грузится позже <img>, поэтому
+     предзагрузка здесь не роскошь, а то, что держит первый экран. -->
+<link rel="preload" as="image" type="image/webp" fetchpriority="high"
+      media="(min-width:1500px),(min-width:900px) and (min-resolution:1.5dppx)"
+      href="assets/hero/hero-wide-2880.webp">
+<link rel="preload" as="image" type="image/webp" fetchpriority="high"
+      media="(min-width:900px) and (max-width:1499px) and (max-resolution:1.49dppx)"
+      href="assets/hero/hero-wide-1600.webp">
+<link rel="preload" as="image" type="image/webp" fetchpriority="high"
+      media="(max-width:899px)"
+      href="assets/hero/hero-tall-1200.webp">
 <style>
 @font-face{font-family:"Jost";src:url("assets/fonts/Jost-500.woff2") format("woff2");font-weight:500;font-display:swap}
 @font-face{font-family:"Jost";src:url("assets/fonts/Jost-600.woff2") format("woff2");font-weight:600;font-display:swap}
@@ -31,12 +35,29 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--face);-w
 a{color:inherit}
 
 /* ---------- герой ---------- */
-@media (min-width:900px){.hero__img{object-position:50% 50%}}
-.hero{position:relative;z-index:1;background:var(--ink);height:100vh;height:100svh;min-height:520px;overflow:hidden;display:grid;isolation:isolate}
-.hero__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;z-index:0}
+/* Фон прозрачный: под героем тот же закреплённый коллаж, что и под афишей.
+   Низ фотографии не обрывается чёрной полосой, а растворяется прямо в нём.
+   Снимок здесь — фон блока и в WebP, а не <img> с AVIF, и это вынужденно:
+   слой под маской остаётся пустым, если картинка в нём AVIF и ещё не
+   декодирована к моменту первой отрисовки. Проверено на холодной загрузке:
+   с AVIF первый экран чёрный, с WebP растворение работает. Плата за это —
+   лишние ~190 КБ на десктопе и ~110 КБ на телефоне. */
+.hero{position:relative;z-index:1;height:100vh;height:100svh;min-height:520px;overflow:hidden;display:grid;isolation:isolate}
+.hero__ph{position:absolute;inset:0;z-index:0;
+  background-position:center;background-size:cover;background-repeat:no-repeat;
+  background-image:url("assets/hero/hero-tall-1200.webp")}
 .hero__scrim{position:absolute;inset:0;z-index:1;background:
   linear-gradient(to top,rgba(6,8,11,.95) 0%,rgba(6,8,11,.6) 22%,rgba(6,8,11,.05) 54%),
   linear-gradient(100deg,rgba(6,8,11,.6) 0%,rgba(6,8,11,.12) 42%,transparent 70%)}
+/* растворение снимка и его затемнения — одной и той же маской, иначе
+   на стыке останется висеть полупрозрачная чёрная плёнка */
+.hero__ph,.hero__scrim{
+  -webkit-mask-image:linear-gradient(to bottom,#000 0,#000 56%,rgba(0,0,0,.5) 80%,transparent 100%);
+          mask-image:linear-gradient(to bottom,#000 0,#000 56%,rgba(0,0,0,.5) 80%,transparent 100%)}
+@media (min-width:900px){.hero__ph{background-image:url("assets/hero/hero-wide-1600.webp")}}
+@media (min-width:1500px),(min-width:900px) and (min-resolution:1.5dppx){
+  .hero__ph{background-image:url("assets/hero/hero-wide-2880.webp")}
+}
 .hero__txt{position:relative;z-index:2;align-self:end;justify-items:start;display:grid;
   gap:clamp(13px,2.2vh,22px);padding:0 var(--gut) clamp(52px,9vh,104px)}
 .hero .logo{width:min(64vw,640px);height:auto;color:var(--bone);display:block}
@@ -67,7 +88,8 @@ a{color:inherit}
   font-weight:600;font-size:12px;letter-spacing:.18em;text-transform:uppercase;transition:.16s}
 .soc__l a:hover,.soc__l a:focus-visible{background:var(--ember);color:#0B0603}
 
-.top{position:relative;z-index:1;background:var(--ink);
+/* заголовок стоит уже на коллаже — чёрной перебивки между фото и афишей нет */
+.top{position:relative;z-index:1;
   padding:clamp(26px,4.5vh,46px) 0 clamp(3px,0.5vh,5px)}
 .kicker{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--ash);margin:0 0 14px}
 .top h1{max-width:940px;margin:0 auto;padding:0 var(--gut);
@@ -87,12 +109,10 @@ a{color:inherit}
 
 .afisha{position:relative;z-index:1;isolation:isolate;
   padding:clamp(72px,9vh,100px) 0 clamp(70px,11vh,120px)}
-/* мягкие края вместо резаной линии: тушуем сверху и снизу на фиксированную
-   высоту, а не на процент от секции — иначе край гуляет от её длины */
-.afisha::before,.afisha::after{content:"";position:absolute;left:0;right:0;height:64px;
-  z-index:2;pointer-events:none}
-.afisha::before{top:0;background:linear-gradient(var(--ink),rgba(6,8,11,0))}
-.afisha::after{bottom:0;background:linear-gradient(rgba(6,8,11,0),var(--ink))}
+/* сверху тушевать нечего: коллаж идёт сплошняком от самого героя.
+   Осталась нижняя растушёвка — там секция уходит в чернильный блок соцсетей */
+.afisha::after{content:"";position:absolute;left:0;right:0;bottom:0;height:64px;
+  z-index:2;pointer-events:none;background:linear-gradient(rgba(6,8,11,0),var(--ink))}
 .afisha__in{position:relative;z-index:3;max-width:940px;margin:0 auto;padding:0 var(--gut)}
 
 .strip{display:none;position:fixed;inset:0;z-index:4;pointer-events:none;opacity:0;
@@ -155,8 +175,16 @@ span.row__v{border-bottom:0}
      берём лёгкий лист и мельчим до текстуры */
   .bg{background-image:linear-gradient(rgba(6,8,11,var(--scrim)),rgba(6,8,11,var(--scrim))),
         url("assets/collage-sheet-sm.webp")}
-  .afisha::before,.afisha::after{height:30px}
+  .afisha::after{height:30px}
   .afisha{padding-top:40px}
+  /* Экран у телефона уже кадра, и cover срезал бы бока — а по бокам крайние
+     музыканты. Поэтому здесь снимок вписан по ширине: высоту задаёт его же
+     пропорция, ниже начинается коллаж. На коротких экранах высоту ограничивает
+     max-height, и тогда cover всё-таки подрезает — но только там, где иначе
+     фото заняло бы весь экран без остатка. */
+  /* затемнение повторяет ту же коробку, иначе его маска обрывается не там,
+     где кончается снимок, и на стыке остаётся тёмная ступенька */
+  .hero__ph,.hero__scrim{inset:0 0 auto 0;height:auto;aspect-ratio:2950/5241;max-height:82svh}
   .top{padding-top:16px}
   /* фон здесь едет вместе с контентом, повторить его на липкой плашке нечем —
      оставляем ей глухую заливку, иначе стык будет рваным */
@@ -190,23 +218,8 @@ span.row__v{border-bottom:0}
 <div class="bg" aria-hidden="true"></div>
 
 <section class="hero">
-  <picture>
-    <source media="(min-width:900px)" type="image/avif"
-            srcset="assets/hero/hero-wide-1600.avif 1600w,
-                    assets/hero/hero-wide-2880.avif 2880w" sizes="100vw">
-    <source media="(min-width:900px)" type="image/webp"
-            srcset="assets/hero/hero-wide-1600.webp 1600w,
-                    assets/hero/hero-wide-2880.webp 2880w" sizes="100vw">
-    <source type="image/avif"
-            srcset="assets/hero/hero-tall-800.avif 800w,
-                    assets/hero/hero-tall-1200.avif 1200w" sizes="100vw">
-    <img class="hero__img"
-         src="assets/hero/hero-tall-1200.webp"
-         srcset="assets/hero/hero-tall-800.webp 800w,
-                 assets/hero/hero-tall-1200.webp 1200w"
-         sizes="100vw" fetchpriority="high" decoding="async"
-         alt="Линда с группой на сцене, зал с поднятыми телефонами">
-  </picture>
+  <div class="hero__ph" role="img"
+       aria-label="Линда с группой на сцене, зал с поднятыми телефонами"></div>
   <div class="hero__scrim" aria-hidden="true"></div>
   <div class="hero__txt">
     <svg class="logo" viewBox="0 0 461.1 100" role="img" aria-label="ЛИNДА">
