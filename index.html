@@ -28,7 +28,7 @@
   --face:"Jost","Helvetica Neue",Helvetica,Arial,sans-serif;
   --mono:ui-monospace,"SF Mono",Menlo,monospace;
   --gut:clamp(20px,5vw,64px);
-  --scrim:.79;
+  --scrim:.82;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--face);-webkit-font-smoothing:antialiased}
@@ -214,6 +214,9 @@ span.row__v{border-bottom:0}
     clip-path:inset(50%);white-space:nowrap}
   .cue i{height:36px}
 
+  /* затемнение коллажа на телефоне слабее: экран меньше, и при общем
+     значении фон тут читается глуше, чем на десктопе */
+  :root{--scrim:.79}
   .afisha::after{height:30px}
   .afisha{padding-top:20px}
   .top{padding-top:8px}
