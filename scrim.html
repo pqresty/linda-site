@@ -1,0 +1,103 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ЛИNДА — затемнение коллажа</title>
+<style>
+@font-face{font-family:"Jost";src:url("assets/fonts/Jost-500.woff2") format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"Jost";src:url("assets/fonts/Jost-600.woff2") format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Jost";src:url("assets/fonts/Jost-800.woff2") format("woff2");font-weight:800;font-display:swap}
+:root{--ink:#06080B;--bone:#EDE9E1;--ash:#79828D;--halo:#4FD8E4;--ember:#E8642F;
+  --mono:ui-monospace,"SF Mono",Menlo,monospace;
+  --face:"Jost","Helvetica Neue",Helvetica,Arial,sans-serif;--gut:20px;--scrim:.82}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--face);
+  -webkit-font-smoothing:antialiased;padding-bottom:150px}
+
+/* тот же закреплённый слой коллажа, что и на сайте */
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(6,8,11,var(--scrim)),rgba(6,8,11,var(--scrim))),
+                   url("assets/collage-sheet-sm.webp");
+  background-size:cover,cover;background-position:center,center;
+  filter:grayscale(.55) contrast(1.05)}
+
+.top{position:relative;z-index:1;padding:26px 0 3px}
+.top h1{max-width:940px;margin:0 auto;padding:0 var(--gut);
+  font-weight:800;font-size:38px;letter-spacing:-.02em;line-height:1}
+.af{position:relative;z-index:1;padding:20px 0 40px}
+.in{max-width:940px;margin:0 auto;padding:0 var(--gut)}
+.mon__h{margin:0 -14px 10px;padding:16px 14px 12px;font-weight:600;font-size:24px;
+  letter-spacing:-.01em;border-bottom:1px solid rgba(237,233,225,.32)}
+.row{display:grid;grid-template-columns:46px minmax(0,1fr) auto;gap:3px 12px;
+  align-items:center;padding:11px 12px;margin:0 -12px;
+  border-bottom:1px solid rgba(237,233,225,.11)}
+.d{grid-column:1;grid-row:1/span 2;font-family:var(--mono);font-weight:500;font-size:25px;
+  line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.m{grid-column:2;grid-row:1;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ash)}
+.c{grid-column:2;grid-row:2;font-weight:600;font-size:18px;line-height:1.15}
+.v{display:block;font-weight:500;font-size:12.5px;color:#A8B0BA;
+  border-bottom:1px solid rgba(168,176,186,.34);width:max-content}
+.b{grid-column:3;grid-row:1/span 2;align-self:center;display:inline-flex;align-items:center;
+  justify-content:center;padding:9px 14px;font-weight:600;font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;border:1px solid rgba(237,233,225,.46);white-space:nowrap}
+
+/* ---------- пульт ---------- */
+.p{position:fixed;z-index:9;left:0;right:0;bottom:0;background:rgba(6,8,11,.94);
+  backdrop-filter:blur(18px);border-top:1px solid rgba(237,233,225,.18);
+  padding:14px var(--gut) calc(16px + env(safe-area-inset-bottom));display:grid;gap:10px}
+.p__t{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.p__n{font-weight:600;font-size:13px;letter-spacing:.02em}
+.p__v{font-family:var(--mono);font-size:20px;color:var(--ember);font-variant-numeric:tabular-nums}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:30px;background:none;
+  cursor:pointer;margin:0}
+input[type=range]::-webkit-slider-runnable-track{height:2px;background:rgba(237,233,225,.28)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;margin-top:-10px;
+  background:var(--ember);border:0;border-radius:0;transform:rotate(45deg)}
+input[type=range]::-moz-range-track{height:2px;background:rgba(237,233,225,.28)}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;background:var(--ember);border:0;border-radius:0}
+.p__h{margin:0;font-size:11px;line-height:1.5;color:var(--ash)}
+.p__h b{color:var(--bone);font-weight:600}
+</style>
+
+<div class="bg"></div>
+<header class="top"><h1>Афиша</h1></header>
+<section class="af"><div class="in">
+  <div class="mon__h">Август</div>
+  <div class="row"><span class="d">05</span><span class="m">ср · 20:00</span>
+    <span class="c">Москва<span class="v">Petter</span></span><span class="b">Билеты</span></div>
+  <div class="row"><span class="d">06</span><span class="m">чт · 20:00</span>
+    <span class="c">Москва<span class="v">16 Тонн</span></span><span class="b">Билеты</span></div>
+  <div class="row"><span class="d">20</span><span class="m">чт · 20:30</span>
+    <span class="c">Гатчина<span class="v">Поместье Грув</span></span><span class="b">Билеты</span></div>
+  <div class="row"><span class="d">21</span><span class="m">пт · 20:00</span>
+    <span class="c">Москва<span class="v">Академ Джаз Клуб</span></span><span class="b">Билеты</span></div>
+  <div class="mon__h" style="margin-top:34px">Сентябрь</div>
+  <div class="row"><span class="d">18</span><span class="m">чт · 20:00</span>
+    <span class="c">Москва<span class="v">Академ Джаз Клуб</span></span><span class="b">Билеты</span></div>
+  <div class="row"><span class="d">25</span><span class="m">чт · 20:00</span>
+    <span class="c">Химки<span class="v">Руки Вверх! Бар</span></span><span class="b">Билеты</span></div>
+</div></section>
+
+<div class="p">
+  <div class="p__t"><span class="p__n">Затемнение коллажа</span><span class="p__v" id="v">0.82</span></div>
+  <input type="range" min="60" max="96" step="1" value="82" id="s" aria-label="Затемнение коллажа">
+  <p class="p__h" id="h"></p>
+</div>
+
+<script>
+(function(){
+  var s=document.getElementById('s'), v=document.getElementById('v'), h=document.getElementById('h'),
+      root=document.documentElement;
+  function upd(){
+    var n=+s.value/100;
+    root.style.setProperty('--scrim', n);
+    v.textContent = n.toFixed(2);
+    h.innerHTML = n<=.72 ? 'Коллаж читается кадрами — видно, что это фотографии, но строки спорят с фоном.'
+      : n<.80 ? 'Середина: сюжеты угадываются, текст держится.'
+      : n<.88 ? 'Сейчас на сайте <b>0.82</b>. Коллаж работает фактурой, а не картинками.'
+      : 'Почти чёрный фон, от коллажа остаётся только намёк.';
+    try{ localStorage.setItem('scrim', s.value); }catch(e){}
+  }
+  try{ var was=localStorage.getItem('scrim'); if(was) s.value=was; }catch(e){}
+  s.addEventListener('input', upd);
+  upd();
+})();
+</script>
