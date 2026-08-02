@@ -48,7 +48,7 @@ a{color:inherit}
    слой с прозрачностью остаётся пустым, если картинка в нём AVIF и ещё не
    декодирована к моменту первой отрисовки. Проверено на холодной загрузке:
    с AVIF первый экран чёрный, с WebP всё в порядке. */
-.hero{position:relative;z-index:1;height:100vh;height:100svh;min-height:520px;
+.hero{position:relative;z-index:1;height:100vh;height:100svh;height:var(--app-h,100svh);min-height:520px;
   overflow:hidden;display:grid;isolation:isolate;will-change:opacity}
 .hero__ph{position:absolute;inset:0;z-index:0;
   background-position:center;background-size:cover;background-repeat:no-repeat;
@@ -481,6 +481,17 @@ span.row__v{border-bottom:0}
   sync(); upd();
   addEventListener('scroll', upd, {passive:true});
   addEventListener('resize', function(){ sync(); upd(); });
+})();
+
+// Высота первого экрана берётся у окна, а не у единиц вьюпорта. Во встроенных
+// браузерах — телеграма в первую очередь — svh считается от всего экрана, а не
+// от видимой части, и низ героя с логотипом уезжает под нижнюю панель.
+// innerHeight в них отдаёт именно видимую высоту.
+(function(){
+  function fit(){ document.documentElement.style.setProperty('--app-h', innerHeight + 'px'); }
+  fit();
+  addEventListener('resize', fit);
+  addEventListener('orientationchange', fit);
 })();
 
 // [hero-fade] — метка для transitions.py: он вырезает этот блок целиком,
