@@ -584,6 +584,34 @@ span.row__v{border-bottom:0}
   addEventListener('scroll', paint, {passive:true});
   addEventListener('resize', paint);
 })();
+
+// Отладка: открыть страницу с ?debug — в углу появятся живые числа окна и
+// слоёв. По одному скриншоту из встроенного браузера видно, что именно он
+// считает высотой окна и куда на самом деле ставит закреплённые слои.
+(function(){
+  if (location.search.indexOf('debug') < 0) return;
+  var d = document.createElement('div');
+  d.style.cssText = 'position:fixed;left:8px;top:8px;z-index:99;background:rgba(6,8,11,.92);'
+    + 'color:#EDE9E1;font:11px/1.5 ui-monospace,Menlo,monospace;padding:8px 10px;'
+    + 'pointer-events:none;white-space:pre';
+  document.body.appendChild(d);
+  var strip = document.querySelector('.strip'), mon = document.querySelector('.mon__h');
+  function rect(el){ if (!el) return '—';
+    var r = el.getBoundingClientRect(); return Math.round(r.top) + '..' + Math.round(r.bottom); }
+  function tick(){
+    var vv = window.visualViewport;
+    d.textContent = 'inner ' + innerWidth + 'x' + innerHeight
+      + '\nclient ' + document.documentElement.clientWidth + 'x' + document.documentElement.clientHeight
+      + (vv ? '\nvisual ' + Math.round(vv.width) + 'x' + Math.round(vv.height) + ' offs ' + Math.round(vv.offsetTop)
+            : '\nvisualViewport нет')
+      + '\nscrollY ' + Math.round(scrollY)
+      + '\nstrip ' + rect(strip) + ' op ' + (strip ? getComputedStyle(strip).opacity : '—')
+      + '\nплашка ' + rect(mon)
+      + '\n' + navigator.userAgent.slice(-70);
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
 </script>
 </body>
 </html>
