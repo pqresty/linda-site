@@ -499,11 +499,22 @@ span.row__v{border-bottom:0}
 // браузерах — телеграма в первую очередь — svh считается от всего экрана, а не
 // от видимой части, и низ героя с логотипом уезжает под нижнюю панель.
 // innerHeight в них отдаёт именно видимую высоту.
+//
+// Но замеряем её только при смене ШИРИНЫ окна, то есть при повороте. В сафари
+// адресная строка сворачивается прямо во время прокрутки, innerHeight при этом
+// растёт и шлёт resize; если идти за ним, первый экран растёт под пальцем,
+// вся страница ниже съезжает — снято на видео с телефона, скачок около 60 px.
+// Замер на загрузке лечит телеграм, отказ от пересчёта по высоте — дёрганье.
 (function(){
-  function fit(){ document.documentElement.style.setProperty('--app-h', innerHeight + 'px'); }
+  var seen = -1;
+  function fit(){
+    if (innerWidth === seen) return;
+    seen = innerWidth;
+    document.documentElement.style.setProperty('--app-h', innerHeight + 'px');
+  }
   fit();
   addEventListener('resize', fit);
-  addEventListener('orientationchange', fit);
+  addEventListener('orientationchange', function(){ seen = -1; fit(); });
 })();
 
 // [hero-fade] — метка для transitions.py: он вырезает этот блок целиком,
