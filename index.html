@@ -229,6 +229,16 @@ span.row__v{border-bottom:0}
      обычный position:fixed с тем же фоном, обрезанный по высоте плашки. */
   .mon__h::before{display:none}
   .strip{display:block}
+  /* Встроенный браузер телеграма прячет свою верхнюю панель при прокрутке и
+     открывает над нулём вьюпорта полосу ~60pt, о которой страница не знает:
+     inner, client и visualViewport так и отдают прежнюю высоту с offs 0
+     (снято отладкой с живого устройства), и ни fixed, ни sticky туда не
+     дотягиваются. Строки в этой полосе шли поверх плашки месяца. Шторка
+     поднята ВЫШЕ нуля: в обычных браузерах эта область не отображается
+     вовсе, так что там её не существует, а в телеграме она накрывает полосу.
+     Включается вместе с полосой-подложкой. */
+  .afisha.on::before{content:"";position:fixed;left:0;right:0;top:-160px;height:160px;
+    z-index:4;pointer-events:none;background:var(--ink)}
 
   /* дата слева, название по центру, кнопка справа от названия — в две строки */
   .book{flex-wrap:nowrap;gap:14px;padding:18px 14px}
@@ -475,7 +485,9 @@ span.row__v{border-bottom:0}
   // включаем, пока афиша перекрывает верхнюю кромку экрана
   function upd(){
     var r = af.getBoundingClientRect();
-    strip.classList.toggle('on', r.top <= 0 && r.bottom > 80);
+    var on = r.top <= 0 && r.bottom > 80;
+    strip.classList.toggle('on', on);
+    af.classList.toggle('on', on);
   }
 
   sync(); upd();
