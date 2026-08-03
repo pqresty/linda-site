@@ -107,7 +107,7 @@ a{color:inherit}
    background-attachment:fixed игнорирует. */
 .bg{position:fixed;inset:0;z-index:0;pointer-events:none;
   background-image:linear-gradient(rgba(6,8,11,var(--scrim)),rgba(6,8,11,var(--scrim))),
-                   url("assets/collage-sheet.webp?v=ec942b78");
+                   url("assets/collage-sheet.webp?v=f85f5b47");
   background-size:cover,cover;background-position:center,center;
   filter:grayscale(.55) contrast(1.05)}
 
@@ -121,7 +121,7 @@ a{color:inherit}
 
 .strip{display:none;position:fixed;inset:0;z-index:4;pointer-events:none;opacity:0;
   background-image:linear-gradient(rgba(6,8,11,var(--scrim)),rgba(6,8,11,var(--scrim))),
-                   url("assets/collage-sheet-sm.webp?v=a3cab7da");
+                   url("assets/collage-sheet-sm.webp?v=46d05c59");
   background-size:cover,cover;background-position:center,center;
   filter:grayscale(.55) contrast(1.05);
   clip-path:inset(0 0 calc(100% - var(--plate-h,64px)) 0)}
@@ -139,7 +139,7 @@ a{color:inherit}
    и стыка не видно. */
 .mon__h::before{content:"";position:absolute;inset:0;z-index:-1;
   background-image:linear-gradient(rgba(6,8,11,var(--scrim)),rgba(6,8,11,var(--scrim))),
-                   url("assets/collage-sheet.webp?v=ec942b78");
+                   url("assets/collage-sheet.webp?v=f85f5b47");
   background-size:cover,cover;background-position:center,center;
   background-attachment:fixed,fixed;
   filter:grayscale(.55) contrast(1.05)}
@@ -178,7 +178,7 @@ span.row__v{border-bottom:0}
   /* на узком экране cover раздувает полотно до одной колонки кадров —
      берём лёгкий лист и мельчим до текстуры */
   .bg{background-image:linear-gradient(rgba(6,8,11,var(--scrim)),rgba(6,8,11,var(--scrim))),
-        url("assets/collage-sheet-sm.webp?v=a3cab7da")}
+        url("assets/collage-sheet-sm.webp?v=46d05c59")}
   /* На телефоне кадр дорощен снизу, поэтому под группой стало больше тёмного
      поля — знаку есть куда вырасти. Мешал ему только указатель «Афиша»,
      стоявший на одной высоте; знак занимает всю колонку набора — от поля до
@@ -522,7 +522,7 @@ span.row__v{border-bottom:0}
 (function(){
   var hero = document.querySelector('.hero'),
       word = document.querySelector('.top h1'),
-      mon  = document.querySelector('.mon__h');
+      row  = document.querySelector('.afisha .row');
   if (!hero || !word) return;
   var last = -1, from = 0, span = 1, fade = false;
 
@@ -542,12 +542,12 @@ span.row__v{border-bottom:0}
     // растворения — то есть с резаной кромкой на стыке с коллажем.
     fade = innerWidth > 820;
     if (!fade) { hero.style.opacity = ''; hero.style.visibility = ''; return; }
-    // Конец — не когда у месяца показалась верхушка, а когда он вышел целиком.
-    // Иначе весь путь укладывается в зазор между «Афишей» и «Августом», а он
-    // после сокращения отступов невелик: заголовок за это время проходит по
-    // экрану меньше пятой части, и фото пропадает будто при неподвижной странице.
+    // Конец пути — не месяц, а первая строка афиши, целиком вышедшая из-под
+    // нижней кромки: к этому моменту внимание уже на датах, и снимку пора уйти.
+    // Раньше конец стоял на месяце, но зазор между «Афишей» и «Августом» после
+    // сокращения отступов мал, и растворение выходило слишком ранним.
     var a = docTop(word),
-        b = mon ? docTop(mon) + mon.offsetHeight
+        b = row ? docTop(row) + row.offsetHeight
                 : a + word.getBoundingClientRect().height;
     from = a - vh;
     span = Math.max(1, b - a);
