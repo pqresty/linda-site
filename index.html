@@ -245,9 +245,16 @@ span.row__v{border-bottom:0}
     z-index:4;pointer-events:none;background:var(--ink)}
 
   /* дата слева, название по центру, кнопка справа от названия — в две строки */
-  .book{flex-wrap:nowrap;gap:14px;padding:18px 14px}
+  /* Имя, телефон и телеграм держим одной строкой, как и раньше, а почта
+     в неё уже не влезает — уводим её на свою строку целиком, а не рвём
+     переносом посередине адреса. */
+  .book{flex-wrap:wrap;gap:12px 14px;padding:18px 14px}
   .book__c{font-size:11.5px;letter-spacing:.1em}
   .book__who{font-size:11.5px;letter-spacing:.1em}
+  /* Разрядку у адреса убираем — с ней он занимает 323 px при 307 доступных
+     на iPhone поуже. И снимаем запрет переноса: на совсем узких экранах
+     пусть лучше разорвётся, чем вылезет за рамку. */
+  .book__c--mail{flex:1 0 100%;letter-spacing:.01em;white-space:normal;overflow-wrap:anywhere}
 
   .row{grid-template-columns:46px minmax(0,1fr) auto;gap:3px 12px;align-items:center;
        padding:11px 12px;margin:0 -12px}
@@ -467,6 +474,7 @@ span.row__v{border-bottom:0}
     <b class="book__who">Михаил</b>
     <a class="book__c" href="tel:+79151528223">+7 915 152-82-23</a>
     <a class="book__c" href="https://t.me/pqresty" target="_blank" rel="noopener noreferrer">@pqresty</a>
+    <a class="book__c book__c--mail" href="mailto:booking@lindaconcerts.ru">booking@lindaconcerts.ru</a>
   </div>
 
   <p class="credit">Фотографии — <a href="https://www.instagram.com/ph.krasnaya"
