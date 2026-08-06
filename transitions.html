@@ -91,6 +91,10 @@ a{color:inherit}
 .soc__l a{flex:1 1 150px;background:var(--ink);padding:20px 18px;text-decoration:none;
   font-weight:600;font-size:12px;letter-spacing:.18em;text-transform:uppercase;transition:.16s}
 .soc__l a:hover,.soc__l a:focus-visible{background:var(--ember);color:#0B0603}
+/* подпись автора съёмки — весь сайт снят одним фотографом */
+.credit{margin:clamp(24px,4.5vh,44px) 0 0;font-size:12px;letter-spacing:.05em;color:var(--ash)}
+.credit a{text-decoration:none;border-bottom:1px solid rgba(121,130,141,.55);transition:.16s;white-space:nowrap}
+.credit a:hover,.credit a:focus-visible{color:var(--ember);border-bottom-color:var(--ember)}
 
 /* заголовок стоит уже на коллаже — чёрной перебивки между фото и афишей нет */
 .top{position:relative;z-index:1;
@@ -482,6 +486,9 @@ span.row__v{border-bottom:0}
     <a class="book__c" href="tel:+79151528223">+7 915 152-82-23</a>
     <a class="book__c" href="https://t.me/pqresty" target="_blank" rel="noopener noreferrer">@pqresty</a>
   </div>
+
+  <p class="credit">Фотографии — <a href="https://www.instagram.com/ph.krasnaya"
+     target="_blank" rel="noopener noreferrer">фотограф Дарья Красная</a></p>
   </div>
 </nav>
 
