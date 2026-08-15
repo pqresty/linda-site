@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ЛИNДА — примерка гарнитур на знак</title>
+<style>
+@font-face{font-family:"Unbounded";src:url("assets/fonts/Unbounded.woff2") format("woff2");font-weight:800;font-display:swap}
+@font-face{font-family:"Jost";src:url("assets/fonts/Jost.woff2") format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"Onest";src:url("assets/fonts/Onest.woff2") format("woff2");font-weight:800;font-display:swap}
+@font-face{font-family:"Montserrat";src:url("assets/fonts/Montserrat.woff2") format("woff2");font-weight:800;font-display:swap}
+
+:root{
+  --ink:#06080B; --stone:#131A22; --bone:#EDE9E1; --ash:#6B7683;
+  --halo:#4FD8E4; --ember:#E8642F;
+  --sys:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,monospace;
+  --gut:clamp(20px,5vw,64px);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--sys);-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+
+.wrap{max-width:1180px;margin:0 auto;padding:clamp(48px,9vh,96px) var(--gut) 110px}
+.kicker{font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--ash);margin:0 0 14px}
+h1{margin:0 0 16px;font-weight:200;font-size:clamp(28px,5vw,58px);letter-spacing:-.015em;line-height:1.05}
+.lead{margin:0 0 44px;max-width:62ch;line-height:1.62;color:#B9BFC8;font-size:clamp(14px,1.5vw,16.5px)}
+
+.ref{margin:0 0 12px;border:1px solid rgba(237,233,225,.18)}
+.ref img{width:100%}
+.refcap{margin:0 0 52px;font-size:11px;color:var(--ash);letter-spacing:.05em;line-height:1.6}
+
+.card{border:1px solid rgba(237,233,225,.16);margin-bottom:16px;background:linear-gradient(180deg,rgba(19,26,34,.5),transparent)}
+.card__h{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  padding:13px 20px;border-bottom:1px solid rgba(237,233,225,.14)}
+.card__h b{font-weight:400;font-size:12px;letter-spacing:.26em;text-transform:uppercase}
+.card__h span{font-size:11px;color:var(--ash);letter-spacing:.04em}
+.card__h .w{color:var(--halo);font-family:var(--mono);font-size:11px}
+
+.spec{padding:26px 20px 22px;overflow-x:auto}
+.spec p{margin:0;line-height:1;white-space:nowrap;
+  font-size:clamp(38px,9.4vw,116px);font-weight:800}
+.tight{letter-spacing:-.005em}
+
+.row{display:grid;grid-template-columns:78px 1fr auto;gap:16px;align-items:center;
+  padding:13px 20px;border-top:1px solid rgba(237,233,225,.1)}
+.row__d{font-family:var(--mono);font-size:20px;color:var(--halo);font-variant-numeric:tabular-nums}
+.row__c{font-size:20px;font-weight:600}
+.row__c em{font-style:normal;display:block;font-size:12.5px;color:#9AA3AE;font-weight:400;margin-top:3px}
+.row__b{border:1px solid rgba(237,233,225,.4);padding:10px 18px;font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+
+.f-unbounded .spec p,.f-unbounded .row__c{font-family:"Unbounded",var(--sys)}
+.f-jost .spec p,.f-jost .row__c{font-family:"Jost",var(--sys)}
+.f-onest .spec p,.f-onest .row__c{font-family:"Onest",var(--sys)}
+.f-montserrat .spec p,.f-montserrat .row__c{font-family:"Montserrat",var(--sys)}
+.f-jost .spec p{font-weight:700}
+
+.verdict{margin-top:48px;padding:26px 24px;border:1px solid rgba(232,100,47,.4);background:rgba(232,100,47,.07)}
+.verdict h2{margin:0 0 14px;font-weight:400;font-size:15px;letter-spacing:.22em;text-transform:uppercase;color:var(--ember)}
+.verdict ul{margin:0;padding-left:1.1em;display:grid;gap:11px;line-height:1.6;color:#C6CBD3;font-size:14.5px;max-width:68ch}
+.verdict b{color:var(--bone);font-weight:600}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="kicker">Линда · подбор гарнитуры под знак</p>
+  <h1>Четыре кандидата против настоящего логотипа</h1>
+  <p class="lead">Сверху — знак с вашей афиши 2025 года. Ниже те же пять букв, набранные бесплатными кириллическими гарнитурами в тяжёлом начертании. Сравнивайте три вещи: острые ли вершины у Л, А и Д, нарисована ли Д треугольником, и зеркалит ли И латинскую N.</p>
+
+  <div class="ref"><img src="assets/logo-ref.png" alt="Логотип ЛИNДА с официальной афиши 2025 года"></div>
+  <p class="refcap">Эталон — афиша «ЛИНДА. АФИША 2025-1 (ШАБЛОН).psd» из промопака.<br>Острые вершины, Д треугольником, плоские терминалы, плотная посадка, чистый белый.</p>
+
+  <div class="card f-jost">
+    <div class="card__h"><b>Jost*</b><span>геометрический, по мотивам Futura</span><span class="w">700 · 4,3 КБ</span></div>
+    <div class="spec"><p class="tight">ЛИNДА</p></div>
+    <div class="row"><span class="row__d">05.08</span><span class="row__c">Москва<em>Petter · среда · 20:00</em></span><span class="row__b">Билет</span></div>
+  </div>
+
+  <div class="card f-unbounded">
+    <div class="card__h"><b>Unbounded</b><span>геометрический дисплейный</span><span class="w">800 · 12,8 КБ</span></div>
+    <div class="spec"><p class="tight">ЛИNДА</p></div>
+    <div class="row"><span class="row__d">05.08</span><span class="row__c">Москва<em>Petter · среда · 20:00</em></span><span class="row__b">Билет</span></div>
+  </div>
+
+  <div class="card f-onest">
+    <div class="card__h"><b>Onest</b><span>кириллический гротеск</span><span class="w">800 · 6,2 КБ</span></div>
+    <div class="spec"><p class="tight">ЛИNДА</p></div>
+    <div class="row"><span class="row__d">05.08</span><span class="row__c">Москва<em>Petter · среда · 20:00</em></span><span class="row__b">Билет</span></div>
+  </div>
+
+  <div class="card f-montserrat">
+    <div class="card__h"><b>Montserrat</b><span>геометрический, самый расхожий</span><span class="w">800 · 8,7 КБ</span></div>
+    <div class="spec"><p class="tight">ЛИNДА</p></div>
+    <div class="row"><span class="row__d">05.08</span><span class="row__c">Москва<em>Petter · среда · 20:00</em></span><span class="row__b">Билет</span></div>
+  </div>
+
+  <div class="verdict">
+    <h2>На что смотреть</h2>
+    <ul>
+      <li><b>Jost*</b> — прямой потомок Futura: острые вершины у Л, А и Д, треугольная Д. Геометрия ближе всех к знаку. Минус — в 700 он легче вашего логотипа.</li>
+      <li><b>Unbounded</b> — тяжёлый и характерный, но вершины притуплены, буквы шире. Знак станет мягче.</li>
+      <li><b>Onest</b> — аккуратный и очень читаемый в мелком кегле, но геометрия нейтральная: у Д прямоугольная чаша, не треугольник. Для строк афиши хорош, для знака мимо.</li>
+      <li><b>Montserrat</b> — рабочий вариант, но вершина А почти плоская, и он стоит на каждом втором сайте. Именно та безликость, от которой уходим.</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ЛИNДА — герой, два варианта</title>
+<style>
+@font-face{font-family:"Jost";src:url("assets/fonts/Jost-500.woff2") format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"Jost";src:url("assets/fonts/Jost-600.woff2") format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Jost";src:url("assets/fonts/Jost-800.woff2") format("woff2");font-weight:800;font-display:swap}
+:root{
+  --ink:#06080B; --bone:#EDE9E1; --ash:#79828D; --ember:#E8642F;
+  --face:"Jost","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --gut:clamp(20px,5vw,64px);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--face);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+
+.rail{position:fixed;inset:auto 0 0 0;z-index:90;display:flex;justify-content:center;gap:2px;padding:0 10px 10px;pointer-events:none}
+.rail a{pointer-events:auto;font-size:10px;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;
+  background:rgba(6,8,11,.86);backdrop-filter:blur(14px);border:1px solid rgba(237,233,225,.16);padding:9px 14px}
+.rail a:hover{border-color:var(--ember);color:var(--ember)}
+
+.brief{padding:clamp(44px,8vh,84px) var(--gut) clamp(24px,4vh,40px);max-width:940px;margin:0 auto}
+.brief p.k{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--ash);margin:0 0 12px}
+.brief h1{margin:0 0 14px;font-weight:800;font-size:clamp(28px,5vw,54px);letter-spacing:-.02em;line-height:1.04}
+.brief p{margin:0;max-width:62ch;line-height:1.6;color:#B9BFC8;font-size:clamp(14px,1.5vw,16.5px)}
+
+.v{position:relative;height:92vh;height:92svh;min-height:520px;overflow:hidden;display:grid;isolation:isolate;
+  border-top:1px solid rgba(237,233,225,.14)}
+.v__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.v__scrim{position:absolute;inset:0;z-index:1}
+.v__tag{position:absolute;top:0;left:0;z-index:40;display:flex;align-items:baseline;gap:12px;
+  padding:15px var(--gut);font-size:10px;letter-spacing:.26em;text-transform:uppercase}
+.v__tag i{font-style:normal;color:var(--ember)}
+.v__tag s{text-decoration:none;color:var(--ash)}
+.logo{height:auto;color:var(--bone);display:block}
+.tag{margin:0;font-size:clamp(10.5px,1.4vw,15px);letter-spacing:.3em;text-transform:uppercase;color:#C9CED6}
+
+/* --- A: кроп справа глубже, знак снизу слева --- */
+#a .v__img{object-position:52% 70%}
+#a .v__scrim{background:
+  linear-gradient(to top,rgba(6,8,11,.95) 0%,rgba(6,8,11,.6) 22%,rgba(6,8,11,.05) 54%),
+  linear-gradient(100deg,rgba(6,8,11,.6) 0%,rgba(6,8,11,.12) 42%,transparent 70%)}
+#a .txt{position:relative;z-index:2;align-self:end;justify-items:start;display:grid;
+  gap:clamp(13px,2.2vh,22px);padding:0 var(--gut) clamp(52px,9vh,104px)}
+#a .logo{width:min(64vw,640px)}
+
+/* --- B: кадр как есть, знак в правом верхнем углу --- */
+#b .v__img{object-position:44% 66%}
+#b .v__scrim{background:
+  linear-gradient(to bottom,rgba(6,8,11,.82) 0%,rgba(6,8,11,.34) 26%,transparent 52%),
+  linear-gradient(to top,rgba(6,8,11,.7) 0%,transparent 30%)}
+#b .txt{position:relative;z-index:2;align-self:start;justify-self:end;justify-items:end;display:grid;
+  gap:clamp(11px,1.8vh,18px);padding:clamp(46px,8vh,90px) var(--gut) 0;text-align:right}
+#b .logo{width:min(46vw,440px)}
+
+/* указатель «снизу афиша» */
+.cue{position:absolute;z-index:3;right:var(--gut);bottom:clamp(30px,6vh,64px);
+  display:grid;justify-items:center;gap:10px;text-decoration:none;color:#C9CED6}
+#b .cue{right:auto;left:var(--gut)}
+.cue span{font-size:10.5px;letter-spacing:.28em;text-transform:uppercase}
+.cue i{display:block;width:1px;height:44px;background:linear-gradient(#C9CED6,transparent);
+  transform-origin:top;animation:cue 2.4s ease-in-out infinite}
+@keyframes cue{0%,100%{transform:scaleY(.45);opacity:.5}50%{transform:scaleY(1);opacity:1}}
+
+/* кусок афиши, чтобы был виден стык */
+.peek{padding:clamp(15px,2.5vh,29px) 0 60px}
+.peek__in{max-width:940px;margin:0 auto;padding:0 var(--gut)}
+.peek h2{margin:0 0 10px;font-weight:600;font-size:clamp(24px,4.4vw,44px);letter-spacing:-.01em;
+  padding-bottom:12px;border-bottom:1px solid rgba(237,233,225,.32)}
+.peek .row{display:grid;grid-template-columns:64px 128px 1fr auto;gap:20px;align-items:center;
+  padding:16px 0;border-bottom:1px solid rgba(237,233,225,.11)}
+.peek .d{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-weight:500;font-size:clamp(28px,3.6vw,40px);
+  line-height:1;letter-spacing:-.03em}
+.peek .m{font-size:13px;letter-spacing:.13em;text-transform:uppercase;color:var(--ash)}
+.peek .c{font-weight:600;font-size:clamp(20px,2.7vw,31px);letter-spacing:-.01em}
+.peek .c em{display:block;font-style:normal;font-weight:500;font-size:15px;color:#A8B0BA;margin-top:4px}
+.peek .b{border:1px solid rgba(237,233,225,.46);padding:13px 26px;font-weight:600;font-size:12.5px;
+  letter-spacing:.18em;text-transform:uppercase;white-space:nowrap}
+
+@media (max-width:760px){
+  #b .logo{width:min(62vw,360px)}
+  .peek .row{grid-template-columns:52px 1fr auto;gap:4px 12px}
+  .peek .d{grid-row:1/span 2;font-size:25px}
+  .peek .m{grid-column:2;font-size:10.5px}
+  .peek .c{grid-column:2;font-size:18px}
+  .peek .b{grid-column:3;grid-row:1/span 2;padding:9px 14px;font-size:10.5px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+
+<nav class="rail">
+  <a href="#a">A · кроп справа</a>
+  <a href="#b">B · знак вверху справа</a>
+</nav>
+
+<header class="brief">
+  <p class="k">Линда · первый экран, два варианта</p>
+  <h1>Куда девать правую тёмную часть кадра</h1>
+  <p>В обоих вариантах высота экрана 92% — верх афиши намеренно выглядывает снизу, чтобы было однозначно, что там продолжение. Плюс указатель «Афиша» со стрелкой-линией.</p>
+</header>
+
+<!-- ============ A ============ -->
+<section class="v" id="a">
+  <img class="v__img" src="assets/hero/hero-9926-tight.webp"
+       alt="Линда с группой на сцене, зал с поднятыми руками">
+  <div class="v__scrim" aria-hidden="true"></div>
+  <div class="v__tag"><i>A</i><s>кроп справа глубже · знак снизу слева</s></div>
+  <div class="txt">
+    <svg class="logo" viewBox="0 0 461.1 100" role="img" aria-label="ЛИNДА">
+      <g fill="currentColor" fill-rule="evenodd">
+        <path d="M31.1 0 H53.3 L85 102 H-0.6 Z M39.9 14 L66.8 102 H13.8 Z"/>
+        <path d="M94.8 0 H111.1 V70 L152.8 0 H170.1 V102 H152.8 V30 L111.1 102 H94.8 Z"/>
+        <path d="M188.2 0 H204.9 L246.5 70 V0 H263.5 V102 H246.5 L204.9 30 V102 H188.2 Z"/>
+        <path d="M309.7 0 H332.3 L366.7 102 H276.4 Z M319.3 10.4 L341.9 85 H296.7 Z"/>
+        <path d="M406.2 0 H427.5 L461.8 102 H372.6 Z M415 13.4 L429.7 62 H400.3 Z M394.4 80 H435.8 L443.5 102 H386.9 Z"/>
+      </g>
+    </svg>
+    <p class="tag">Музыка пространства без границ</p>
+  </div>
+  <a class="cue" href="#peek"><span>Афиша</span><i></i></a>
+</section>
+
+<!-- ============ B ============ -->
+<section class="v" id="b">
+  <img class="v__img" src="assets/hero/hero-9926.webp"
+       alt="Линда с группой на сцене, зал с поднятыми руками">
+  <div class="v__scrim" aria-hidden="true"></div>
+  <div class="v__tag"><i>B</i><s>кадр как есть · знак вверху справа</s></div>
+  <div class="txt">
+    <svg class="logo" viewBox="0 0 461.1 100" role="img" aria-label="ЛИNДА">
+      <g fill="currentColor" fill-rule="evenodd">
+        <path d="M31.1 0 H53.3 L85 102 H-0.6 Z M39.9 14 L66.8 102 H13.8 Z"/>
+        <path d="M94.8 0 H111.1 V70 L152.8 0 H170.1 V102 H152.8 V30 L111.1 102 H94.8 Z"/>
+        <path d="M188.2 0 H204.9 L246.5 70 V0 H263.5 V102 H246.5 L204.9 30 V102 H188.2 Z"/>
+        <path d="M309.7 0 H332.3 L366.7 102 H276.4 Z M319.3 10.4 L341.9 85 H296.7 Z"/>
+        <path d="M406.2 0 H427.5 L461.8 102 H372.6 Z M415 13.4 L429.7 62 H400.3 Z M394.4 80 H435.8 L443.5 102 H386.9 Z"/>
+      </g>
+    </svg>
+    <p class="tag">Музыка пространства без границ</p>
+  </div>
+  <a class="cue" href="#peek"><span>Афиша</span><i></i></a>
+</section>
+
+<section class="peek" id="peek">
+  <div class="peek__in">
+    <h2>Август</h2>
+    <div class="row">
+      <span class="d">05</span><span class="m">ср · 20:00</span>
+      <span class="c">Москва<em>Petter</em></span><span class="b">Билет</span>
+    </div>
+    <div class="row">
+      <span class="d">06</span><span class="m">чт · 20:00</span>
+      <span class="c">Москва<em>16 Тонн</em></span><span class="b">Билет</span>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

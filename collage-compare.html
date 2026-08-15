@@ -1,0 +1,135 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ЛИNДА — коллаж: сегодня против только DSCF</title>
+<style>
+@font-face{font-family:"Jost";src:url("assets/fonts/Jost-500.woff2") format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"Jost";src:url("assets/fonts/Jost-600.woff2") format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Jost";src:url("assets/fonts/Jost-800.woff2") format("woff2");font-weight:800;font-display:swap}
+:root{--ink:#06080B;--bone:#EDE9E1;--ash:#79828D;--ember:#E8642F;
+  --mono:ui-monospace,"SF Mono",Menlo,monospace;
+  --face:"Jost","Helvetica Neue",Helvetica,Arial,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--face);
+  -webkit-font-smoothing:antialiased;padding:48px 28px 90px}
+.k{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--ash);margin:0 0 12px}
+h1{margin:0 0 10px;font-weight:800;font-size:34px;letter-spacing:-.02em}
+.lead{margin:0 0 44px;max-width:70ch;line-height:1.6;color:#B9BFC8;font-size:15px}
+h2{margin:54px 0 18px;font-weight:600;font-size:13px;letter-spacing:.26em;text-transform:uppercase;color:var(--ember)}
+.grid{display:grid;grid-template-columns:repeat(2,max-content);gap:26px 26px;justify-content:start}
+.cap{margin:0 0 8px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ash)}
+.cap b{color:var(--bone);font-weight:600}
+
+/* панель = уменьшенный экран: внутри рамка натурального размера, снаружи масштаб */
+.box{position:relative;overflow:hidden;border:1px solid rgba(237,233,225,.18)}
+.box-d{width:620px;height:calc(620px * 860 / 1440)}
+.box-m{width:300px;height:calc(300px * 852 / 393)}
+.frame{position:absolute;left:0;top:0;transform-origin:top left}
+.frame-d{width:1440px;height:860px;transform:scale(calc(620 / 1440))}
+.frame-m{width:393px;height:852px;transform:scale(calc(300 / 393))}
+
+/* фон — как на сайте: затемнение поверх коллажа, обесцвечивание, контраст */
+.bg{position:absolute;inset:0;background-size:cover,cover;background-position:center,center;
+  filter:grayscale(.55) contrast(1.05)}
+.bg-cur-d{background-image:linear-gradient(rgba(6,8,11,.82),rgba(6,8,11,.82)),url("assets/collage-sheet.webp")}
+.bg-new-d{background-image:linear-gradient(rgba(6,8,11,.82),rgba(6,8,11,.82)),url("assets/collage-sheet-dscf.webp")}
+.bg-cur-m{background-image:linear-gradient(rgba(6,8,11,.79),rgba(6,8,11,.79)),url("assets/collage-sheet-sm.webp")}
+.bg-new-m{background-image:linear-gradient(rgba(6,8,11,.79),rgba(6,8,11,.79)),url("assets/collage-sheet-dscf-sm.webp")}
+
+/* текст афиши поверх — размеры боевые */
+.ov{position:absolute;inset:0;display:flex;flex-direction:column}
+.ov-d{padding:26px 64px 0}
+.ov-d .h1{font-weight:800;font-size:86px;letter-spacing:-.02em;line-height:1;margin:0 0 41px}
+.ov-d .mon{font-weight:600;font-size:44px;letter-spacing:-.01em;padding:16px 0 12px;
+  border-bottom:1px solid rgba(237,233,225,.32);margin-bottom:10px}
+.ov-d .row{display:grid;grid-template-columns:64px 128px 1fr auto;gap:20px;align-items:center;
+  padding:16px 0;border-bottom:1px solid rgba(237,233,225,.11)}
+.ov-d .d{font-family:var(--mono);font-weight:500;font-size:40px;line-height:1;letter-spacing:-.03em}
+.ov-d .m{font-size:13px;letter-spacing:.13em;text-transform:uppercase;color:var(--ash);line-height:1.45}
+.ov-d .c{display:grid;gap:4px;font-weight:600;font-size:31px;letter-spacing:-.01em;line-height:1.1}
+.ov-d .v{font-weight:500;font-size:16px;color:#A8B0BA;width:max-content;
+  border-bottom:1px solid rgba(168,176,186,.34)}
+.ov-d .b{display:inline-flex;align-items:center;justify-content:center;min-width:9.5em;
+  padding:13px 20px;font-weight:600;font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;
+  border:1px solid rgba(237,233,225,.46);white-space:nowrap}
+.ov-m{padding:8px 20px 0}
+.ov-m .h1{font-weight:800;font-size:38px;letter-spacing:-.02em;line-height:1;margin:0 0 20px}
+.ov-m .mon{font-weight:600;font-size:24px;padding:16px 0 12px;
+  border-bottom:1px solid rgba(237,233,225,.32);margin-bottom:10px}
+.ov-m .row{display:grid;grid-template-columns:46px minmax(0,1fr) auto;gap:3px 12px;align-items:center;
+  padding:11px 0;border-bottom:1px solid rgba(237,233,225,.11)}
+.ov-m .d{grid-row:1/span 2;font-family:var(--mono);font-weight:500;font-size:25px;line-height:1;letter-spacing:-.03em}
+.ov-m .m{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ash)}
+.ov-m .c{grid-column:2;font-weight:600;font-size:18px;line-height:1.15}
+.ov-m .v{display:block;font-weight:500;font-size:12.5px;color:#A8B0BA;width:max-content;
+  border-bottom:1px solid rgba(168,176,186,.34)}
+.ov-m .b{grid-column:3;grid-row:1/span 2;padding:9px 14px;font-weight:600;font-size:10.5px;
+  letter-spacing:.14em;text-transform:uppercase;border:1px solid rgba(237,233,225,.46);white-space:nowrap}
+</style>
+
+<p class="k">Линда · переговоры с фотографами</p>
+<h1>Коллаж: сегодня против «только DSCF»</h1>
+<p class="lead">Слева текущее полотно (22 DSCF + 10 IMG), справа пересобранное только из DSCF — 32 разных кадра из 34, повторов не понадобилось. Светлые кадры отогнаны от левого края, где идёт основной текст. Зонирование считается по яркости пятен света, а не по средней яркости кадра — иначе тёмный кадр с одной вспышкой проскакивал влево. Пятна по колонкам: 136 у левого края, до 250 в центре и справа; на телефоне видимая пара колонок — 174 слева против 228 справа. Плюс точечные правки: клавишник в дыму опущен на ряд, на его месте тёмный кадр 9237, на десктопе пара плиток переставлена по разметке. Принцип непохожести соседей прежний. Обработка и затемнение боевые: 0.82 на десктопе, 0.79 на мобилке.</p>
+
+<h2>Десктоп · чистое полотно</h2>
+<div class="grid">
+  <div><p class="cap"><b>Сегодня</b> · DSCF+IMG</p>
+    <div class="box box-d"><div class="frame frame-d"><div class="bg bg-cur-d"></div></div></div></div>
+  <div><p class="cap"><b>Только DSCF</b></p>
+    <div class="box box-d"><div class="frame frame-d"><div class="bg bg-new-d"></div></div></div></div>
+</div>
+
+<h2>Десктоп · с текстом афиши</h2>
+<div class="grid">
+  <div><p class="cap"><b>Сегодня</b> · DSCF+IMG</p>
+    <div class="box box-d"><div class="frame frame-d"><div class="bg bg-cur-d"></div>
+      <div class="ov ov-d"><div class="h1">Афиша</div><div class="mon">Август</div>
+        <div class="row"><span class="d">05</span><span class="m">СР · 20:00</span>
+          <span class="c">Москва<span class="v">Petter</span></span><span class="b">Билеты</span></div>
+        <div class="row"><span class="d">06</span><span class="m">ЧТ · 20:00</span>
+          <span class="c">Москва<span class="v">16 Тонн</span></span><span class="b">Билеты</span></div>
+        <div class="row"><span class="d">20</span><span class="m">ЧТ · 20:30</span>
+          <span class="c">Гатчина<span class="v">Поместье Грув</span></span><span class="b">Билеты</span></div>
+      </div></div></div></div>
+  <div><p class="cap"><b>Только DSCF</b></p>
+    <div class="box box-d"><div class="frame frame-d"><div class="bg bg-new-d"></div>
+      <div class="ov ov-d"><div class="h1">Афиша</div><div class="mon">Август</div>
+        <div class="row"><span class="d">05</span><span class="m">СР · 20:00</span>
+          <span class="c">Москва<span class="v">Petter</span></span><span class="b">Билеты</span></div>
+        <div class="row"><span class="d">06</span><span class="m">ЧТ · 20:00</span>
+          <span class="c">Москва<span class="v">16 Тонн</span></span><span class="b">Билеты</span></div>
+        <div class="row"><span class="d">20</span><span class="m">ЧТ · 20:30</span>
+          <span class="c">Гатчина<span class="v">Поместье Грув</span></span><span class="b">Билеты</span></div>
+      </div></div></div></div>
+</div>
+
+<h2>Мобилка · чистое полотно</h2>
+<div class="grid">
+  <div><p class="cap"><b>Сегодня</b> · DSCF+IMG</p>
+    <div class="box box-m"><div class="frame frame-m"><div class="bg bg-cur-m"></div></div></div></div>
+  <div><p class="cap"><b>Только DSCF</b></p>
+    <div class="box box-m"><div class="frame frame-m"><div class="bg bg-new-m"></div></div></div></div>
+</div>
+
+<h2>Мобилка · с текстом афиши</h2>
+<div class="grid">
+  <div><p class="cap"><b>Сегодня</b> · DSCF+IMG</p>
+    <div class="box box-m"><div class="frame frame-m"><div class="bg bg-cur-m"></div>
+      <div class="ov ov-m"><div class="h1">Афиша</div><div class="mon">Август</div>
+        <div class="row"><span class="d">05</span><span class="m">СР · 20:00</span>
+          <span class="c">Москва<span class="v">Petter</span></span><span class="b">Билеты</span></div>
+        <div class="row"><span class="d">06</span><span class="m">ЧТ · 20:00</span>
+          <span class="c">Москва<span class="v">16 Тонн</span></span><span class="b">Билеты</span></div>
+        <div class="row"><span class="d">20</span><span class="m">ЧТ · 20:30</span>
+          <span class="c">Гатчина<span class="v">Поместье Грув</span></span><span class="b">Билеты</span></div>
+      </div></div></div></div>
+  <div><p class="cap"><b>Только DSCF</b></p>
+    <div class="box box-m"><div class="frame frame-m"><div class="bg bg-new-m"></div>
+      <div class="ov ov-m"><div class="h1">Афиша</div><div class="mon">Август</div>
+        <div class="row"><span class="d">05</span><span class="m">СР · 20:00</span>
+          <span class="c">Москва<span class="v">Petter</span></span><span class="b">Билеты</span></div>
+        <div class="row"><span class="d">06</span><span class="m">ЧТ · 20:00</span>
+          <span class="c">Москва<span class="v">16 Тонн</span></span><span class="b">Билеты</span></div>
+        <div class="row"><span class="d">20</span><span class="m">ЧТ · 20:30</span>
+          <span class="c">Гатчина<span class="v">Поместье Грув</span></span><span class="b">Билеты</span></div>
+      </div></div></div></div>
+</div>

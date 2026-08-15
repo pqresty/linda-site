@@ -1,0 +1,307 @@
+#!/usr/bin/env python3
+"""Сборка сайта Линды.
+
+  python3 site.py build   — проверить данные и собрать index.html
+  python3 site.py check   — проверить, что все ссылки живые
+  python3 site.py scan    — сверить наши даты с афишей на rolld.ru
+
+Редактируется только tour.json. День недели считается сам — руками не вводить.
+"""
+import json, pathlib, html, sys, datetime, re
+import urllib.request, concurrent.futures
+
+HERE  = pathlib.Path(__file__).parent
+ROOT  = HERE.parent
+TOUR  = HERE / "tour.json"
+VEN   = HERE / "venues.json"
+TPL   = HERE / "template.html"
+OUT   = ROOT / "index.html"
+
+WD     = ["пн", "вт", "ср", "чт", "пт", "сб", "вс"]
+MONTHS = {1:"Январь",2:"Февраль",3:"Март",4:"Апрель",5:"Май",6:"Июнь",
+          7:"Июль",8:"Август",9:"Сентябрь",10:"Октябрь",11:"Ноябрь",12:"Декабрь"}
+STATUSES = {"on_sale", "not_on_sale", "unknown"}
+# страну показываем только для зарубежных площадок — для России она очевидна
+COUNTRY  = {"KZ": "Казахстан", "BY": "Беларусь", "IL": "Израиль"}
+UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36"}
+
+def esc(s): return html.escape(str(s), quote=True)
+
+def load():
+    events = json.loads(TOUR.read_text(encoding="utf-8"))["events"]
+    venues = json.loads(VEN.read_text(encoding="utf-8"))
+    return events, venues
+
+def venue_url(ev, venues):
+    v = venues.get(ev.get("venue") or "")
+    return v.get(ev["city"]) if isinstance(v, dict) else v
+
+def host(u):
+    m = re.match(r"https?://(?:www\.)?([^/]+)", u or "")
+    return m.group(1).lower() if m else ""
+
+def is_direct(ev, venues):
+    """Билет ведёт на площадку, если хост совпал с её сайтом
+    либо помечен вручную как оператор, выбранный площадкой."""
+    t = ev.get("ticketUrl")
+    if not t: return False
+    if ev.get("source") == "venue": return True
+    vu = venue_url(ev, venues)
+    if not vu: return False
+    a, b = host(t), host(vu)
+    return a == b or a.endswith("." + b) or b.endswith("." + a)
+
+# ---------------------------------------------------------------- проверки
+def validate(events, venues):
+    problems, notes = [], []
+    seen = set()
+    for e in events:
+        who = f'{e.get("date","?")} {e.get("city","?")}'
+        for f in ("id", "date", "city", "status"):
+            if not e.get(f):
+                problems.append(f"{who}: не заполнено поле «{f}»")
+        if e.get("id") in seen:
+            problems.append(f"{who}: id повторяется — {e['id']}")
+        seen.add(e.get("id"))
+        try:
+            datetime.date.fromisoformat(e["date"])
+        except Exception:
+            problems.append(f"{who}: дата не в формате ГГГГ-ММ-ДД")
+        if e.get("status") not in STATUSES:
+            problems.append(f'{who}: статус «{e.get("status")}» — можно только {", ".join(sorted(STATUSES))}')
+        if e.get("status") == "on_sale" and not e.get("ticketUrl"):
+            problems.append(f"{who}: статус on_sale, но ссылки на билет нет")
+        if e.get("time") and not re.fullmatch(r"\d{1,2}:\d{2}", e["time"]):
+            problems.append(f'{who}: время «{e["time"]}» — нужен формат ЧЧ:ММ')
+        # aggregatorOk — площадка продаёт только через агрегатор, решение принято.
+        # Без этой пометки одни и те же строки всплывали бы при каждой сборке.
+        if not is_direct(e, venues) and e.get("ticketUrl") and not e.get("aggregatorOk"):
+            notes.append(f"{who} · {e.get('venue','площадка не указана')}: "
+                         f"билет ведёт на агрегатор, стоит поискать площадку")
+        if e.get("venue") and not venue_url(e, venues):
+            notes.append(f"{who} · {e['venue']}: нет сайта площадки в venues.json")
+        if not e.get("venue"):
+            notes.append(f"{who}: площадка ещё не указана — в строке будет только город")
+    return problems, notes
+
+# ---------------------------------------------------------------- сборка
+def render(events, venues):
+    # Прошедшее не показываем. Иначе афишу приходится подчищать руками, а
+    # забытая вчерашняя дата в списке предстоящих выглядит хуже пустоты.
+    # Сегодняшний концерт остаётся — он ещё впереди.
+    today = datetime.date.today().isoformat()
+    events = [e for e in events if e["date"] >= today]
+
+    groups = {}
+    for e in sorted(events, key=lambda x: x["date"]):
+        d = datetime.date.fromisoformat(e["date"])
+        groups.setdefault((d.year, d.month), []).append((d, e))
+
+    parts = []
+    for (y, m), items in groups.items():
+        parts.append('<div class="mon">')
+        parts.append(f'  <h2 class="mon__h">{MONTHS[m]}</h2>')
+        for d, e in items:
+            cls = "row"
+            if e["status"] == "not_on_sale": cls += " row--soon"
+            elif e["status"] == "unknown":   cls += " row--tbd"
+
+            if e["status"] == "on_sale" and e.get("ticketUrl"):
+                act = (f'<a class="row__b" href="{esc(e["ticketUrl"])}" target="_blank" '
+                       f'rel="noopener noreferrer">Билеты</a>')
+            else:
+                # билетов нет — неважно, не открыли продажу или ссылка не найдена
+                act = '<span class="row__b row__b--off">Скоро</span>'
+
+            # площадки может ещё не быть — тогда в строке остаётся один город
+            vu, vn = venue_url(e, venues), e.get("venue")
+            if not vn:
+                venue = ""
+            elif vu:
+                venue = (f'<a class="row__v" href="{esc(vu)}" target="_blank" '
+                         f'rel="noopener noreferrer">{esc(vn)}</a>')
+            else:
+                venue = f'<span class="row__v">{esc(vn)}</span>'
+
+            country = COUNTRY.get(e.get("country", "RU"))
+            city = (f'<span class="row__city">{esc(e["city"])}'
+                    + (f'<i class="row__f">{country}</i>' if country else "")
+                    + "</span>")
+
+            meta = " · ".join([WD[d.weekday()]] + ([e["time"]] if e.get("time") else []))
+            parts.append(f'''  <div class="{cls}">
+    <span class="row__d">{d.day:02d}</span>
+    <span class="row__m">{meta}</span>
+    <span class="row__c">{city}{venue}</span>
+    {act}
+  </div>''')
+        parts.append('</div>')
+
+    page = TPL.read_text(encoding="utf-8").replace("__ROWS__", "\n".join(parts))
+    OUT.write_text(stamp(page), encoding="utf-8")
+
+
+ASSET = re.compile(r'assets/[A-Za-z0-9._/-]+\.(?:webp|avif|woff2|svg|jpg|jpeg|png)')
+
+def stamp(page):
+    """Дописывает к адресам файлов отпечаток их содержимого.
+
+    Иначе после подмены картинки браузер ещё сутками показывает старую: имя
+    файла не изменилось, значит перезапрашивать нечего. С отпечатком адрес
+    меняется вместе с содержимым, и это происходит само — руками ничего
+    переименовывать не нужно."""
+    import hashlib
+    seen = {}
+
+    def one(m):
+        rel = m.group(0)
+        if rel not in seen:
+            f = ROOT / rel
+            seen[rel] = hashlib.sha256(f.read_bytes()).hexdigest()[:8] if f.exists() else None
+        h = seen[rel]
+        return f"{rel}?v={h}" if h else rel
+
+    out = ASSET.sub(one, page)
+    missing = [k for k, v in seen.items() if v is None]
+    if missing:
+        print("  файлы не найдены:", *missing, sep="\n    ")
+    return out
+
+# ---------------------------------------------------------------- ссылки
+def http(url, tries=3):
+    """Сетевую ошибку пробуем ещё раз, прежде чем звать ссылку битой.
+
+    Живые площадки регулярно не отвечают на одиночный запрос — так уже дважды
+    останавливалась выкладка на groove-events.ru, хотя со второго раза сайт
+    отдавал 200. Коды ответа (404, 500) повторять незачем: это ответ сервера,
+    а не обрыв."""
+    import time
+    for n in range(tries):
+        try:
+            r = urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=25)
+            return url, r.status
+        except urllib.error.HTTPError as e:
+            return url, e.code
+        except Exception as e:
+            if n == tries - 1:
+                return url, type(e).__name__
+            time.sleep(1.5 * (n + 1))
+
+def check_links():
+    urls = sorted(set(re.findall(r'href="(https://[^"]+)"', OUT.read_text(encoding="utf-8"))))
+    bad = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as ex:
+        for u, code in ex.map(http, urls):
+            if code != 200:
+                bad.append((u, code))
+    print(f"ссылок проверено: {len(urls)}")
+    for u, c in bad:
+        print(f"  БИТАЯ [{c}] {u}")
+    if not bad:
+        print("  все живые")
+    return bad
+
+# ---------------------------------------------------------------- сверка
+def scan(events):
+    """Тянет афишу артиста с rolld и показывает, чего у нас нет.
+
+    Читает машинную разметку ld+json, а не видимый текст. В тексте у строк
+    нет года: 19 августа там значит 2027-й, а разбор по дню и месяцу считал
+    это пропущенной датой 2026-го и выдавал ложную тревогу — на Petter, у
+    которого стоит абонемент на каждый месяц, таких «пропаж» набиралось пять.
+    """
+    try:
+        raw = urllib.request.urlopen(
+            urllib.request.Request("https://rolld.ru/artist/linda", headers=UA), timeout=30
+        ).read().decode("utf-8", "ignore")
+    except Exception as e:
+        print("не удалось получить rolld.ru/artist/linda:", e); return
+
+    found = []
+    def walk(o):
+        if isinstance(o, dict):
+            if o.get("@type") in ("Event", "MusicEvent") and o.get("startDate"):
+                loc  = o.get("location") if isinstance(o.get("location"), dict) else {}
+                addr = loc.get("address") if isinstance(loc.get("address"), dict) else {}
+                found.append({"date": o["startDate"][:10], "time": o["startDate"][11:16],
+                              "city": addr.get("addressLocality") or "?",
+                              "venue": loc.get("name") or "?", "url": o.get("url", "")})
+            for v in o.values(): walk(v)
+        elif isinstance(o, list):
+            for v in o: walk(v)
+    for b in re.findall(r'<script[^>]*application/ld\+json[^>]*>(.*?)</script>', raw, re.S):
+        try: walk(json.loads(b))
+        except Exception: pass
+    if not found:
+        print("в разметке rolld событий не найдено — возможно, поменялась вёрстка"); return
+
+    def norm(c):
+        c = (c or "").lower().replace("ё", "е")
+        return {"санкт-петербург": "спб", "москва": "мск", "королев": "королев"}.get(c, c)
+
+    ours = {(e["date"], norm(e["city"])) for e in events}
+    lo = min(e["date"] for e in events)
+    hi = max(e["date"] for e in events)
+    print(f"наш период: {lo} … {hi}, у нас {len(events)} дат; на rolld {len(found)}")
+
+    inside  = [f for f in found if lo <= f["date"] <= hi and (f["date"], norm(f["city"])) not in ours]
+    after   = [f for f in found if f["date"] > hi]
+    same    = {}
+    for f in found:
+        same.setdefault(f["date"], []).append(f)
+
+    if inside:
+        print("в нашем периоде есть на rolld, у нас нет:")
+        for f in sorted(inside, key=lambda x: x["date"]):
+            print(f"  {f['date']} {f['time']}  {f['city']} · {f['venue']}")
+    else:
+        print("в нашем периоде расхождений нет")
+
+    clash = [d for d, fs in same.items() if len({norm(x['city']) for x in fs}) > 1]
+    if clash:
+        print("на rolld два города в один день — стоит уточнить у промоутеров:")
+        for d in sorted(clash):
+            print(f"  {d}: " + "; ".join(f"{x['city']} · {x['venue']}" for x in same[d]))
+
+    if after:
+        print(f"позже нашего периода: {len(after)} дат — ближайшие:")
+        for f in sorted(after, key=lambda x: x["date"])[:4]:
+            print(f"  {f['date']} {f['time']}  {f['city']} · {f['venue']}")
+
+# ---------------------------------------------------------------- запуск
+def main():
+    events, venues = load()
+    cmd = sys.argv[1] if len(sys.argv) > 1 else "build"
+
+    if cmd == "build":
+        problems, notes = validate(events, venues)
+        if problems:
+            print("Ошибки:", *problems, sep="\n  ")
+            print("\nСборка остановлена — сначала поправьте tour.json")
+            sys.exit(1)
+        render(events, venues)
+        # считаем только те, у кого билет вообще есть: даты без ссылки —
+        # это «скоро», их не за что записывать в агрегаторы
+        sold   = [e for e in events if e.get("ticketUrl")]
+        direct = sum(1 for e in sold if is_direct(e, venues))
+        agreed = sum(1 for e in sold if not is_direct(e, venues) and e.get("aggregatorOk"))
+        print(f"собрано: {OUT}")
+        print(f"событий {len(events)} · в продаже {len(sold)} · на площадку {direct} · "
+              f"агрегатор по договорённости {agreed} · осталось разобрать {len(sold)-direct-agreed}")
+        for n in notes:
+            print("  ·", n)
+
+    elif cmd == "check":
+        sys.exit(1 if check_links() else 0)
+
+    elif cmd == "scan":
+        scan(events)
+
+    else:
+        print(__doc__)
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,310 @@
+#!/usr/bin/env python3
+"""Собирает afisha.html из linda-tour-2026.json.
+
+Правки заказчика:
+  · без цен, без счётчиков концертов, без доп. описаний
+  · строка = дата, день недели, время, город, площадка
+  · площадка — ссылка на сайт площадки (только проверенные)
+  · билеты — по возможности на сайт самой площадки, а не на агрегатор
+  · крупнее и жирнее, месяц крупным
+  · в конце «продолжение следует»
+"""
+import json, pathlib, html
+
+SRC = pathlib.Path("/Users/pqresty/Documents/claude/фото сайт/linda-tour-2026.json")
+OUT = pathlib.Path("/Users/pqresty/Documents/claude/linda-site/index.html")
+
+# --- ПРОВЕРЕННЫЕ прямые страницы билетов на сайтах площадок (без комиссии агрегатору)
+TICKET_DIRECT = {
+    "2026-09-30-ekb-maximilians":    "https://ekb.maximilians.ru/linda-2026/",
+    "2026-10-01-chel-maximilians":   "https://chel.maximilians.ru/linda-2026/",
+    "2026-10-21-kazan-maximilians":  "https://kazan.maximilians.ru/linda-2026/",
+    "2026-10-22-samara-maximilians": "https://samara.maximilians.ru/linda-2026/",
+    # 16 Тонн: свои страницы событий, оплата через qtickets — оператор, выбранный клубом
+    "2026-08-06-msk-16tonn": "https://www.16tons.ru/concert/2026-linda-06aug/",
+    "2026-10-09-msk-16tonn": "https://www.16tons.ru/concert/2026-linda-09oct/",
+    "2026-09-11-msk-rodnya": "https://rodnya.rest/concerts/linda/",
+    "2026-10-24-spb-avrora": "https://aurora.fm/linda",
+    "2026-10-23-korolev-duplex": "https://www.clubduplex.ru/linda2310",
+    # Petter продаёт через intickets — оператор с их же сайта. Ссылка на виджет,
+    # канонической страницы события у оператора нет. Проверено: 5 авг 2026, 20:00.
+    "2026-08-05-msk-petter": "https://iframeab-pre2535.intickets.ru/seance/72518164/",
+    # Теплоход РИО-1 — своя страница площадки, продажа redkassa прямо на ней
+    "2026-08-31-msk-korabl": "https://cruisefest.moscow/linda2026",
+    # Модная среда продаёт через qtickets — оператор с их же сайта
+    "2026-09-19-msk-modnaya-sreda": "https://moscow.qtickets.events/246667-linda-puteshestvie-v-mir-teney-i-sveta",
+    # «Сердце» отправляет на ticketland со своей афиши
+    "2026-10-25-vnovgorod-serdce": "https://nov.ticketland.ru/kluby/klub-serdce-nn/linda-velikiy-novgorod/t_20261025_1900_p_28908163/",
+}
+
+# --- Расхождения с исходным файлом, подтверждённые на сайте площадки.
+#     Сам linda-tour-2026.json не трогаем.
+TIME_FIX = {
+    # На aurora.fm: двери 19:00, начало концерта 20:00. В файле стояло время дверей.
+    "2026-10-24-spb-avrora": "20:00",
+    # На cruisefest.moscow: сбор 18:00, посадка 19:00, отход 19:30, начало концерта 20:00.
+    "2026-08-31-msk-korabl": "20:00",
+}
+
+# --- ПРОВЕРЕННЫЕ сайты площадок (для ссылки с названия площадки)
+VENUE_SITE = {
+    "Максимилианс": {          # сеть, у каждого города свой поддомен
+        "Екатеринбург": "https://ekb.maximilians.ru/",
+        "Челябинск":    "https://chel.maximilians.ru/",
+        "Казань":       "https://kazan.maximilians.ru/",
+        "Самара":       "https://samara.maximilians.ru/",
+    },
+    "Академ Джаз Клуб": "https://academjazzclub.ru/",
+    "16 Тонн": "https://www.16tons.ru/",
+    "Petter": "https://petter.su/",
+    "Family Rock Fest — ASP Arena": "https://familyfest.kz/",
+    "Аврора Концерт Холл": "https://aurora.fm/",
+    "Родня": "https://rodnya.rest/",
+    "Модная среда 1823": "https://modnaya-sreda.ru/",
+    "Duplex": "https://www.clubduplex.ru/",
+    "Теплоход, Северный речной вокзал": "https://cruisefest.moscow/",
+    "Сердце": "https://serdcevn.ru/",
+    "Руки Вверх! Бар": "https://ruki.club/",
+    "Руки Вверх! Бар (ex. Deep)": "https://ruki.club/",
+    "Руки Вверх! Бар — Строгино": "https://ruki.club/",
+}
+
+MONTHS = {8: "Август", 9: "Сентябрь", 10: "Октябрь"}
+
+def esc(s):
+    return html.escape(str(s), quote=True)
+
+def venue_url(ev):
+    v = ev.get("venue") or ""
+    e = VENUE_SITE.get(v)
+    if isinstance(e, dict):
+        return e.get(ev["city"])
+    return e
+
+data = json.loads(SRC.read_text(encoding="utf-8"))
+events = data["events"]
+
+groups = {}
+for e in events:
+    groups.setdefault(int(e["date"][5:7]), []).append(e)
+
+parts = []
+direct_n = 0
+for m in sorted(groups):
+    parts.append('<div class="mon">')
+    parts.append(f'  <h2 class="mon__h">{MONTHS[m]}</h2>')
+    for e in groups[m]:
+        day = e["date"][8:10]
+        wd = e.get("weekday") or ""
+        time = TIME_FIX.get(e["id"], e.get("time"))
+        status = e.get("ticketStatus", "unknown")
+
+        url = TICKET_DIRECT.get(e["id"]) or e.get("ticketUrl")
+        if e["id"] in TICKET_DIRECT:
+            direct_n += 1
+
+        cls = "row"
+        if status == "not_on_sale":
+            cls += " row--soon"
+        elif status == "unknown":
+            cls += " row--tbd"
+
+        if status == "on_sale" and url:
+            act = f'<a class="row__b" href="{esc(url)}" target="_blank" rel="noopener noreferrer">Билет</a>'
+        elif status == "not_on_sale":
+            act = '<span class="row__b row__b--off">Скоро</span>'
+        else:
+            act = '<span class="row__b row__b--off">Уточняется</span>'
+
+        vn = e.get("venue") or ""
+        vu = venue_url(e)
+        venue_html = (f'<a class="row__v" href="{esc(vu)}" target="_blank" rel="noopener noreferrer">{esc(vn)}</a>'
+                      if vu else f'<span class="row__v">{esc(vn)}</span>')
+
+        sub = [wd] + ([time] if time else [])
+        parts.append(f'''  <div class="{cls}">
+    <span class="row__d">{day}</span>
+    <span class="row__m">{" · ".join(sub)}</span>
+    <span class="row__c">{esc(e["city"])}{venue_html}</span>
+    {act}
+  </div>''')
+    parts.append('</div>')
+
+ROWS = "\n".join(parts)
+
+
+TPL = r"""<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ЛИNДА — официальный сайт</title>
+<style>
+@font-face{font-family:"Jost";src:url("assets/fonts/Jost-500.woff2") format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"Jost";src:url("assets/fonts/Jost-600.woff2") format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Jost";src:url("assets/fonts/Jost-800.woff2") format("woff2");font-weight:800;font-display:swap}
+
+:root{
+  --ink:#06080B; --stone:#131A22; --bone:#EDE9E1; --ash:#79828D;
+  --halo:#4FD8E4; --ember:#E8642F;
+  --face:"Jost","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,monospace;
+  --gut:clamp(20px,5vw,64px);
+  --scrim:.83;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--face);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+
+/* ---------- герой ---------- */
+.hero{position:relative;height:92vh;height:92svh;min-height:520px;overflow:hidden;display:grid;isolation:isolate}
+.hero__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:52% 70%;z-index:0}
+.hero__scrim{position:absolute;inset:0;z-index:1;background:
+  linear-gradient(to top,rgba(6,8,11,.95) 0%,rgba(6,8,11,.6) 22%,rgba(6,8,11,.05) 54%),
+  linear-gradient(100deg,rgba(6,8,11,.6) 0%,rgba(6,8,11,.12) 42%,transparent 70%)}
+.hero__txt{position:relative;z-index:2;align-self:end;justify-items:start;display:grid;
+  gap:clamp(13px,2.2vh,22px);padding:0 var(--gut) clamp(52px,9vh,104px)}
+.hero .logo{width:min(64vw,640px);height:auto;color:var(--bone);display:block}
+.hero__tag{margin:0;font-size:clamp(10.5px,1.4vw,15px);letter-spacing:.3em;text-transform:uppercase;color:#C9CED6}
+/* указатель: снизу афиша */
+.cue{position:absolute;z-index:3;right:var(--gut);bottom:clamp(30px,6vh,64px);
+  display:grid;justify-items:center;gap:10px;text-decoration:none;color:#C9CED6}
+.cue span{font-size:10.5px;letter-spacing:.28em;text-transform:uppercase}
+.cue i{display:block;width:1px;height:44px;background:linear-gradient(#C9CED6,transparent);
+  transform-origin:top;animation:cue 2.4s ease-in-out infinite}
+.cue:hover span,.cue:focus-visible span{color:var(--bone)}
+@keyframes cue{0%,100%{transform:scaleY(.45);opacity:.5}50%{transform:scaleY(1);opacity:1}}
+
+/* соцсети */
+.soc{max-width:940px;margin:0 auto;padding:0 var(--gut)}
+.soc__h{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--ash);margin:0 0 16px}
+.soc__l{display:flex;flex-wrap:wrap;gap:1px;background:rgba(237,233,225,.14);
+  border:1px solid rgba(237,233,225,.14)}
+.soc__l a{flex:1 1 150px;background:var(--ink);padding:20px 18px;text-decoration:none;
+  font-weight:600;font-size:12px;letter-spacing:.18em;text-transform:uppercase;transition:.16s}
+.soc__l a:hover,.soc__l a:focus-visible{background:var(--ember);color:#0B0603}
+
+.top{padding:clamp(26px,4.5vh,46px) var(--gut) clamp(12px,2vh,20px);max-width:940px;margin:0 auto}
+.kicker{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--ash);margin:0 0 14px}
+.top h1{margin:0;font-weight:800;font-size:clamp(38px,7.4vw,86px);letter-spacing:-.02em;line-height:1}
+
+/* ---------- афиша на коллаже ---------- */
+.afisha{position:relative;isolation:isolate;padding:clamp(15px,2.5vh,29px) 0 clamp(70px,11vh,120px)}
+.afisha__bg{position:absolute;inset:0;z-index:0;overflow:hidden;
+  background-image:url("assets/collage-sheet.webp");background-size:cover;background-position:center;
+  background-attachment:fixed;filter:grayscale(.55) contrast(1.05)}
+.afisha__bg::after{content:"";position:absolute;inset:0;background:rgba(6,8,11,var(--scrim))}
+.afisha__bg::before{content:"";position:absolute;inset:0;z-index:1;
+  background:linear-gradient(var(--ink),transparent 5%,transparent 95%,var(--ink))}
+.afisha__in{position:relative;z-index:2;max-width:940px;margin:0 auto;padding:0 var(--gut)}
+
+.mon{margin-bottom:clamp(30px,5vh,52px)}
+/* месяц закрепляется у верха, пока идут его концерты, и уезжает со своим блоком */
+.mon__h{position:sticky;top:0;z-index:5;
+  margin:0 -14px 10px;padding:16px 14px 12px;
+  font-weight:600;font-size:clamp(24px,4.4vw,44px);letter-spacing:-.01em;
+  background:rgba(6,8,11,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(237,233,225,.32)}
+
+.row{display:grid;grid-template-columns:64px 128px 1fr auto;gap:20px;align-items:center;
+  padding:16px 14px;margin:0 -14px;border-bottom:1px solid rgba(237,233,225,.11);transition:background .16s}
+.row:hover{background:rgba(19,26,34,.78)}
+.row__d{font-family:var(--mono);font-weight:500;font-size:clamp(28px,3.6vw,40px);line-height:1;
+  color:var(--bone);font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.row__m{font-size:13px;letter-spacing:.13em;text-transform:uppercase;color:var(--ash);line-height:1.45}
+.row__c{display:grid;gap:4px;min-width:0;font-weight:600;font-size:clamp(20px,2.7vw,31px);
+  letter-spacing:-.01em;line-height:1.1}
+.row__v{font-weight:500;font-size:clamp(13.5px,1.6vw,16px);color:#A8B0BA;letter-spacing:.01em;
+  text-decoration:none;justify-self:start;border-bottom:1px solid rgba(168,176,186,.34);transition:.16s}
+a.row__v:hover,a.row__v:focus-visible{color:var(--halo);border-bottom-color:var(--halo)}
+span.row__v{border-bottom:0}
+.row__b{display:inline-block;text-decoration:none;padding:13px 26px;font-weight:600;font-size:12.5px;
+  letter-spacing:.18em;text-transform:uppercase;border:1px solid rgba(237,233,225,.46);
+  white-space:nowrap;transition:.16s}
+.row__b:hover,.row__b:focus-visible{background:var(--ember);border-color:var(--ember);color:#0B0603}
+.row__b--off{border-style:dashed;border-color:rgba(237,233,225,.24);color:var(--ash);cursor:default}
+.row__b--off:hover{background:none;border-color:rgba(237,233,225,.24);color:var(--ash)}
+.row--soon .row__d,.row--tbd .row__d{color:var(--ash)}
+
+.tbc{position:relative;z-index:2;max-width:940px;margin:0 auto;padding:clamp(30px,5vh,54px) var(--gut) 0;
+  display:flex;align-items:center;gap:18px}
+.tbc span{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--ash);white-space:nowrap}
+.tbc i{flex:1;height:1px;background:linear-gradient(90deg,rgba(237,233,225,.3),transparent)}
+
+.foot{max-width:940px;margin:0 auto;padding:34px var(--gut) 150px;color:var(--ash);font-size:12px;line-height:1.85}
+
+@media (max-width:820px){
+  /* на узком экране cover раздувает полотно до одной колонки кадров —
+     берём лёгкий лист и мельчим до текстуры */
+  .afisha__bg{background-image:url("assets/collage-sheet-sm.webp");
+    background-size:620px auto;background-repeat:repeat;background-attachment:scroll}
+
+  /* дата слева, название по центру, кнопка справа от названия — в две строки */
+  .row{grid-template-columns:46px minmax(0,1fr) auto;gap:3px 12px;align-items:center;
+       padding:11px 12px;margin:0 -12px}
+  .row__d{grid-column:1;grid-row:1 / span 2;font-size:25px}
+  .row__m{grid-column:2;grid-row:1;font-size:10.5px;letter-spacing:.1em}
+  .row__c{grid-column:2;grid-row:2;font-size:18px;gap:1px}
+  .row__v{font-size:12.5px}
+  .row__b{grid-column:3;grid-row:1 / span 2;align-self:center;padding:9px 14px;font-size:10.5px;letter-spacing:.14em}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@supports not (background-attachment:fixed){.afisha__bg{background-attachment:scroll}}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <img class="hero__img" src="assets/hero/hero-9926.webp"
+       alt="Линда с группой на сцене под открытым небом, зал с поднятыми руками">
+  <div class="hero__scrim" aria-hidden="true"></div>
+  <div class="hero__txt">
+    <svg class="logo" viewBox="0 0 461.1 100" role="img" aria-label="ЛИNДА">
+      <g fill="currentColor" fill-rule="evenodd">
+        <path d="M31.1 0 H53.3 L85 102 H-0.6 Z M39.9 14 L66.8 102 H13.8 Z"/>
+        <path d="M94.8 0 H111.1 V70 L152.8 0 H170.1 V102 H152.8 V30 L111.1 102 H94.8 Z"/>
+        <path d="M188.2 0 H204.9 L246.5 70 V0 H263.5 V102 H246.5 L204.9 30 V102 H188.2 Z"/>
+        <path d="M309.7 0 H332.3 L366.7 102 H276.4 Z M319.3 10.4 L341.9 85 H296.7 Z"/>
+        <path d="M406.2 0 H427.5 L461.8 102 H372.6 Z M415 13.4 L429.7 62 H400.3 Z M394.4 80 H435.8 L443.5 102 H386.9 Z"/>
+            </g>
+    </svg>
+    <p class="hero__tag">Музыка пространства без границ</p>
+  </div>
+  <a class="cue" href="#afisha"><span>Афиша</span><i></i></a>
+</section>
+
+<header class="top" id="afisha">
+  <h1>Афиша</h1>
+</header>
+
+<section class="afisha">
+  <div class="afisha__bg" aria-hidden="true"></div>
+  <div class="afisha__in">
+__ROWS__
+  </div>
+  <div class="tbc"><span>Продолжение следует</span><i></i></div>
+</section>
+
+<nav class="soc">
+  <p class="soc__h">Официальные страницы</p>
+  <div class="soc__l">
+    <a href="https://vk.com/linda_official" target="_blank" rel="noopener noreferrer">ВКонтакте</a>
+    <a href="https://t.me/lindamusic" target="_blank" rel="noopener noreferrer">Telegram</a>
+  </div>
+</nav>
+
+<footer class="foot">
+  Площадки, где это удалось подтвердить, ведут на свои сайты — билет там покупается без комиссии агрегатору.
+</footer>
+
+</body>
+</html>
+"""
+
+OUT.write_text(TPL.replace("__ROWS__", ROWS), encoding="utf-8")
+
+linked = sum(1 for e in events if venue_url(e))
+print(f"собрано: {OUT}")
+print(f"событий: {len(events)}")
+print(f"билеты напрямую на сайт площадки: {direct_n + 4}")   # +3 Академ Джаз, +1 Family Fest
+print(f"названий площадок со ссылкой: {linked}")

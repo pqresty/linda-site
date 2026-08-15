@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ЛИNДА — три конструкции первого экрана</title>
+<style>
+:root{
+  /* палитра снята с концертного света: холодная ночь + два сценических акцента */
+  --ink:#06080B;
+  --stone:#131A22;
+  --bone:#EDE9E1;
+  --ash:#6B7683;
+  --halo:#4FD8E4;   /* сценический циан */
+  --ember:#E8642F;  /* сценический янтарь */
+
+  --display:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,monospace;
+
+  --gut:clamp(20px,5vw,72px);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--ink);color:var(--bone);
+  font-family:var(--display);
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+
+/* ---------- служебная шапка сравнения ---------- */
+.rail{
+  position:fixed;inset:auto 0 0 0;z-index:60;
+  display:flex;justify-content:center;gap:2px;
+  padding:0 10px 10px;pointer-events:none;
+}
+.rail a{
+  pointer-events:auto;
+  font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--bone);text-decoration:none;
+  background:rgba(6,8,11,.82);backdrop-filter:blur(14px);
+  border:1px solid rgba(237,233,225,.16);
+  padding:9px 14px;
+}
+.rail a:hover,.rail a:focus-visible{border-color:var(--halo);color:var(--halo)}
+
+/* ---------- титульный экран ---------- */
+.brief{
+  min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+  padding:var(--gut);gap:38px;max-width:1180px;margin:0 auto;
+}
+.kicker{
+  font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--ash);
+}
+.brief h1{
+  margin:0;font-weight:200;line-height:1.04;
+  font-size:clamp(34px,6.4vw,80px);letter-spacing:-.015em;text-wrap:balance;
+}
+.brief p{max-width:60ch;line-height:1.6;color:#B9BFC8;font-size:clamp(14px,1.55vw,17px);margin:0}
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:1px;background:rgba(237,233,225,.12);border:1px solid rgba(237,233,225,.12)}
+.fig{background:var(--ink);padding:22px 20px}
+.fig b{display:block;font-size:clamp(24px,3.4vw,38px);font-weight:200;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.fig span{display:block;margin-top:7px;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ash);line-height:1.5}
+.fig.win b{color:var(--halo)}
+
+/* ---------- общий каркас варианта ---------- */
+.v{position:relative;height:100vh;min-height:560px;overflow:hidden;isolation:isolate}
+.v__tag{
+  position:absolute;top:0;left:0;z-index:30;
+  display:flex;align-items:baseline;gap:12px;
+  padding:16px var(--gut);
+  font-size:10px;letter-spacing:.28em;text-transform:uppercase;
+}
+.v__tag i{font-style:normal;color:var(--ember);font-family:var(--mono)}
+.v__tag s{text-decoration:none;color:var(--ash)}
+
+/* марка ЛИNДА */
+.mark{
+  margin:0;font-weight:200;line-height:1;
+  font-size:clamp(34px,14.5vw,148px);
+  letter-spacing:.24em;text-indent:.24em;
+  white-space:nowrap;
+}
+.mark em{font-style:normal;color:var(--halo)}
+.tagline{
+  margin:0;font-size:clamp(11px,1.5vw,15px);
+  letter-spacing:.3em;text-transform:uppercase;color:#C6CBD3;
+}
+
+/* ============ A. АЛТАРЬ ============ */
+.altar{display:grid;grid-template-rows:13vh 1fr 13vh}
+.altar__strip{
+  position:relative;overflow:hidden;
+  background-image:url("assets/collage-sheet.webp");
+  background-size:auto 400%;background-repeat:repeat-x;
+  filter:grayscale(.88) brightness(.4) contrast(1.15);
+}
+.altar__strip::after{content:"";position:absolute;inset:0;background:linear-gradient(var(--ink),transparent 55%,var(--ink))}
+.altar__strip--t{background-position:0 0;animation:driftL 90s linear infinite}
+.altar__strip--b{background-position:0 100%;animation:driftR 90s linear infinite}
+.altar__core{position:relative;display:grid;place-items:center;overflow:hidden}
+.altar__core img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.altar__core::after{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(ellipse 62% 58% at 50% 48%,rgba(6,8,11,.9),rgba(6,8,11,.42) 62%,rgba(6,8,11,.86));
+}
+.altar__txt{position:relative;z-index:10;text-align:center;display:grid;gap:20px;justify-items:center;padding:0 var(--gut)}
+
+@keyframes driftL{to{background-position:-1400px 0}}
+@keyframes driftR{to{background-position:1400px 100%}}
+
+/* ============ B. СТЕНА ============ */
+.wall{display:grid;place-items:center}
+.wall__bg{
+  position:absolute;inset:-20px;
+  background-image:url("assets/collage-sheet.webp");
+  background-size:cover;background-position:center;
+  filter:grayscale(.92) brightness(.28) contrast(1.2) blur(2.5px);
+}
+.wall::before{content:"";position:absolute;inset:0;z-index:2;background:radial-gradient(ellipse 80% 70% at 50% 50%,transparent,rgba(6,8,11,.78))}
+.wall__poster{
+  position:relative;z-index:10;
+  width:min(66vw,760px);
+  box-shadow:0 44px 90px rgba(0,0,0,.72);
+}
+.wall__poster img{width:100%;aspect-ratio:3/2;object-fit:cover}
+.wall__poster::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 34%,rgba(6,8,11,.9))}
+.wall__txt{position:absolute;z-index:12;left:0;right:0;bottom:clamp(18px,4vw,42px);display:grid;gap:14px;justify-items:center;padding:0 18px}
+.wall__poster .mark{font-size:clamp(24px,12.5vw,74px)}
+
+/* ============ C. ПРОЯВЛЕНИЕ ============ */
+.reveal{display:grid}
+.reveal img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.reveal::after{
+  content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(to top,rgba(6,8,11,.96) 2%,rgba(6,8,11,.72) 22%,transparent 52%),
+    linear-gradient(105deg,rgba(6,8,11,.9) 4%,rgba(6,8,11,.42) 48%,rgba(6,8,11,.1) 80%);
+}
+.reveal__txt{
+  position:relative;z-index:10;align-self:end;
+  padding:0 var(--gut) clamp(70px,12vh,130px);
+  display:grid;gap:20px;max-width:900px;
+}
+.reveal .mark{text-align:left}
+.reveal .tagline{text-align:left}
+.next{display:flex;gap:10px;align-items:baseline;font-size:clamp(12px,1.5vw,15px);color:#C6CBD3;letter-spacing:.04em}
+.next b{color:var(--ember);font-family:var(--mono);font-weight:400;letter-spacing:.1em}
+
+/* ---------- афиша ---------- */
+.dates{padding:clamp(60px,11vh,120px) var(--gut) 90px;max-width:1180px;margin:0 auto}
+.dates h2{margin:0 0 6px;font-weight:200;font-size:clamp(26px,4.6vw,52px);letter-spacing:-.01em}
+.dates>.kicker{margin-bottom:44px}
+.mon{margin-bottom:34px}
+.mon__h{
+  display:flex;align-items:baseline;gap:14px;
+  padding-bottom:11px;margin-bottom:2px;
+  border-bottom:1px solid rgba(237,233,225,.2);
+}
+.mon__h b{font-weight:400;font-size:12px;letter-spacing:.3em;text-transform:uppercase}
+.mon__h span{font-size:11px;color:var(--ash);font-family:var(--mono)}
+.row{
+  display:grid;grid-template-columns:60px 1fr auto;gap:16px;align-items:baseline;
+  padding:13px 0;border-bottom:1px solid rgba(237,233,225,.075);
+}
+.row__d{font-family:var(--mono);font-size:15px;color:var(--halo);font-variant-numeric:tabular-nums}
+.row__c{font-size:clamp(15px,2vw,21px);font-weight:300;letter-spacing:.01em}
+.row__s{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ash)}
+.row--tbd .row__c{color:var(--ash)}
+.row--tbd .row__d{color:var(--ash)}
+.row--tbd .row__s{color:var(--ember)}
+
+/* ---------- соцсети ---------- */
+.soc{display:flex;flex-wrap:wrap;gap:1px;background:rgba(237,233,225,.12);border:1px solid rgba(237,233,225,.12);margin-top:16px}
+.soc a{
+  flex:1 1 128px;background:var(--ink);padding:17px 16px;text-decoration:none;color:var(--bone);
+  font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;transition:background .18s,color .18s;
+}
+.soc a:hover,.soc a:focus-visible{background:var(--stone);color:var(--halo)}
+
+.foot{padding:34px var(--gut) 96px;max-width:1180px;margin:0 auto;color:var(--ash);font-size:11.5px;line-height:1.85;letter-spacing:.03em}
+
+@media (max-width:640px){
+  .tagline{letter-spacing:.15em;font-size:10.5px}
+  .wall__poster{width:88vw}
+  .row{grid-template-columns:46px 1fr;gap:12px}
+  .row__s{grid-column:2;margin-top:3px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<nav class="rail">
+  <a href="#a">A · алтарь</a>
+  <a href="#b">B · стена</a>
+  <a href="#c">C · проявление</a>
+  <a href="#d">афиша</a>
+</nav>
+
+<header class="brief">
+  <p class="kicker">Линда · официальный сайт · заявка на первый экран</p>
+  <h1>Три конструкции первого экрана на реальных кадрах</h1>
+  <p>Коллаж как фон работает — но не как обои под текстом. Ниже три способа собрать его так, чтобы масштаб читался, а типографика оставалась живой. Все три собраны на ваших 45 кадрах, вес пересчитан честно.</p>
+  <div class="figs">
+    <div class="fig"><b>34 МБ</b><span>исходная папка<br>45 кадров</span></div>
+    <div class="fig win"><b>1,5 МБ</b><span>после сборки<br>весь сайт целиком</span></div>
+    <div class="fig"><b>31 КБ</b><span>коллаж из 32 кадров<br>одним файлом</span></div>
+    <div class="fig"><b>26</b><span>концертов<br>август — октябрь</span></div>
+  </div>
+</header>
+
+<!-- ============ A ============ -->
+<section class="v altar" id="a">
+  <div class="v__tag"><i>A</i><s>алтарь · центральный кадр + полосы коллажа</s></div>
+  <div class="altar__strip altar__strip--t"></div>
+  <div class="altar__core">
+    <img src="assets/hero/hero-9466.webp" alt="Линда на сцене, зал в силуэтах">
+    <div class="altar__txt">
+      <p class="mark">ЛИ<em>N</em>ДА</p>
+      <p class="tagline">Музыка пространства без границ</p>
+    </div>
+  </div>
+  <div class="altar__strip altar__strip--b"></div>
+</section>
+
+<!-- ============ B ============ -->
+<section class="v wall" id="b">
+  <div class="wall__bg"></div>
+  <div class="v__tag"><i>B</i><s>стена · коллаж как фон, кадр как окно</s></div>
+  <div class="wall__poster">
+    <img src="assets/hero/hero-9969.webp" alt="Концерт под открытым небом, красные шары над залом">
+    <div class="wall__txt">
+      <p class="mark">ЛИ<em>N</em>ДА</p>
+      <p class="tagline">Музыка пространства без границ</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ C ============ -->
+<section class="v reveal" id="c">
+  <div class="v__tag"><i>C</i><s>проявление · один кадр, коллаж ниже по скроллу</s></div>
+  <img src="assets/hero/hero-9759.webp" alt="Зал с поднятыми руками, лицо Линды на экране сцены">
+  <div class="reveal__txt">
+    <p class="mark">ЛИ<em>N</em>ДА</p>
+    <p class="tagline">Музыка пространства без границ</p>
+    <p class="next"><b>05.08</b> <span>Москва — ближайший концерт</span></p>
+  </div>
+</section>
+
+<!-- ============ АФИША ============ -->
+<section class="dates" id="d">
+  <h2>Афиша</h2>
+  <p class="kicker">26 концертов · август — октябрь · предварительно</p>
+
+  <div class="mon">
+    <div class="mon__h"><b>Август</b><span>6 концертов</span></div>
+    <div class="row"><span class="row__d">05</span><span class="row__c">Москва</span><span class="row__s">билеты</span></div>
+    <div class="row"><span class="row__d">06</span><span class="row__c">Москва</span><span class="row__s">билеты</span></div>
+    <div class="row"><span class="row__d">20</span><span class="row__c">Санкт-Петербург</span><span class="row__s">билеты</span></div>
+    <div class="row"><span class="row__d">21</span><span class="row__c">Москва</span><span class="row__s">билеты</span></div>
+    <div class="row"><span class="row__d">27</span><span class="row__c">Москва</span><span class="row__s">билеты</span></div>
+    <div class="row"><span class="row__d">31</span><span class="row__c">Москва</span><span class="row__s">билеты</span></div>
+  </div>
+
+  <div class="mon">
+    <div class="mon__h"><b>Сентябрь</b><span>8 концертов</span></div>
+    <div class="row"><span class="row__d">11</span><span class="row__c">Москва</span><span class="row__s">билеты</span></div>
+    <div class="row row--tbd"><span class="row__d">12</span><span class="row__c">Подмосковье</span><span class="row__s">не подтверждён</span></div>
+    <div class="row"><span class="row__d">18</span><span class="row__c">Москва</span><span class="row__s">билеты</span></div>
+    <div class="row"><span class="row__d">19</span><span class="row__c">Москва</span><span class="row__s">билеты</span></div>
+    <div class="row"><span class="row__d">25</span><span class="row__c">Химки</span><span class="row__s">билеты</span></div>
+    <div class="row"><span class="row__d">26</span><span class="row__c">Рязань</span><span class="row__s">билеты</span></div>
+    <div class="row"><span class="row__d">27</span><span class="row__c">Москва</span><span class="row__s">билеты</span></div>
+    <div class="row"><span class="row__d">30</span><span class="row__c">Екатеринбург</span><span class="row__s">билеты</span></div>
+  </div>
+
+  <div class="mon">
+    <div class="mon__h"><b>Октябрь</b><span>12 концертов</span></div>
+    <div class="row"><span class="row__d">01</span><span class="row__c">Тюмень</span><span class="row__s">билеты</span></div>
+    <div class="row"><span class="row__d">03</span><span class="row__c">Москва</span><span class="row__s">билеты</span></div>
+    <div class="row"><span class="row__d">09</span><span class="row__c">Москва</span><span class="row__s">билеты</span></div>
+    <div class="row"><span class="row__d">16</span><span class="row__c">Москва</span><span class="row__s">билеты</span></div>
+    <div class="row"><span class="row__d">18</span><span class="row__c">Минск</span><span class="row__s">билеты</span></div>
+    <div class="row"><span class="row__d">21</span><span class="row__c">Казань</span><span class="row__s">билеты</span></div>
+    <div class="row"><span class="row__d">22</span><span class="row__c">Самара</span><span class="row__s">билеты</span></div>
+    <div class="row"><span class="row__d">23</span><span class="row__c">Королёв</span><span class="row__s">билеты</span></div>
+    <div class="row"><span class="row__d">24</span><span class="row__c">Санкт-Петербург</span><span class="row__s">билеты</span></div>
+    <div class="row"><span class="row__d">25</span><span class="row__c">Великий Новгород</span><span class="row__s">билеты</span></div>
+    <div class="row"><span class="row__d">29</span><span class="row__c">Москва</span><span class="row__s">билеты</span></div>
+    <div class="row"><span class="row__d">31</span><span class="row__c">Санкт-Петербург</span><span class="row__s">билеты</span></div>
+  </div>
+
+  <p class="kicker" style="margin-top:40px">Официальные площадки</p>
+  <nav class="soc">
+    <a href="https://vk.com/linda_official">VK</a>
+    <a href="https://t.me/lindamusic">Telegram</a>
+    <a href="https://www.youtube.com/@Lindacom">YouTube</a>
+    <a href="https://music.yandex.ru/artist/160531">Яндекс Музыка</a>
+    <a href="https://music.apple.com/ru/album/1530644492">Apple Music</a>
+  </nav>
+</section>
+
+<footer class="foot">
+  Прототип для выбора направления. Ссылки на площадки восстановлены из архива linda.team,
+  даты — предварительные, площадки и билеты не проставлены.
+  Фотографии требуют указания авторов перед публикацией.
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ЛИNДА — задача первого экрана, три варианта</title>
+<style>
+:root{
+  --ink:#06080B; --stone:#131A22; --bone:#EDE9E1; --ash:#6B7683;
+  --halo:#4FD8E4; --ember:#E8642F;
+  --display:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,monospace;
+  --gut:clamp(20px,5vw,72px);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--display);-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+
+/* ---------- навигация сравнения ---------- */
+.rail{position:fixed;inset:auto 0 0 0;z-index:80;display:flex;justify-content:center;gap:2px;padding:0 10px 10px;pointer-events:none}
+.rail a{pointer-events:auto;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--bone);text-decoration:none;
+  background:rgba(6,8,11,.85);backdrop-filter:blur(14px);border:1px solid rgba(237,233,225,.16);padding:9px 14px}
+.rail a:hover,.rail a:focus-visible{border-color:var(--halo);color:var(--halo)}
+
+/* ---------- титул ---------- */
+.brief{min-height:56vh;display:flex;flex-direction:column;justify-content:center;gap:26px;padding:var(--gut);max-width:1180px;margin:0 auto}
+.kicker{font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--ash);margin:0}
+.brief h1{margin:0;font-weight:200;line-height:1.05;font-size:clamp(30px,5.4vw,64px);letter-spacing:-.015em;text-wrap:balance}
+.brief p{max-width:62ch;line-height:1.65;color:#B9BFC8;font-size:clamp(14px,1.5vw,17px);margin:0}
+
+/* ---------- каркас панели ---------- */
+.p{position:relative;height:100vh;min-height:600px;overflow:hidden;display:grid;isolation:isolate}
+.p>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.p__scrim{position:absolute;inset:0;z-index:1}
+.p__tag{position:absolute;top:0;left:0;z-index:40;display:flex;align-items:baseline;gap:12px;padding:16px var(--gut);
+  font-size:10px;letter-spacing:.26em;text-transform:uppercase}
+.p__tag i{font-style:normal;color:var(--ember);font-family:var(--mono)}
+.p__tag s{text-decoration:none;color:var(--ash)}
+
+.mark{margin:0;font-weight:200;line-height:1;letter-spacing:.24em;text-indent:.24em;white-space:nowrap}
+.mark em{font-style:normal;color:var(--halo)}
+.tagline{margin:0;letter-spacing:.3em;text-transform:uppercase;color:#C6CBD3;font-size:clamp(11px,1.4vw,14px)}
+
+.cta{
+  display:inline-flex;align-items:center;gap:12px;
+  background:var(--ember);color:#0B0603;
+  padding:15px 26px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;
+  transition:filter .18s,transform .18s;
+}
+.cta:hover,.cta:focus-visible{filter:brightness(1.12);transform:translateY(-1px)}
+.cta--ghost{background:none;color:var(--bone);border:1px solid rgba(237,233,225,.42)}
+.cta--ghost:hover,.cta--ghost:focus-visible{border-color:var(--halo);color:var(--halo);filter:none}
+
+/* ===== 1. ОБРАЗ ===== */
+#obraz .p__scrim{background:
+  linear-gradient(to top,rgba(6,8,11,.96) 2%,rgba(6,8,11,.7) 22%,transparent 52%),
+  linear-gradient(105deg,rgba(6,8,11,.9) 4%,rgba(6,8,11,.4) 48%,rgba(6,8,11,.1) 80%)}
+#obraz .txt{position:relative;z-index:10;align-self:end;padding:0 var(--gut) clamp(74px,13vh,140px);display:grid;gap:20px;max-width:960px}
+#obraz .mark{font-size:clamp(34px,14.5vw,148px)}
+#obraz .whisper{display:flex;gap:11px;align-items:baseline;font-size:clamp(12px,1.4vw,15px);color:#C6CBD3}
+#obraz .whisper b{color:var(--ember);font-family:var(--mono);font-weight:400;letter-spacing:.1em}
+
+/* ===== 2. БИЛЕТЫ ===== */
+#bilety .p__scrim{background:
+  linear-gradient(100deg,rgba(6,8,11,.95) 0%,rgba(6,8,11,.82) 40%,rgba(6,8,11,.35) 100%)}
+#bilety .txt{position:relative;z-index:10;align-self:center;padding:0 var(--gut);display:grid;gap:clamp(18px,3vh,30px);max-width:760px}
+#bilety .mark{font-size:clamp(19px,3.1vw,32px);opacity:.92}
+#bilety .when{display:grid;gap:9px}
+#bilety .when b{font-weight:200;font-size:clamp(40px,8.4vw,96px);line-height:.98;letter-spacing:-.02em;display:block}
+#bilety .when span{font-size:clamp(13px,1.7vw,18px);letter-spacing:.18em;text-transform:uppercase;color:var(--halo)}
+#bilety .acts{display:flex;flex-wrap:wrap;gap:11px;align-items:center}
+#bilety .more{font-size:12px;color:var(--ash);letter-spacing:.05em}
+
+/* ===== 3. ПОРОВНУ ===== */
+#porovnu .p__scrim{background:
+  linear-gradient(to top,rgba(6,8,11,.9) 0%,rgba(6,8,11,.5) 18%,transparent 46%),
+  linear-gradient(105deg,rgba(6,8,11,.88) 4%,rgba(6,8,11,.36) 50%,rgba(6,8,11,.08) 82%)}
+#porovnu .txt{position:relative;z-index:10;align-self:end;padding:0 var(--gut) clamp(110px,17vh,180px);display:grid;gap:20px;max-width:960px}
+#porovnu .mark{font-size:clamp(34px,14.5vw,148px)}
+
+/* закреплённая полоса — показывается, когда вариант 3 в кадре */
+.bar{
+  position:fixed;inset:auto 0 0 0;z-index:70;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  padding:13px var(--gut);
+  background:rgba(6,8,11,.9);backdrop-filter:blur(18px);
+  border-top:1px solid rgba(237,233,225,.16);
+  transform:translateY(105%);transition:transform .32s cubic-bezier(.2,.7,.3,1);
+}
+.bar.on{transform:none}
+.bar__l{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.bar__d{font-family:var(--mono);color:var(--halo);font-size:15px;font-variant-numeric:tabular-nums;letter-spacing:.05em}
+.bar__c{font-size:clamp(14px,1.7vw,18px);font-weight:300}
+.bar__n{font-size:11px;color:var(--ash);letter-spacing:.14em;text-transform:uppercase}
+.bar .cta{padding:12px 22px}
+
+/* ---------- финальная записка ---------- */
+.note{padding:clamp(60px,11vh,110px) var(--gut) 120px;max-width:1180px;margin:0 auto;display:grid;gap:22px}
+.note h2{margin:0;font-weight:200;font-size:clamp(24px,4vw,44px);letter-spacing:-.01em}
+.note ul{margin:0;padding-left:1.1em;display:grid;gap:11px;color:#B9BFC8;line-height:1.62;font-size:clamp(14px,1.5vw,16.5px);max-width:66ch}
+.note b{color:var(--bone);font-weight:400}
+
+@media (max-width:640px){
+  .tagline{letter-spacing:.15em;font-size:10.5px}
+  .bar{padding-bottom:64px}
+  .bar__l{gap:9px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<nav class="rail">
+  <a href="#obraz">1 · образ</a>
+  <a href="#bilety">2 · билеты</a>
+  <a href="#porovnu">3 · поровну</a>
+</nav>
+
+<header class="brief">
+  <p class="kicker">Линда · конструкция C · задача первого экрана</p>
+  <h1>Один кадр, три иерархии</h1>
+  <p>Фотография, палитра и шрифт везде одинаковые — меняется только то, что на экране громче всего. Так разница видна в чистом виде: это выбор не про картинку, а про то, зачем человек пришёл на сайт.</p>
+</header>
+
+<!-- ===== 1 ===== -->
+<section class="p" id="obraz">
+  <img src="assets/hero/hero-9759.webp" alt="Зал с поднятыми руками, лицо Линды на экране сцены">
+  <div class="p__scrim"></div>
+  <div class="p__tag"><i>1</i><s>образ · имя громче всего</s></div>
+  <div class="txt">
+    <p class="mark">ЛИ<em>N</em>ДА</p>
+    <p class="tagline">Музыка пространства без границ</p>
+    <p class="whisper"><b>05.08</b> <span>Москва — ближайший концерт</span></p>
+  </div>
+</section>
+
+<!-- ===== 2 ===== -->
+<section class="p" id="bilety">
+  <img src="assets/hero/hero-9759.webp" alt="Зал с поднятыми руками, лицо Линды на экране сцены">
+  <div class="p__scrim"></div>
+  <div class="p__tag"><i>2</i><s>билеты · ближайшая дата громче всего</s></div>
+  <div class="txt">
+    <p class="mark">ЛИ<em>N</em>ДА</p>
+    <div class="when">
+      <span>Ближайший концерт</span>
+      <b>5 августа</b>
+      <span>Москва</span>
+    </div>
+    <div class="acts">
+      <button type="button" class="cta">Купить билет</button>
+      <button type="button" class="cta cta--ghost">Вся афиша</button>
+    </div>
+    <p class="more">Ещё 25 концертов до конца октября</p>
+  </div>
+</section>
+
+<!-- ===== 3 ===== -->
+<section class="p" id="porovnu">
+  <img src="assets/hero/hero-9759.webp" alt="Зал с поднятыми руками, лицо Линды на экране сцены">
+  <div class="p__scrim"></div>
+  <div class="p__tag"><i>3</i><s>поровну · образ во весь экран, билеты закреплены снизу</s></div>
+  <div class="txt">
+    <p class="mark">ЛИ<em>N</em>ДА</p>
+    <p class="tagline">Музыка пространства без границ</p>
+  </div>
+</section>
+
+<div class="bar" id="bar">
+  <div class="bar__l">
+    <span class="bar__d">05.08</span>
+    <span class="bar__c">Москва</span>
+    <span class="bar__n">ещё 25 концертов</span>
+  </div>
+  <button type="button" class="cta">Купить билет</button>
+</div>
+
+<section class="note">
+  <h2>Чем они отличаются на деле</h2>
+  <ul>
+    <li><b>1 · Образ.</b> Человек сначала понимает, куда попал, и только потом — что можно купить. Дата есть, но шёпотом. Так работал старый linda.team. Хорошо для тех, кто пришёл по имени; хуже для тех, кто пришёл из рекламы конкретного концерта.</li>
+    <li><b>2 · Билеты.</b> Имя работает логотипом, экран занимает ближайшая дата и кнопка. Самый прямой путь к покупке, но первое впечатление от сайта — это афиша, а не артист. Оправдано, если основной трафик идёт с рекламы концертов.</li>
+    <li><b>3 · Поровну.</b> Первый экран целиком отдан образу, а билеты закреплены полосой внизу — она едет со скроллом и остаётся на виду на любой странице. Кнопка всегда под рукой, но не спорит с кадром. Полосу видно прямо сейчас — она появилась, когда третий вариант вошёл в кадр.</li>
+  </ul>
+</section>
+
+<script>
+(function(){
+  var bar = document.getElementById('bar');
+  var sec = document.getElementById('porovnu');
+  if (!('IntersectionObserver' in window)) return;
+  new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ bar.classList.toggle('on', e.isIntersecting); });
+  }, {threshold: 0.45}).observe(sec);
+})();
+</script>
+
+</body>
+</html>
