@@ -29,9 +29,9 @@ UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
 def esc(s): return html.escape(str(s), quote=True)
 
 def load():
-    events = json.loads(TOUR.read_text(encoding="utf-8"))["events"]
+    data   = json.loads(TOUR.read_text(encoding="utf-8"))
     venues = json.loads(VEN.read_text(encoding="utf-8"))
-    return events, venues
+    return data["events"], venues, data.get("ignored", [])
 
 def venue_url(ev, venues):
     v = venues.get(ev.get("venue") or "")
@@ -203,7 +203,7 @@ def check_links():
     return bad
 
 # ---------------------------------------------------------------- сверка
-def scan(events):
+def scan(events, ignored=()):
     """Тянет афишу артиста с rolld и показывает, чего у нас нет.
 
     Читает машинную разметку ld+json, а не видимый текст. В тексте у строк
@@ -241,11 +241,15 @@ def scan(events):
         return {"санкт-петербург": "спб", "москва": "мск", "королев": "королев"}.get(c, c)
 
     ours = {(e["date"], norm(e["city"])) for e in events}
+    # решённое однажды не показываем снова: список в tour.json, ключ ignored
+    skip = {(i["date"], norm(i["city"])): (i["city"], i.get("reason", "")) for i in ignored}
     lo = min(e["date"] for e in events)
     hi = max(e["date"] for e in events)
     print(f"наш период: {lo} … {hi}, у нас {len(events)} дат; на rolld {len(found)}")
 
-    inside  = [f for f in found if lo <= f["date"] <= hi and (f["date"], norm(f["city"])) not in ours]
+    inside  = [f for f in found if lo <= f["date"] <= hi
+               and (f["date"], norm(f["city"])) not in ours
+               and (f["date"], norm(f["city"])) not in skip]
     after   = [f for f in found if f["date"] > hi]
     same    = {}
     for f in found:
@@ -257,6 +261,10 @@ def scan(events):
             print(f"  {f['date']} {f['time']}  {f['city']} · {f['venue']}")
     else:
         print("в нашем периоде расхождений нет")
+    if skip:
+        print(f"пропущено по прежним решениям: {len(skip)}")
+        for (d, _), (city, reason) in sorted(skip.items()):
+            print(f"  {d} {city} — {reason}")
 
     clash = [d for d, fs in same.items() if len({norm(x['city']) for x in fs}) > 1]
     if clash:
@@ -271,7 +279,7 @@ def scan(events):
 
 # ---------------------------------------------------------------- запуск
 def main():
-    events, venues = load()
+    events, venues, ignored = load()
     cmd = sys.argv[1] if len(sys.argv) > 1 else "build"
 
     if cmd == "build":
@@ -296,7 +304,7 @@ def main():
         sys.exit(1 if check_links() else 0)
 
     elif cmd == "scan":
-        scan(events)
+        scan(events, ignored)
 
     else:
         print(__doc__)
