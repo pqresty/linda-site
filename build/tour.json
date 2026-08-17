@@ -259,10 +259,9 @@
       "time": "20:00",
       "city": "Москва",
       "venue": "Люстра",
-      "ticketUrl": "https://live.mts.ru/moscow/announcements/linda_lyustra-bar?eventId=28556184",
+      "ticketUrl": "https://www.lustrabar.ru/product/1-noyabrya-vs-linda/",
       "status": "on_sale",
-      "source": "agg",
-      "aggregatorOk": true
+      "source": "venue"
     },
     {
       "id": "2026-11-07-yar-rvb",
@@ -270,10 +269,9 @@
       "time": "19:30",
       "city": "Ярославль",
       "venue": "Руки Вверх! Бар",
-      "ticketUrl": "https://live.mts.ru/yaroslavl/announcements/linda-vse-khity_bar-ruki-vverkh?eventId=28610766",
+      "ticketUrl": "https://yar.rvbar.ru/poster/linda-vse-hity/",
       "status": "on_sale",
-      "source": "agg",
-      "aggregatorOk": true
+      "source": "venue"
     },
     {
       "id": "2026-11-08-msk-rvb-tverskaya",
@@ -281,18 +279,19 @@
       "time": "19:30",
       "city": "Москва",
       "venue": "Руки Вверх! Бар — Тверская",
-      "ticketUrl": "https://live.mts.ru/moscow/announcements/linda-vse-khity-concert",
+      "ticketUrl": "https://tverskaya.rvbar.ru/poster/linda-vse-hity-3/",
       "status": "on_sale",
-      "source": "agg",
-      "aggregatorOk": true
+      "source": "venue"
     },
     {
       "id": "2026-11-13-msk-academ",
       "date": "2026-11-13",
       "city": "Москва",
       "venue": "Академ Джаз Клуб",
-      "status": "not_on_sale",
-      "source": "agg"
+      "status": "on_sale",
+      "source": "venue",
+      "ticketUrl": "https://academjazzclub.ru/events/1245/",
+      "time": "20:00"
     },
     {
       "id": "2026-11-14-nn-rvb",
@@ -300,10 +299,9 @@
       "time": "19:30",
       "city": "Нижний Новгород",
       "venue": "Руки Вверх! Бар",
-      "ticketUrl": "https://live.mts.ru/nizhnij-novgorod/announcements/linda-khity?eventId=28610759",
+      "ticketUrl": "https://nino.rvbar.ru/poster/linda-vse-hity-2/",
       "status": "on_sale",
-      "source": "agg",
-      "aggregatorOk": true
+      "source": "venue"
     },
     {
       "id": "2026-11-20-tlv",
