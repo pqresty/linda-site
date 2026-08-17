@@ -22,7 +22,7 @@ EXTRA = ["transitions.html", "mobile-crop.html", "scrim.html"]
 # и Pages переключится на домен и выпустит сертификат.
 # ВАЖЕН ПОРЯДОК: сначала DNS, потом эта строка. Наоборот — Pages начнёт
 # перенаправлять на домен, которого ещё нет, и сайт на время пропадёт.
-DOMAIN = ""
+DOMAIN = "lindaconcerts.ru"
 
 
 def referenced(html_text):
