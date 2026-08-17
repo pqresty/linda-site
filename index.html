@@ -4,7 +4,934 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ЛИNДА — официальный сайт</title>
-<meta name="description" content="Линда — официальный сайт. Афиша концертов, билеты, площадки.">
+<meta name="description" content="Линда — официальный сайт. Афиша концертов: даты, города, площадки и билеты.">
+<link rel="canonical" href="https://lindaconcerts.ru/">
+
+<!-- Как ссылка разворачивается в телеграме, вотсапе и вконтакте. Без этих
+     тегов она приходит голой строкой, а сайт будут пересылать в переписке
+     чаще, чем открывать из поиска. Адрес картинки обязан быть абсолютным. -->
+<meta property="og:type" content="music.musician">
+<meta property="og:site_name" content="ЛИNДА">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="ЛИNДА — официальный сайт">
+<meta property="og:description" content="Афиша концертов: даты, города, площадки и билеты.">
+<meta property="og:url" content="https://lindaconcerts.ru/">
+<meta property="og:image" content="https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Линда с группой на сцене">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- Машинная разметка: из неё поисковик собирает карточку артиста и решает,
+     какой сайт официальный. Собирается сборкой из tour.json — руками не
+     трогать, иначе разъедется с афишей. -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "MusicGroup",
+   "@id": "https://lindaconcerts.ru/#artist",
+   "name": "Линда",
+   "alternateName": [
+    "ЛИNДА",
+    "Linda",
+    "Светлана Гейман"
+   ],
+   "url": "https://lindaconcerts.ru/",
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "sameAs": [
+    "https://vk.com/linda_official",
+    "https://t.me/lindamusic"
+   ]
+  },
+  {
+   "@type": "WebSite",
+   "@id": "https://lindaconcerts.ru/#site",
+   "url": "https://lindaconcerts.ru/",
+   "name": "ЛИNДА — официальный сайт",
+   "inLanguage": "ru-RU",
+   "about": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Гатчина",
+   "startDate": "2026-08-20T20:30",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Гатчина",
+     "addressCountry": "RU"
+    },
+    "name": "Поместье Грув",
+    "url": "https://groove-events.ru/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://groove-events.ru/events/6a69dfded8543650992d035c",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-08-20"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Москва",
+   "startDate": "2026-08-21T20:00",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Москва",
+     "addressCountry": "RU"
+    },
+    "name": "Академ Джаз Клуб",
+    "url": "https://academjazzclub.ru/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://academjazzclub.ru/events/939/",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-08-21"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Казань",
+   "startDate": "2026-08-25",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Казань",
+     "addressCountry": "RU"
+    },
+    "name": "Новая волна"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/"
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Москва",
+   "startDate": "2026-08-27T21:00",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Москва",
+     "addressCountry": "RU"
+    },
+    "name": "Petter",
+    "url": "https://petter.su/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://rolld.ru/event/linda-2026-08-27/tickets",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-08-27"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Конаев",
+   "startDate": "2026-08-30",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Конаев",
+     "addressCountry": "KZ"
+    },
+    "name": "Family Rock Fest — ASP Arena",
+    "url": "https://familyfest.kz/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://familyfest.kz/tc-events/family-rock-festival-2026/",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-08-30"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Москва",
+   "startDate": "2026-08-31T20:00",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Москва",
+     "addressCountry": "RU"
+    },
+    "name": "Теплоход, Северный речной вокзал",
+    "url": "https://cruisefest.moscow/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://cruisefest.moscow/linda2026",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-08-31"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Москва",
+   "startDate": "2026-09-11T20:00",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Москва",
+     "addressCountry": "RU"
+    },
+    "name": "Родня",
+    "url": "https://rodnya.rest/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://rodnya.rest/concerts/linda/",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-09-11"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Москва",
+   "startDate": "2026-09-18T20:00",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Москва",
+     "addressCountry": "RU"
+    },
+    "name": "Академ Джаз Клуб",
+    "url": "https://academjazzclub.ru/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://academjazzclub.ru/events/940/",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-09-18"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Москва",
+   "startDate": "2026-09-19T20:00",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Москва",
+     "addressCountry": "RU"
+    },
+    "name": "Модная среда 1823",
+    "url": "https://modnaya-sreda.ru/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://moscow.qtickets.events/246667-linda-puteshestvie-v-mir-teney-i-sveta",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-09-19"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Химки",
+   "startDate": "2026-09-25T20:00",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Химки",
+     "addressCountry": "RU"
+    },
+    "name": "Руки Вверх! Бар"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://rolld.ru/event/linda-chimki/tickets",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-09-25"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Рязань",
+   "startDate": "2026-09-26T19:30",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Рязань",
+     "addressCountry": "RU"
+    },
+    "name": "Руки Вверх! Бар (ex. Deep)",
+    "url": "https://ryazan.rvbar.ru/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://ryazan.rvbar.ru/poster/linda-vse-hity/",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-09-26"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Москва",
+   "startDate": "2026-09-27T21:00",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Москва",
+     "addressCountry": "RU"
+    },
+    "name": "Petter",
+    "url": "https://petter.su/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://rolld.ru/event/linda-2026-09-27/tickets",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-09-27"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Екатеринбург",
+   "startDate": "2026-09-30T20:00",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Екатеринбург",
+     "addressCountry": "RU"
+    },
+    "name": "Максимилианс",
+    "url": "https://ekb.maximilians.ru/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://ekb.maximilians.ru/linda-2026/",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-09-30"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Челябинск",
+   "startDate": "2026-10-01T21:00",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Челябинск",
+     "addressCountry": "RU"
+    },
+    "name": "Максимилианс",
+    "url": "https://chel.maximilians.ru/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://chel.maximilians.ru/linda-2026/",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-10-01"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Москва",
+   "startDate": "2026-10-03T19:30",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Москва",
+     "addressCountry": "RU"
+    },
+    "name": "Руки Вверх! Бар — Строгино",
+    "url": "https://strogino.rvbar.ru/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://strogino.rvbar.ru/poster/linda/",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-10-03"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Москва",
+   "startDate": "2026-10-09T20:00",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Москва",
+     "addressCountry": "RU"
+    },
+    "name": "16 Тонн",
+    "url": "https://www.16tons.ru/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://www.16tons.ru/concert/2026-linda-09oct/",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-10-09"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Москва",
+   "startDate": "2026-10-16T20:00",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Москва",
+     "addressCountry": "RU"
+    },
+    "name": "Академ Джаз Клуб",
+    "url": "https://academjazzclub.ru/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://academjazzclub.ru/events/1244/",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-10-16"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Казань",
+   "startDate": "2026-10-21T20:00",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Казань",
+     "addressCountry": "RU"
+    },
+    "name": "Максимилианс",
+    "url": "https://kazan.maximilians.ru/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://kazan.maximilians.ru/linda-2026/",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-10-21"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Самара",
+   "startDate": "2026-10-22T20:00",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Самара",
+     "addressCountry": "RU"
+    },
+    "name": "Максимилианс",
+    "url": "https://samara.maximilians.ru/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://samara.maximilians.ru/linda-2026/",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-10-22"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Королёв",
+   "startDate": "2026-10-23T20:00",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Королёв",
+     "addressCountry": "RU"
+    },
+    "name": "Duplex",
+    "url": "https://www.clubduplex.ru/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://www.clubduplex.ru/linda2310",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-10-23"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Санкт-Петербург",
+   "startDate": "2026-10-24T20:00",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Санкт-Петербург",
+     "addressCountry": "RU"
+    },
+    "name": "Аврора Концерт Холл",
+    "url": "https://aurora.fm/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://aurora.fm/linda",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-10-24"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Великий Новгород",
+   "startDate": "2026-10-25T19:00",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Великий Новгород",
+     "addressCountry": "RU"
+    },
+    "name": "Сердце",
+    "url": "https://serdcevn.ru/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://nov.ticketland.ru/kluby/klub-serdce-nn/linda-velikiy-novgorod/t_20261025_1900_p_28908163/",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-10-25"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Москва",
+   "startDate": "2026-10-29T21:00",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Москва",
+     "addressCountry": "RU"
+    },
+    "name": "Petter",
+    "url": "https://petter.su/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://rolld.ru/event/linda-2026-10-29/tickets",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-10-29"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Москва",
+   "startDate": "2026-11-01T20:00",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Москва",
+     "addressCountry": "RU"
+    },
+    "name": "Люстра",
+    "url": "https://lustrabar.ru/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://www.lustrabar.ru/product/1-noyabrya-vs-linda/",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-11-01"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Ярославль",
+   "startDate": "2026-11-07T19:30",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Ярославль",
+     "addressCountry": "RU"
+    },
+    "name": "Руки Вверх! Бар",
+    "url": "https://yar.rvbar.ru/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://yar.rvbar.ru/poster/linda-vse-hity/",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-11-07"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Москва",
+   "startDate": "2026-11-08T19:30",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Москва",
+     "addressCountry": "RU"
+    },
+    "name": "Руки Вверх! Бар — Тверская",
+    "url": "https://tverskaya.rvbar.ru/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://tverskaya.rvbar.ru/poster/linda-vse-hity-3/",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-11-08"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Москва",
+   "startDate": "2026-11-13T20:00",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Москва",
+     "addressCountry": "RU"
+    },
+    "name": "Академ Джаз Клуб",
+    "url": "https://academjazzclub.ru/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://academjazzclub.ru/events/1245/",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-11-13"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Нижний Новгород",
+   "startDate": "2026-11-14T19:30",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Нижний Новгород",
+     "addressCountry": "RU"
+    },
+    "name": "Руки Вверх! Бар",
+    "url": "https://nino.rvbar.ru/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://nino.rvbar.ru/poster/linda-vse-hity-2/",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-11-14"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Тель-Авив",
+   "startDate": "2026-11-20T20:30",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Тель-Авив",
+     "addressCountry": "IL"
+    },
+    "name": "Ридинг 3"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://showman.co.il/e/linda-2026/",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-11-20"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Хайфа",
+   "startDate": "2026-11-21T20:30",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Хайфа",
+     "addressCountry": "IL"
+    },
+    "name": "Кригер"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/",
+   "offers": {
+    "@type": "Offer",
+    "url": "https://showman.co.il/e/linda-2026/",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2026-11-21"
+   }
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Москва",
+   "startDate": "2026-11-27",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Москва",
+     "addressCountry": "RU"
+    },
+    "name": "Графит",
+    "url": "https://graphite.moscow/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/"
+  },
+  {
+   "@type": "MusicEvent",
+   "name": "Линда — концерт в городе Одинцово",
+   "startDate": "2026-11-28",
+   "eventStatus": "https://schema.org/EventScheduled",
+   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+   "location": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Одинцово",
+     "addressCountry": "RU"
+    },
+    "name": "Руки Вверх! Бар",
+    "url": "https://odin.rvbar.ru/"
+   },
+   "performer": {
+    "@id": "https://lindaconcerts.ru/#artist"
+   },
+   "image": "https://lindaconcerts.ru/assets/og/og-cover.jpg?v=dfa7506f",
+   "url": "https://lindaconcerts.ru/"
+  }
+ ]
+}
+</script>
 <!-- Ровно те же файлы и те же условия, что и в CSS ниже: иначе браузер
      скачает картинку дважды. Фон блока грузится позже <img>, поэтому
      предзагрузка здесь не роскошь, а то, что держит первый экран. -->

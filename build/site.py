@@ -138,8 +138,100 @@ def render(events, venues):
   </div>''')
         parts.append('</div>')
 
-    page = TPL.read_text(encoding="utf-8").replace("__ROWS__", "\n".join(parts))
+    page = (TPL.read_text(encoding="utf-8")
+            .replace("__ROWS__", "\n".join(parts))
+            .replace("__JSONLD__", jsonld(events, venues)))
     OUT.write_text(stamp(page), encoding="utf-8")
+    sidecars()
+
+
+SITE = "https://lindaconcerts.ru"
+# Код страны из ISO — в разметке он нужен всегда, в том числе для России,
+# где в самой афише мы его не показываем.
+ISO = {"RU": "RU", "KZ": "KZ", "BY": "BY", "IL": "IL"}
+
+def jsonld(events, venues):
+    """Артист и его концерты машинным языком.
+
+    Из этого поисковик собирает карточку исполнителя и понимает, что сайт
+    официальный, а не очередная перепечатка афиши. Список тот же, что и на
+    странице, — расходиться им нельзя, поэтому собирается из тех же данных."""
+    artist = {
+        "@type": "MusicGroup",
+        "@id": SITE + "/#artist",
+        "name": "Линда",
+        "alternateName": ["ЛИNДА", "Linda", "Светлана Гейман"],
+        "url": SITE + "/",
+        "image": SITE + "/assets/og/og-cover.jpg",
+        "sameAs": ["https://vk.com/linda_official", "https://t.me/lindamusic"],
+    }
+    graph = [artist, {
+        "@type": "WebSite",
+        "@id": SITE + "/#site",
+        "url": SITE + "/",
+        "name": "ЛИNДА — официальный сайт",
+        "inLanguage": "ru-RU",
+        "about": {"@id": SITE + "/#artist"},
+    }]
+
+    for e in sorted(events, key=lambda x: x["date"]):
+        place = {"@type": "Place", "address": {
+            "@type": "PostalAddress",
+            "addressLocality": e["city"],
+            "addressCountry": ISO.get(e.get("country", "RU"), "RU"),
+        }}
+        if e.get("venue"):
+            place["name"] = e["venue"]
+            vu = venue_url(e, venues)
+            if vu: place["url"] = vu
+
+        ev = {
+            "@type": "MusicEvent",
+            "name": f'Линда — концерт в городе {e["city"]}',
+            # Без смещения: у нас города в пяти поясах, а местное время
+            # схема допускает. Врать про +03:00 хуже, чем не указать вовсе.
+            "startDate": e["date"] + ("T" + e["time"] if e.get("time") else ""),
+            "eventStatus": "https://schema.org/EventScheduled",
+            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+            "location": place,
+            # organizer не ставим: концерты собирают промоутеры, а не артистка
+            "performer": {"@id": SITE + "/#artist"},
+            "image": SITE + "/assets/og/og-cover.jpg",
+            "url": SITE + "/",
+        }
+        if e["status"] == "on_sale" and e.get("ticketUrl"):
+            ev["offers"] = {
+                "@type": "Offer",
+                "url": e["ticketUrl"],
+                "availability": "https://schema.org/InStock",
+                "validFrom": e["date"],
+            }
+        graph.append(ev)
+
+    body = json.dumps({"@context": "https://schema.org", "@graph": graph},
+                      ensure_ascii=False, indent=1)
+    return f'<script type="application/ld+json">\n{body}\n</script>'
+
+
+def sidecars():
+    """robots.txt и sitemap.xml — их никто не линкует, роботы берут по адресу."""
+    # Страницы-примерки лежат рядом и открываются по прямому адресу. В поиске
+    # им не место: это черновики, и они тянут на себя запросы про Линду.
+    (ROOT / "robots.txt").write_text(
+        "User-agent: *\nAllow: /\n"
+        "Disallow: /transitions.html\n"
+        "Disallow: /mobile-crop.html\n"
+        "Disallow: /scrim.html\n\n"
+        f"Sitemap: {SITE}/sitemap.xml\n", encoding="utf-8")
+    today = datetime.date.today().isoformat()
+    (ROOT / "sitemap.xml").write_text(
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        f'  <url>\n    <loc>{SITE}/</loc>\n'
+        f'    <lastmod>{today}</lastmod>\n'
+        '    <changefreq>weekly</changefreq>\n'
+        '    <priority>1.0</priority>\n  </url>\n'
+        '</urlset>\n', encoding="utf-8")
 
 
 ASSET = re.compile(r'assets/[A-Za-z0-9._/-]+\.(?:webp|avif|woff2|svg|jpg|jpeg|png)')

@@ -4,7 +4,28 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ЛИNДА — официальный сайт</title>
-<meta name="description" content="Линда — официальный сайт. Афиша концертов, билеты, площадки.">
+<meta name="description" content="Линда — официальный сайт. Афиша концертов: даты, города, площадки и билеты.">
+<link rel="canonical" href="https://lindaconcerts.ru/">
+
+<!-- Как ссылка разворачивается в телеграме, вотсапе и вконтакте. Без этих
+     тегов она приходит голой строкой, а сайт будут пересылать в переписке
+     чаще, чем открывать из поиска. Адрес картинки обязан быть абсолютным. -->
+<meta property="og:type" content="music.musician">
+<meta property="og:site_name" content="ЛИNДА">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="ЛИNДА — официальный сайт">
+<meta property="og:description" content="Афиша концертов: даты, города, площадки и билеты.">
+<meta property="og:url" content="https://lindaconcerts.ru/">
+<meta property="og:image" content="https://lindaconcerts.ru/assets/og/og-cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Линда с группой на сцене">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- Машинная разметка: из неё поисковик собирает карточку артиста и решает,
+     какой сайт официальный. Собирается сборкой из tour.json — руками не
+     трогать, иначе разъедется с афишей. -->
+__JSONLD__
 <!-- Ровно те же файлы и те же условия, что и в CSS ниже: иначе браузер
      скачает картинку дважды. Фон блока грузится позже <img>, поэтому
      предзагрузка здесь не роскошь, а то, что держит первый экран. -->

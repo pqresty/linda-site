@@ -16,6 +16,10 @@ OUT  = ROOT / "site"
 # адресу — нужны, чтобы смотреть варианты с телефона. Убрать: очистить список.
 EXTRA = ["transitions.html", "mobile-crop.html", "scrim.html"]
 
+# Файлы для роботов. На них никто не ссылается — поисковик берёт их по
+# фиксированному адресу, поэтому в списке ссылок они не всплывут никогда.
+ROBOTS = ["robots.txt", "sitemap.xml"]
+
 # Свой домен. Пока пусто — GitHub раздаёт сайт по адресу вида
 # pqresty.github.io/linda-site/. Как только записи DNS будут указывать на
 # GitHub, впишите сюда "lindaconcerts.ru": сборка положит рядом файл CNAME,
@@ -37,6 +41,11 @@ def referenced(html_text):
             p = part.strip().split()[0]
             if p and not p.startswith(("http", "data:")):
                 paths.add(p)
+    # Картинка для соцсетей и разметки указывается абсолютным адресом — иначе
+    # телеграм и вконтакте её не заберут. В src/href она при этом не попадает,
+    # поэтому любой путь вида assets/… забираем, где бы он в странице ни лежал.
+    paths |= set(re.findall(
+        r'assets/[A-Za-z0-9._/-]+\.(?:webp|avif|woff2|svg|jpg|jpeg|png)', html_text))
     return sorted(p.split("?", 1)[0] for p in paths)
 
 
@@ -54,7 +63,7 @@ def main():
     OUT.mkdir(exist_ok=True)
 
     total = 0
-    for p in pages:
+    for p in pages + [r for r in ROBOTS if (ROOT / r).exists()]:
         shutil.copy2(ROOT / p, OUT / p)
         total += (OUT / p).stat().st_size
     missing = []
