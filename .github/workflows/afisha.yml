@@ -1,0 +1,66 @@
+name: Афиша
+
+# Идёт на серверах GitHub, а не на Маке. Маку тут делать нечего: launchd не
+# пускают в ~/Documents без Full Disk Access, и такие задачи ломаются молча.
+#
+# Время в cron — UTC. Москва на три часа впереди.
+on:
+  schedule:
+    - cron: "0 6 * * *"        # 09:00 МСК — вопрос про прошедшие даты
+    - cron: "*/20 6-20 * * *"  # днём каждые 20 минут — слушаем чат
+    - cron: "0 7 * * 1"        # понедельник 10:00 МСК — недельная сводка
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  afisha:
+    runs-on: ubuntu-latest
+    env:
+      TG_TOKEN: ${{ secrets.TG_TOKEN }}
+      TG_CHAT:  ${{ secrets.TG_CHAT }}
+      SCHED:    ${{ github.event.schedule }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: source }
+
+      - name: Спросить про прошедшие даты
+        if: github.event.schedule == '0 6 * * *' || github.event_name == 'workflow_dispatch'
+        run: python3 build/watch.py ask
+
+      - name: Разобрать чат
+        run: python3 build/watch.py apply | tee /tmp/out.txt
+
+      - name: Недельная сводка
+        if: github.event.schedule == '0 7 * * 1'
+        run: python3 build/watch.py report
+
+      # Дальше — только если в чате сказали «да». Признак печатает сам watch.py.
+      - name: Собрать и выложить
+        run: |
+          grep -q 'publish=1' /tmp/out.txt || { echo "публиковать нечего"; exit 0; }
+          python3 build/site.py build
+          python3 build/deploy.py
+          git config user.name  "Афиша"
+          git config user.email "actions@github.com"
+          git clone --depth 1 --branch main \
+            "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" live
+          # .git у клона не трогаем, остальное заменяем содержимым site/
+          find live -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -a site/. live/
+          cd live
+          git add -A
+          git diff --cached --quiet || { git commit -m "Прошедшие даты убраны"; git push; }
+
+      # Ящик с правками и отметка о заданном вопросе должны пережить прогон,
+      # иначе завтра всё спросится заново, а письма потеряются.
+      - name: Запомнить состояние
+        if: always()
+        run: |
+          git config user.name  "Афиша"
+          git config user.email "actions@github.com"
+          git add build/pending.json build/inbox.jsonl 2>/dev/null || true
+          git diff --cached --quiet && { echo "состояние не менялось"; exit 0; }
+          git commit -m "Состояние утренней проверки"
+          git push "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:source
