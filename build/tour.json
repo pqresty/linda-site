@@ -37,10 +37,9 @@
       "city": "Москва",
       "country": "RU",
       "venue": "Petter",
-      "ticketUrl": "https://rolld.ru/event/linda-2026-08-27/tickets",
+      "ticketUrl": "https://petter.su/afisha/",
       "status": "on_sale",
-      "source": "agg",
-      "aggregatorOk": true
+      "source": "venue"
     },
     {
       "id": "2026-08-30-konaev-familyrockfest",
@@ -56,10 +55,10 @@
     {
       "id": "2026-08-31-msk-korabl",
       "date": "2026-08-31",
-      "time": "20:00",
+      "time": "19:00",
       "city": "Москва",
       "country": "RU",
-      "venue": "Теплоход, Северный речной вокзал",
+      "venue": "Теплоход «РИО-1»",
       "ticketUrl": "https://cruisefest.moscow/linda2026",
       "status": "on_sale",
       "source": "venue"
@@ -103,10 +102,10 @@
       "time": "20:00",
       "city": "Химки",
       "country": "RU",
-      "venue": "Руки Вверх! Бар",
-      "ticketUrl": "https://rolld.ru/event/linda-chimki/tickets",
+      "venue": "90е",
+      "ticketUrl": "https://barkhimki.ru/events/linda",
       "status": "on_sale",
-      "source": "agg"
+      "source": "venue"
     },
     {
       "id": "2026-09-26-ryazan-rvb",
@@ -126,10 +125,9 @@
       "city": "Москва",
       "country": "RU",
       "venue": "Petter",
-      "ticketUrl": "https://rolld.ru/event/linda-2026-09-27/tickets",
+      "ticketUrl": "https://petter.su/afisha/",
       "status": "on_sale",
-      "source": "agg",
-      "aggregatorOk": true
+      "source": "venue"
     },
     {
       "id": "2026-09-30-ekb-maximilians",
@@ -237,7 +235,7 @@
       "city": "Великий Новгород",
       "country": "RU",
       "venue": "Сердце",
-      "ticketUrl": "https://nov.ticketland.ru/kluby/klub-serdce-nn/linda-velikiy-novgorod/t_20261025_1900_p_28908163/",
+      "ticketUrl": "https://serdcevn.ru/",
       "status": "on_sale",
       "source": "venue"
     },
@@ -248,10 +246,9 @@
       "city": "Москва",
       "country": "RU",
       "venue": "Petter",
-      "ticketUrl": "https://rolld.ru/event/linda-2026-10-29/tickets",
+      "ticketUrl": "https://petter.su/afisha/",
       "status": "on_sale",
-      "source": "agg",
-      "aggregatorOk": true
+      "source": "venue"
     },
     {
       "id": "2026-11-01-msk-lyustra",

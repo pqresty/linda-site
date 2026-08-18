@@ -1,12 +1,22 @@
 {
-  "Petter": "https://petter.su/",
   "16 Тонн": "https://www.16tons.ru/",
-  "Поместье Грув": "https://groove-events.ru/",
-  "Академ Джаз Клуб": "https://academjazzclub.ru/",
+  "90е": "https://barkhimki.ru/",
+  "Duplex": "https://www.clubduplex.ru/",
   "Family Rock Fest — ASP Arena": "https://familyfest.kz/",
-  "Теплоход, Северный речной вокзал": "https://cruisefest.moscow/",
-  "Родня": "https://rodnya.rest/",
+  "Petter": "https://petter.su/",
+  "Аврора Концерт Холл": "https://aurora.fm/",
+  "Академ Джаз Клуб": "https://academjazzclub.ru/",
+  "Графит": "https://graphite.moscow/",
+  "Люстра": "https://lustrabar.ru/",
+  "Максимилианс": {
+    "Екатеринбург": "https://ekb.maximilians.ru/",
+    "Челябинск": "https://chel.maximilians.ru/",
+    "Казань": "https://kazan.maximilians.ru/",
+    "Самара": "https://samara.maximilians.ru/"
+  },
   "Модная среда 1823": "https://modnaya-sreda.ru/",
+  "Поместье Грув": "https://groove-events.ru/",
+  "Родня": "https://rodnya.rest/",
   "Руки Вверх! Бар": {
     "Ярославль": "https://yar.rvbar.ru/",
     "Нижний Новгород": "https://nino.rvbar.ru/",
@@ -14,16 +24,7 @@
   },
   "Руки Вверх! Бар (ex. Deep)": "https://ryazan.rvbar.ru/",
   "Руки Вверх! Бар — Строгино": "https://strogino.rvbar.ru/",
-  "Duplex": "https://www.clubduplex.ru/",
-  "Аврора Концерт Холл": "https://aurora.fm/",
-  "Сердце": "https://serdcevn.ru/",
-  "Максимилианс": {
-    "Екатеринбург": "https://ekb.maximilians.ru/",
-    "Челябинск": "https://chel.maximilians.ru/",
-    "Казань": "https://kazan.maximilians.ru/",
-    "Самара": "https://samara.maximilians.ru/"
-  },
   "Руки Вверх! Бар — Тверская": "https://tverskaya.rvbar.ru/",
-  "Люстра": "https://lustrabar.ru/",
-  "Графит": "https://graphite.moscow/"
+  "Сердце": "https://serdcevn.ru/",
+  "Теплоход «РИО-1»": "https://cruisefest.moscow/"
 }
