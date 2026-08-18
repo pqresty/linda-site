@@ -29,10 +29,14 @@ YES = {"да", "да.", "ага", "давай", "убирай", "убрать", 
 NO  = {"нет", "нет.", "не", "погоди", "подожди", "стой", "-"}
 
 
+class NotSetUp(Exception):
+    """Бота ещё не завели. Это не поломка — просто молчим и выходим по-хорошему."""
+
+
 def tg(method, **params):
-    """Запрос к боту. Молчание сети не должно ронять задачу целиком."""
+    """Запрос к боту."""
     if not TOKEN or not CHAT:
-        sys.exit("нет TG_TOKEN или TG_CHAT — задача не настроена")
+        raise NotSetUp
     url = f"https://api.telegram.org/bot{TOKEN}/{method}"
     data = urllib.parse.urlencode(params).encode()
     with urllib.request.urlopen(url, data=data, timeout=30) as r:
@@ -163,5 +167,13 @@ def report():
 
 if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else ""
-    {"ask": ask, "apply": apply, "report": report}.get(
-        cmd, lambda: sys.exit(__doc__))()
+    run = {"ask": ask, "apply": apply, "report": report}.get(cmd)
+    if not run:
+        sys.exit(__doc__)
+    try:
+        run()
+    except NotSetUp:
+        # Пока в секретах нет токена, задача обязана завершаться успехом:
+        # иначе она падает каждые двадцать минут и шлёт письма о сбоях.
+        print("бот не настроен — TG_TOKEN и TG_CHAT пусты, пропускаю")
+        print("publish=0")
