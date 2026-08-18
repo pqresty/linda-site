@@ -101,7 +101,7 @@ def render(events, venues):
     parts = []
     for (y, m), items in groups.items():
         parts.append('<div class="mon">')
-        parts.append(f'  <h2 class="mon__h">{MONTHS[m]}</h2>')
+        parts.append(f'  <h3 class="mon__h">{MONTHS[m]}</h3>')
         for d, e in items:
             cls = "row"
             if e["status"] == "not_on_sale": cls += " row--soon"
