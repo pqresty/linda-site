@@ -6,6 +6,11 @@
 <title>ЛИNДА — официальный сайт</title>
 <meta name="description" content="Линда — официальный сайт. Афиша концертов: даты, города, площадки и билеты.">
 <link rel="canonical" href="https://lindaconcerts.ru/">
+<!-- Знак во вкладке и на домашнем экране. Гугл показывает его и в мобильной
+     выдаче: без него рядом со ссылкой висит серый шарик. -->
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=74f1a1a8">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=a3484b9a">
+<meta name="theme-color" content="#06080B">
 
 <!-- Как ссылка разворачивается в телеграме, вотсапе и вконтакте. Без этих
      тегов она приходит голой строкой, а сайт будут пересылать в переписке
@@ -992,6 +997,12 @@ a{color:inherit}
 }
 .hero__txt{position:relative;z-index:2;align-self:end;justify-items:start;display:grid;
   gap:clamp(13px,2.2vh,22px);padding:0 var(--gut) clamp(52px,9vh,104px)}
+/* Знак — это и есть заголовок страницы: главным на сайте артистки должно быть
+   её имя, а не слово «Афиша». Рисунок остаётся рисунком, имя текстом лежит
+   рядом и спрятано с глаз — для поиска и для читалок экрана. */
+.logo-h{margin:0;display:contents}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;
+  clip-path:inset(50%);white-space:nowrap}
 .hero .logo{width:min(64vw,640px);height:auto;color:var(--bone);display:block}
 .hero__tag{margin:0;font-size:clamp(10.5px,1.4vw,15px);letter-spacing:.3em;text-transform:uppercase;color:#C9CED6}
 /* указатель: снизу афиша */
@@ -1028,7 +1039,7 @@ a{color:inherit}
 .top{position:relative;z-index:1;
   padding:clamp(13px,2.25vh,23px) 0 clamp(2px,0.25vh,3px)}
 .kicker{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--ash);margin:0 0 14px}
-.top h1{max-width:940px;margin:0 auto;padding:0 var(--gut);
+.top h2{max-width:940px;margin:0 auto;padding:0 var(--gut);
   font-weight:800;font-size:clamp(38px,7.4vw,86px);letter-spacing:-.02em;line-height:1}
 
 /* ---------- афиша на коллаже ---------- */
@@ -1220,6 +1231,7 @@ span.row__v{border-bottom:0}
        aria-label="Линда с группой на сцене, зал с поднятыми телефонами"></div>
   <div class="hero__scrim" aria-hidden="true"></div>
   <div class="hero__txt">
+    <h1 class="logo-h">
     <svg class="logo" viewBox="0 0 461.1 100" role="img" aria-label="ЛИNДА">
       <g fill="currentColor" fill-rule="evenodd">
         <path d="M31.1 0 H53.3 L85 102 H-0.6 Z M39.9 14 L66.8 102 H13.8 Z"/>
@@ -1229,20 +1241,22 @@ span.row__v{border-bottom:0}
         <path d="M406.2 0 H427.5 L461.8 102 H372.6 Z M415 13.4 L429.7 62 H400.3 Z M394.4 80 H435.8 L443.5 102 H386.9 Z"/>
             </g>
     </svg>
+    <span class="sr">Линда — официальный сайт</span>
+    </h1>
     <p class="hero__tag">Музыка пространства без границ</p>
   </div>
   <a class="cue" href="#afisha"><span>Афиша</span><i></i></a>
 </section>
 
 <header class="top" id="afisha">
-  <h1>Афиша</h1>
+  <h2>Афиша</h2>
 </header>
 
 <section class="afisha">
   <div class="afisha__in">
     <div class="strip" aria-hidden="true"></div>
 <div class="mon">
-  <h2 class="mon__h">Август</h2>
+  <h3 class="mon__h">Август</h3>
   <div class="row">
     <span class="row__d">20</span>
     <span class="row__m">чт · 20:30</span>
@@ -1281,7 +1295,7 @@ span.row__v{border-bottom:0}
   </div>
 </div>
 <div class="mon">
-  <h2 class="mon__h">Сентябрь</h2>
+  <h3 class="mon__h">Сентябрь</h3>
   <div class="row">
     <span class="row__d">11</span>
     <span class="row__m">пт · 20:00</span>
@@ -1326,7 +1340,7 @@ span.row__v{border-bottom:0}
   </div>
 </div>
 <div class="mon">
-  <h2 class="mon__h">Октябрь</h2>
+  <h3 class="mon__h">Октябрь</h3>
   <div class="row">
     <span class="row__d">01</span>
     <span class="row__m">чт · 21:00</span>
@@ -1389,7 +1403,7 @@ span.row__v{border-bottom:0}
   </div>
 </div>
 <div class="mon">
-  <h2 class="mon__h">Ноябрь</h2>
+  <h3 class="mon__h">Ноябрь</h3>
   <div class="row">
     <span class="row__d">01</span>
     <span class="row__m">вс · 20:00</span>
@@ -1551,7 +1565,7 @@ span.row__v{border-bottom:0}
 // а невидимая ссылка «Афиша» продолжала бы перехватывать нажатия.
 (function(){
   var hero = document.querySelector('.hero'),
-      word = document.querySelector('.top h1'),
+      word = document.querySelector('.top h2'),
       row  = document.querySelector('.afisha .row');
   if (!hero || !word) return;
   var last = -1, from = 0, span = 1, fade = false;
