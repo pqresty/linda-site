@@ -1036,7 +1036,14 @@ a{color:inherit}
    кадре прокрутки, отсюда подёргивание. position:fixed уходит на композитор
    и при скролле не перерисовывается вовсе. Заодно работает на iOS, который
    background-attachment:fixed игнорирует. */
-.bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+/* Высота задана в lvh, а не через inset:0. На телефоне панель браузера то
+   прячется, то возвращается, и окно меняет высоту прямо на прокрутке; слой с
+   inset:0 менялся вместе с ним, а cover каждый раз пересчитывал масштаб — и
+   коллаж наплывал и отъезжал, пока текст стоял на месте. lvh — высота окна с
+   убранной панелью, величина постоянная: картинка считается один раз. Когда
+   панель показана, низ слоя просто уходит под неё. */
+.bg{position:fixed;left:0;right:0;top:0;height:100vh;height:100lvh;
+  z-index:0;pointer-events:none;
   background-image:linear-gradient(rgba(6,8,11,var(--scrim)),rgba(6,8,11,var(--scrim))),
                    url("assets/collage-sheet.webp?v=f85f5b47");
   background-size:cover,cover;background-position:center,center;
@@ -1050,7 +1057,10 @@ a{color:inherit}
   z-index:2;pointer-events:none;background:linear-gradient(rgba(6,8,11,0),var(--ink))}
 .afisha__in{position:relative;z-index:3;max-width:940px;margin:0 auto;padding:0 var(--gut)}
 
-.strip{display:none;position:fixed;inset:0;z-index:4;pointer-events:none;opacity:0;
+/* Размер слово в слово как у .bg: полоса под плашкой месяца обязана совпадать
+   с фоном пиксель в пиксель, иначе на её кромке виден стык. */
+.strip{display:none;position:fixed;left:0;right:0;top:0;height:100vh;height:100lvh;
+  z-index:4;pointer-events:none;opacity:0;
   background-image:linear-gradient(rgba(6,8,11,var(--scrim)),rgba(6,8,11,var(--scrim))),
                    url("assets/collage-sheet-sm.webp?v=46d05c59");
   background-size:cover,cover;background-position:center,center;
