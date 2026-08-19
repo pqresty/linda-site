@@ -27,9 +27,10 @@
       "date": "2026-08-25",
       "city": "Казань",
       "venue": "Новая волна — Нью Вейв Холл",
-      "status": "not_on_sale",
-      "source": "agg",
-      "time": "19:30"
+      "status": "on_sale",
+      "source": "venue",
+      "time": "19:30",
+      "ticketUrl": "https://icetickets.ru/meropriyatie/novaya-volna-2026-000040522"
     },
     {
       "id": "2026-08-27-msk-petter",
