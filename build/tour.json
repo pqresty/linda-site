@@ -1,28 +1,6 @@
 {
   "events": [
     {
-      "id": "2026-08-20-gatchina-groove",
-      "date": "2026-08-20",
-      "time": "20:30",
-      "city": "Гатчина",
-      "country": "RU",
-      "venue": "Поместье Грув",
-      "ticketUrl": "https://groove-events.ru/events/6a69dfded8543650992d035c",
-      "status": "on_sale",
-      "source": "venue"
-    },
-    {
-      "id": "2026-08-21-msk-academ",
-      "date": "2026-08-21",
-      "time": "20:00",
-      "city": "Москва",
-      "country": "RU",
-      "venue": "Академ Джаз Клуб",
-      "ticketUrl": "https://academjazzclub.ru/events/939/",
-      "status": "on_sale",
-      "source": "agg"
-    },
-    {
       "id": "2026-08-25-kzn-novaya-volna",
       "date": "2026-08-25",
       "city": "Казань",
