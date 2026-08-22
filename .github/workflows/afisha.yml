@@ -25,6 +25,9 @@ jobs:
       - uses: actions/checkout@v5
         with: { ref: source }
 
+      - name: Кто мы для телеграма
+        run: python3 build/watch.py whoami
+
       - name: Спросить про прошедшие даты
         if: github.event.schedule == '0 6 * * *' || github.event_name == 'workflow_dispatch'
         run: python3 build/watch.py ask

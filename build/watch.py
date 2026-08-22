@@ -12,7 +12,8 @@
 Токен бота и номер чата берутся из переменных окружения TG_TOKEN и TG_CHAT.
 В коде и в репозитории их нет и быть не должно — они лежат в секретах GitHub.
 """
-import datetime, json, os, pathlib, subprocess, sys, urllib.parse, urllib.request
+import datetime, json, os, pathlib, subprocess, sys
+import urllib.error, urllib.parse, urllib.request
 
 HERE    = pathlib.Path(__file__).parent
 TOUR    = HERE / "tour.json"
@@ -39,8 +40,16 @@ def tg(method, **params):
         raise NotSetUp
     url = f"https://api.telegram.org/bot{TOKEN}/{method}"
     data = urllib.parse.urlencode(params).encode()
-    with urllib.request.urlopen(url, data=data, timeout=30) as r:
-        out = json.loads(r.read().decode())
+    try:
+        with urllib.request.urlopen(url, data=data, timeout=30) as r:
+            out = json.loads(r.read().decode())
+    except urllib.error.HTTPError as e:
+        # Телеграм объясняет отказ в теле ответа, а urllib его проглатывает и
+        # оставляет голый «403 Forbidden». Без этого текста причину не понять:
+        # 403 — это и «не нажали Start у бота», и «бота заблокировали».
+        try:   why = json.loads(e.read().decode()).get("description", "")
+        except Exception: why = ""
+        sys.exit(f"телеграм отказал ({e.code}): {why or e.reason}")
     if not out.get("ok"):
         sys.exit(f"телеграм отказал: {out.get('description')}")
     return out["result"]
@@ -165,9 +174,30 @@ def report():
     print("сводка отправлена")
 
 
+# ---------------------------------------------------------------- диагностика
+def whoami():
+    """Кто мы для телеграма и кто нам писал. Ничего не отправляет.
+
+    Нужна, когда бот молчит: показывает, тот ли это бот и совпадает ли номер
+    чата в секрете с тем, из которого реально приходят сообщения."""
+    me = tg("getMe")
+    print(f"бот: @{me.get('username')} (id {me.get('id')})")
+    print(f"TG_CHAT в секрете: {CHAT}")
+    chats = {}
+    for u in tg("getUpdates", timeout=0, allowed_updates='["message"]'):
+        c = (u.get("message") or {}).get("chat") or {}
+        if c.get("id"):
+            chats[c["id"]] = c.get("type", "?")
+    if chats:
+        print("писали из чатов:", ", ".join(f"{k} ({v})" for k, v in chats.items()))
+        print("совпадает:", "да" if str(CHAT) in map(str, chats) else "НЕТ")
+    else:
+        print("сообщений в очереди нет — либо их уже разобрали, либо боту не писали")
+
+
 if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else ""
-    run = {"ask": ask, "apply": apply, "report": report}.get(cmd)
+    run = {"ask": ask, "apply": apply, "report": report, "whoami": whoami}.get(cmd)
     if not run:
         sys.exit(__doc__)
     try:
