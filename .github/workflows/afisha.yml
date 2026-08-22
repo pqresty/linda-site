@@ -45,8 +45,8 @@ jobs:
           grep -q 'publish=1' /tmp/out.txt || { echo "публиковать нечего"; exit 0; }
           python3 build/site.py build
           python3 build/deploy.py
-          git config user.name  "Афиша"
-          git config user.email "actions@github.com"
+          git config --global user.name  "Афиша"
+          git config --global user.email "actions@github.com"
           git clone --depth 1 --branch main \
             "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" live
           # .git у клона не трогаем, остальное заменяем содержимым site/
@@ -61,9 +61,9 @@ jobs:
       - name: Запомнить состояние
         if: always()
         run: |
-          git config user.name  "Афиша"
-          git config user.email "actions@github.com"
-          git add build/pending.json build/inbox.jsonl 2>/dev/null || true
+          git config --global user.name  "Афиша"
+          git config --global user.email "actions@github.com"
+          git add build/pending.json build/inbox.jsonl build/tour.json 2>/dev/null || true
           git diff --cached --quiet && { echo "состояние не менялось"; exit 0; }
           git commit -m "Состояние утренней проверки"
           git push "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:source

@@ -5,9 +5,10 @@
   python3 watch.py apply   — пришло «да»? пересобрать сайт
   python3 watch.py report  — что изменилось у чужих афиш и не умерли ли ссылки
 
-Прошедшие даты выбрасывает сама сборка, в tour.json их никто не стирает. Значит
-«убрать вчерашнюю дату» — это просто «пересобрать и выложить». Заказчик просил
-не делать этого молча, поэтому между «увидели» и «выложили» стоит его «да».
+Сборка и так не показывает прошедшее, но в tour.json оно остаётся — иначе
+вопрос про одну и ту же вчерашнюю дату приходил бы вечно. Поэтому на «да»
+дата вычёркивается из данных, а сайт пересобирается. Заказчик просил не
+делать этого молча, поэтому между «увидели» и «выложили» стоит его «да».
 
 Токен бота и номер чата берутся из переменных окружения TG_TOKEN и TG_CHAT.
 В коде и в репозитории их нет и быть не должно — они лежат в секретах GitHub.
@@ -95,6 +96,7 @@ def ask():
     PENDING.write_text(json.dumps({
         "asked":  datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "dates":  [e["date"] for e in gone],
+        "ids":    [e["id"] for e in gone],
         "msg_id": msg["message_id"],
     }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"спросил про {len(gone)} дат")
@@ -146,6 +148,18 @@ def apply():
     if not verdict:
         say("Хорошо, оставляю как есть. Спрошу снова, когда появится ещё одна прошедшая дата.")
         print("сказано «нет»"); print("publish=0"); return
+
+    # Вычёркиваем даты из самих данных. Сборка их и так не показывает, но в
+    # tour.json они остаются — и тогда вопрос про них приходил бы каждое утро
+    # до скончания века. История не теряется: она в истории репозитория.
+    d = json.loads(TOUR.read_text(encoding="utf-8"))
+    ids   = set(p.get("ids") or [])
+    dates = set(p.get("dates") or [])
+    keep  = (lambda e: e["id"] not in ids) if ids else (lambda e: e["date"] not in dates)
+    before = len(d["events"])
+    d["events"] = [e for e in d["events"] if keep(e)]
+    TOUR.write_text(json.dumps(d, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"вычеркнуто из данных: {before - len(d['events'])}")
 
     subprocess.run([sys.executable, str(HERE / "site.py"), "build"], check=True)
     subprocess.run([sys.executable, str(HERE / "deploy.py")],        check=True)
