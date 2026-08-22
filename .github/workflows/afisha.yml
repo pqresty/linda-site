@@ -7,7 +7,7 @@ name: Афиша
 on:
   schedule:
     - cron: "0 6 * * *"        # 09:00 МСК — вопрос про прошедшие даты
-    - cron: "*/20 6-20 * * *"  # днём каждые 20 минут — слушаем чат
+    - cron: "*/20 * * * *"     # каждые 20 минут круглые сутки — слушаем чат
     - cron: "0 7 * * 1"        # понедельник 10:00 МСК — недельная сводка
   workflow_dispatch:
 
@@ -28,12 +28,12 @@ jobs:
       - name: Кто мы для телеграма
         run: python3 build/watch.py whoami
 
+      - name: Разобрать чат
+        run: python3 build/watch.py apply | tee /tmp/out.txt
+
       - name: Спросить про прошедшие даты
         if: github.event.schedule == '0 6 * * *' || github.event_name == 'workflow_dispatch'
         run: python3 build/watch.py ask
-
-      - name: Разобрать чат
-        run: python3 build/watch.py apply | tee /tmp/out.txt
 
       - name: Недельная сводка
         if: github.event.schedule == '0 7 * * 1'
