@@ -49,9 +49,11 @@ jobs:
           git config --global user.email "actions@github.com"
           git clone --depth 1 --branch main \
             "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" live
-          # .git у клона не трогаем, остальное заменяем содержимым site/
+          # .git у клона не трогаем — ни при очистке, ни при копировании.
+          # У site/ есть свой .git (deploy.py его заводит), и «cp -a site/.»
+          # затирал им .git клона: коммит проходил, а пушить было уже некуда.
           find live -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
-          cp -a site/. live/
+          find site -mindepth 1 -maxdepth 1 ! -name .git -exec cp -a {} live/ \;
           cd live
           git add -A
           git diff --cached --quiet || { git commit -m "Прошедшие даты убраны"; git push; }
