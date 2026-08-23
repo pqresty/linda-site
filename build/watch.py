@@ -108,23 +108,24 @@ def apply():
 
     Печатает publish=1, если сайт надо перевыложить.
 
-    Смещение (offset) намеренно не подтверждаем: телеграм и так держит
-    непрочитанное сутки, а хранить счётчик между запусками — лишняя возня и
-    лишний коммит в репозиторий. От повторной обработки спасает отметка
-    времени: всё, что старше последнего разбора, пропускаем."""
+    Разобранное подтверждаем телеграму (offset), иначе он сутки отдаёт одни и
+    те же сообщения, и при любой потере нашего состояния они разбираются по
+    второму кругу. Раньше здесь была ставка только на отметку времени в файле
+    ящика — файл однажды не сохранился, и бот четырежды отрапортовал об одном
+    письме. Подтверждение живёт на стороне телеграма и переживает что угодно."""
     seen  = json.loads(INBOX.read_text(encoding="utf-8").splitlines()[-1])["at"] \
             if INBOX.exists() and INBOX.read_text(encoding="utf-8").strip() else 0
     p     = json.loads(PENDING.read_text(encoding="utf-8")) if PENDING.exists() else None
     asked = datetime.datetime.fromisoformat(p["asked"]).timestamp() if p else None
 
-    verdict, letters, newest = None, [], seen
+    verdict, letters, last_id = None, [], 0
     for u in tg("getUpdates", timeout=0, allowed_updates='["message"]'):
+        last_id = max(last_id, u.get("update_id", 0))
         m = u.get("message") or {}
         if str(m.get("chat", {}).get("id")) != str(CHAT): continue
         when = m.get("date", 0)
         t = (m.get("text") or "").strip()
         low = t.lower()
-        newest = max(newest, when)
         if p and when >= asked and low in YES: verdict = True;  continue
         if p and when >= asked and low in NO:  verdict = False; continue
         # всё прочее — это правки от заказчика: концерт в уже вышедший месяц,
@@ -132,6 +133,11 @@ def apply():
         # он складывает их в ящик, разбирать буду я, когда мы сядем за сайт.
         if t and when > seen:
             letters.append({"at": when, "text": t})
+
+    # Говорим телеграму, докуда разобрали. Всё до этого номера он больше не
+    # отдаст — даже если наш файл состояния потеряется.
+    if last_id:
+        tg("getUpdates", offset=last_id + 1, limit=1, timeout=0)
 
     if letters:
         with INBOX.open("a", encoding="utf-8") as f:
