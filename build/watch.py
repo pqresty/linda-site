@@ -73,6 +73,26 @@ def past(today):
     return sorted([e for e in events() if e["date"] < today], key=lambda e: e["date"])
 
 
+MONTHS = {1:"января",2:"февраля",3:"марта",4:"апреля",5:"мая",6:"июня",7:"июля",
+          8:"августа",9:"сентября",10:"октября",11:"ноября",12:"декабря"}
+WD = ["пн","вт","ср","чт","пт","сб","вс"]
+
+def human(iso):
+    """25 августа, вт — вместо 2026-08-25. Бот пишет человеку, а не машине."""
+    d = datetime.date.fromisoformat(iso)
+    return f"{d.day} {MONTHS[d.month]}, {WD[d.weekday()]}"
+
+
+def plural(n, one, few, many):
+    """Русский счёт: 1 письмо, 2 письма, 5 писем. Двадцать первое — снова одно."""
+    n = abs(n) % 100
+    if 11 <= n <= 14: return many
+    n %= 10
+    if n == 1:        return one
+    if 2 <= n <= 4:   return few
+    return many
+
+
 # ------------------------------------------------------------------ спросить
 def ask():
     today = datetime.date.today().isoformat()
@@ -86,11 +106,11 @@ def ask():
         if datetime.datetime.now(datetime.timezone.utc) - asked < PATIENCE:
             print("вопрос уже задан, ждём ответа"); return
 
-    lines = [f'· {e["date"]} — {e["city"]}' + (f' · {e["venue"]}' if e.get("venue") else "")
+    lines = [f'· {human(e["date"])} — {e["city"]}' + (f' · {e["venue"]}' if e.get("venue") else "")
              for e in gone]
-    word = "концерт прошёл" if len(gone) == 1 else "концерты прошли"
-    msg = say(f"<b>Афиша</b>\n\nЭти {word}, но всё ещё висят на сайте:\n"
-              + "\n".join(lines)
+    head = ("Этот концерт прошёл, но всё ещё висит на сайте:" if len(gone) == 1 else
+            "Эти концерты прошли, но всё ещё висят на сайте:")
+    msg = say("<b>Афиша</b>\n\n" + head + "\n" + "\n".join(lines)
               + "\n\nУбрать? Ответь <b>да</b> — пересоберу и выложу.")
 
     PENDING.write_text(json.dumps({
@@ -143,8 +163,11 @@ def apply():
         with INBOX.open("a", encoding="utf-8") as f:
             for l in letters:
                 f.write(json.dumps(l, ensure_ascii=False) + "\n")
-        say(f"Записал, {len(letters)} шт. Разберу, когда сядем за сайт — "
-            f"покажу, что поменяю, и выложу после твоего слова.")
+        n = len(letters)
+        say(("Записал." if n == 1 else
+             f"Записал, {n} {plural(n, 'письмо', 'письма', 'писем')}.")
+            + " Разберу, когда сядем за сайт — покажу, что поменяю, "
+              "и выложу после твоего слова.")
         print(f"в ящик легло {len(letters)}")
 
     if verdict is None:
@@ -169,7 +192,7 @@ def apply():
 
     subprocess.run([sys.executable, str(HERE / "site.py"), "build"], check=True)
     subprocess.run([sys.executable, str(HERE / "deploy.py")],        check=True)
-    say("Убрал: " + ", ".join(p["dates"]) + ". Сайт обновлён.")
+    say("Убрал " + ", ".join(human(x) for x in p["dates"]) + ". Сайт обновлён.")
     print("publish=1")
 
 
@@ -188,7 +211,7 @@ def report():
     soon = [e for e in events() if e["status"] != "on_sale"]
     if soon:
         out.append("<b>Ещё без билетов</b>\n" + "\n".join(
-            f'· {e["date"]} — {e["city"]}' + (f' · {e["venue"]}' if e.get("venue") else "")
+            f'· {human(e["date"])} — {e["city"]}' + (f' · {e["venue"]}' if e.get("venue") else "")
             for e in soon))
     say("\n\n".join(out))
     print("сводка отправлена")
