@@ -1,17 +1,6 @@
 {
   "events": [
     {
-      "id": "2026-08-27-msk-petter",
-      "date": "2026-08-27",
-      "time": "21:00",
-      "city": "Москва",
-      "country": "RU",
-      "venue": "Petter",
-      "ticketUrl": "https://iframeab-pre2535.intickets.ru/seance/68264946/",
-      "status": "on_sale",
-      "source": "venue"
-    },
-    {
       "id": "2026-08-30-konaev-familyrockfest",
       "date": "2026-08-30",
       "time": null,
