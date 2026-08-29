@@ -290,6 +290,30 @@
       "venue": "Руки Вверх! Бар",
       "status": "not_on_sale",
       "source": "agg"
+    },
+    {
+      "id": "2026-11-29-almaty-concordia",
+      "date": "2026-11-29",
+      "time": "19:00",
+      "city": "Алматы",
+      "country": "KZ",
+      "venue": "Театр Concordia",
+      "ticketUrl": "https://biletservice.kz/show/linda-almaty",
+      "status": "on_sale",
+      "source": "venue",
+      "aggregatorOk": true
+    },
+    {
+      "id": "2026-11-30-astana-dvorec",
+      "date": "2026-11-30",
+      "time": "20:00",
+      "city": "Астана",
+      "country": "KZ",
+      "venue": "Дворец молодёжи",
+      "ticketUrl": "https://biletservice.kz/show/linda-astana",
+      "status": "on_sale",
+      "source": "venue",
+      "aggregatorOk": true
     }
   ],
   "ignored": [
