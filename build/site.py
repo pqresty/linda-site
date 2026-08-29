@@ -303,10 +303,13 @@ def scan(events, ignored=()):
     это пропущенной датой 2026-го и выдавал ложную тревогу — на Petter, у
     которого стоит абонемент на каждый месяц, таких «пропаж» набиралось пять.
     """
-    try:
-        raw = urllib.request.urlopen(
-            urllib.request.Request("https://rolld.ru/artist/linda", headers=UA), timeout=30
+    def fetch(u):
+        return urllib.request.urlopen(
+            urllib.request.Request(u, headers=UA), timeout=30
         ).read().decode("utf-8", "ignore")
+
+    try:
+        raw = fetch("https://rolld.ru/artist/linda")
     except Exception as e:
         print("не удалось получить rolld.ru/artist/linda:", e); return
 
@@ -322,9 +325,29 @@ def scan(events, ignored=()):
             for v in o.values(): walk(v)
         elif isinstance(o, list):
             for v in o: walk(v)
-    for b in re.findall(r'<script[^>]*application/ld\+json[^>]*>(.*?)</script>', raw, re.S):
-        try: walk(json.loads(b))
-        except Exception: pass
+    def dig(page):
+        for b in re.findall(r'<script[^>]*application/ld\+json[^>]*>(.*?)</script>', page, re.S):
+            try: walk(json.loads(b))
+            except Exception: pass
+
+    dig(raw)
+    if not found:
+        # С августа 2026 на странице артиста дат нет вовсе — только ItemList со
+        # ссылками на события, а startDate уехал на сами страницы. Значит идём
+        # по ссылкам. Сорок штук, поэтому в несколько потоков.
+        urls = []
+        for b in re.findall(r'<script[^>]*application/ld\+json[^>]*>(.*?)</script>', raw, re.S):
+            try: o = json.loads(b)
+            except Exception: continue
+            if isinstance(o, dict) and o.get("@type") == "ItemList":
+                urls = [i.get("url") for i in o.get("itemListElement", []) if i.get("url")]
+        if not urls:
+            print("на странице артиста нет ни дат, ни списка событий — вёрстка снова другая")
+            return
+        print(f"на странице артиста дат нет, читаю {len(urls)} страниц событий…")
+        with concurrent.futures.ThreadPoolExecutor(max_workers=8) as ex:
+            for page in ex.map(lambda u: (lambda: fetch(u))() if u else "", urls):
+                if page: dig(page)
     if not found:
         print("в разметке rolld событий не найдено — возможно, поменялась вёрстка"); return
 
