@@ -1,17 +1,6 @@
 {
   "events": [
     {
-      "id": "2026-08-30-konaev-familyrockfest",
-      "date": "2026-08-30",
-      "time": null,
-      "city": "Конаев",
-      "country": "KZ",
-      "venue": "Family Rock Fest — ASP Arena",
-      "ticketUrl": "https://familyfest.kz/tc-events/family-rock-festival-2026/",
-      "status": "on_sale",
-      "source": "agg"
-    },
-    {
       "id": "2026-08-31-msk-korabl",
       "date": "2026-08-31",
       "time": "19:00",
