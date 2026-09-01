@@ -2,7 +2,8 @@
 """Утренний присмотр за афишей. Работает на серверах GitHub, не на Маке.
 
   python3 watch.py ask     — вчера был концерт? спросить в телеграме
-  python3 watch.py apply   — пришло «да»? пересобрать сайт
+  python3 watch.py apply   — разобрать чат один раз
+  python3 watch.py listen  — слушать чат почти час длинным опросом
   python3 watch.py report  — что изменилось у чужих афиш и не умерли ли ссылки
 
 Сборка и так не показывает прошедшее, но в tour.json оно остаётся — иначе
@@ -13,7 +14,7 @@
 Токен бота и номер чата берутся из переменных окружения TG_TOKEN и TG_CHAT.
 В коде и в репозитории их нет и быть не должно — они лежат в секретах GitHub.
 """
-import datetime, json, os, pathlib, subprocess, sys
+import datetime, json, os, pathlib, subprocess, sys, time
 import urllib.error, urllib.parse, urllib.request
 
 HERE    = pathlib.Path(__file__).parent
@@ -124,6 +125,25 @@ def ask():
 
 # ------------------------------------------------------------------ ответить
 def apply():
+    """Разбор чата один раз — как его зовёт задача по расписанию."""
+    print("publish=1" if once() else "publish=0")
+
+
+def listen(minutes=50):
+    """Держит длинный опрос: телеграм отвечает в тот же миг, как пришло сообщение.
+
+    Ради этого всё и затевалось. Расписание GitHub на частых интервалах не
+    работает: «каждые 20 минут» он на деле запускал раз в три часа, и ответ
+    «да» ждал полдня. Один прогон, который слушает почти час, покрывает эту
+    дыру: реакция приходит за секунды, а не за три часа."""
+    end = time.monotonic() + minutes * 60
+    while time.monotonic() < end:
+        if once(wait=25):
+            print("publish=1"); return
+    print("publish=0")
+
+
+def once(wait=0):
     """Разбирает чат: ответ на заданный вопрос и всё остальное — в почтовый ящик.
 
     Печатает publish=1, если сайт надо перевыложить.
@@ -137,7 +157,7 @@ def apply():
     asked = datetime.datetime.fromisoformat(p["asked"]).timestamp() if p else None
 
     verdict, letters, last_id = None, [], 0
-    for u in tg("getUpdates", timeout=0, allowed_updates='["message"]'):
+    for u in tg("getUpdates", timeout=wait, allowed_updates='["message"]'):
         last_id = max(last_id, u.get("update_id", 0))
         m = u.get("message") or {}
         if str(m.get("chat", {}).get("id")) != str(CHAT): continue
@@ -174,12 +194,12 @@ def apply():
         print(f"в ящик легло {len(letters)}")
 
     if verdict is None:
-        print("ответа пока нет"); print("publish=0"); return
+        return False
 
     PENDING.unlink()
     if not verdict:
         say("Хорошо, оставляю как есть. Спрошу снова, когда появится ещё одна прошедшая дата.")
-        print("сказано «нет»"); print("publish=0"); return
+        print("сказано «нет»"); return False
 
     # Вычёркиваем даты из самих данных. Сборка их и так не показывает, но в
     # tour.json они остаются — и тогда вопрос про них приходил бы каждое утро
@@ -196,7 +216,7 @@ def apply():
     subprocess.run([sys.executable, str(HERE / "site.py"), "build"], check=True)
     subprocess.run([sys.executable, str(HERE / "deploy.py")],        check=True)
     say("Убрал " + ", ".join(human(x) for x in p["dates"]) + ". Сайт обновлён.")
-    print("publish=1")
+    return True
 
 
 # ------------------------------------------------------------------- сводка
@@ -243,7 +263,8 @@ def whoami():
 
 if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else ""
-    run = {"ask": ask, "apply": apply, "report": report, "whoami": whoami}.get(cmd)
+    run = {"ask": ask, "apply": apply, "listen": listen,
+           "report": report, "whoami": whoami}.get(cmd)
     if not run:
         sys.exit(__doc__)
     try:

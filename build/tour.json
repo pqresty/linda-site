@@ -198,6 +198,17 @@
       "source": "venue"
     },
     {
+      "id": "2026-11-03-msk-academ",
+      "date": "2026-11-03",
+      "time": "20:00",
+      "city": "Москва",
+      "country": "RU",
+      "venue": "Академ Джаз Клуб",
+      "ticketUrl": "https://academjazzclub.ru/events/1480/",
+      "status": "on_sale",
+      "source": "venue"
+    },
+    {
       "id": "2026-11-07-yar-rvb",
       "date": "2026-11-07",
       "time": "19:30",
@@ -236,6 +247,18 @@
       "ticketUrl": "https://nino.rvbar.ru/poster/linda-vse-hity-2/",
       "status": "on_sale",
       "source": "venue"
+    },
+    {
+      "id": "2026-11-19-ashdod",
+      "date": "2026-11-19",
+      "time": "20:30",
+      "city": "Ашдод",
+      "country": "IL",
+      "venue": "Матнас Дюна-Юд",
+      "ticketUrl": "https://showman.co.il/e/linda-2026/",
+      "status": "on_sale",
+      "source": "promoter",
+      "aggregatorOk": true
     },
     {
       "id": "2026-11-20-tlv",
@@ -292,6 +315,17 @@
       "status": "on_sale",
       "source": "venue",
       "aggregatorOk": true
+    },
+    {
+      "id": "2026-12-12-kaliningrad-vagonka",
+      "date": "2026-12-12",
+      "time": "20:00",
+      "city": "Калининград",
+      "country": "RU",
+      "venue": "Вагонка",
+      "ticketUrl": "https://pyramida.info/tickets/linda_62170807",
+      "status": "on_sale",
+      "source": "venue"
     }
   ],
   "ignored": [

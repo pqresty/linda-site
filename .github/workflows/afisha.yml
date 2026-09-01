@@ -3,12 +3,15 @@ name: Афиша
 # Идёт на серверах GitHub, а не на Маке. Маку тут делать нечего: launchd не
 # пускают в ~/Documents без Full Disk Access, и такие задачи ломаются молча.
 #
-# Время в cron — UTC. Москва на три часа впереди.
+# Расписание одно и ежечасное. Частые интервалы GitHub не выполняет: «каждые
+# 20 минут» на деле запускалось раз в три часа, и ответ «да» ждал полдня. Час
+# он держит надёжно, а внутри прогон полсотни минут слушает телеграм длинным
+# опросом — реакция приходит за секунды. Утренний вопрос и недельная сводка
+# делаются тем же прогоном, по часу UTC, чтобы расписания не наезжали друг
+# на друга и два прогона не разбирали чат одновременно.
 on:
   schedule:
-    - cron: "0 6 * * *"        # 09:00 МСК — вопрос про прошедшие даты
-    - cron: "*/20 * * * *"     # каждые 20 минут круглые сутки — слушаем чат
-    - cron: "0 7 * * 1"        # понедельник 10:00 МСК — недельная сводка
+    - cron: "0 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -17,29 +20,34 @@ permissions:
 jobs:
   afisha:
     runs-on: ubuntu-latest
+    timeout-minutes: 70
     env:
       TG_TOKEN: ${{ secrets.TG_TOKEN }}
       TG_CHAT:  ${{ secrets.TG_CHAT }}
-      SCHED:    ${{ github.event.schedule }}
     steps:
       - uses: actions/checkout@v5
         with: { ref: source }
 
-      - name: Кто мы для телеграма
-        run: python3 build/watch.py whoami
-
-      - name: Разобрать чат
+      - name: Разобрать накопившееся
         run: python3 build/watch.py apply | tee /tmp/out.txt
 
+      # 06:00 UTC — девять утра в Москве
       - name: Спросить про прошедшие даты
-        if: github.event.schedule == '0 6 * * *' || github.event_name == 'workflow_dispatch'
-        run: python3 build/watch.py ask
+        run: |
+          [ "$(date -u +%H)" = "06" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ] \
+            && python3 build/watch.py ask || echo "не тот час — не спрашиваем"
 
+      # понедельник, 07:00 UTC — десять утра в Москве
       - name: Недельная сводка
-        if: github.event.schedule == '0 7 * * 1'
-        run: python3 build/watch.py report
+        run: |
+          [ "$(date -u +%H)" = "07" ] && [ "$(date -u +%u)" = "1" ] \
+            && python3 build/watch.py report || echo "не время для сводки"
 
-      # Дальше — только если в чате сказали «да». Признак печатает сам watch.py.
+      # Слушаем чат до конца часа. Если пришло «да» — выходим раньше и публикуем.
+      - name: Слушать чат
+        run: |
+          grep -q 'publish=1' /tmp/out.txt || python3 build/watch.py listen | tee -a /tmp/out.txt
+
       - name: Собрать и выложить
         run: |
           grep -q 'publish=1' /tmp/out.txt || { echo "публиковать нечего"; exit 0; }
@@ -72,4 +80,5 @@ jobs:
           git add -A build/
           git diff --cached --quiet && { echo "состояние не менялось"; exit 0; }
           git commit -m "Состояние утренней проверки"
+          git pull --rebase -q origin source || true
           git push "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:source
