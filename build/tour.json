@@ -1,17 +1,6 @@
 {
   "events": [
     {
-      "id": "2026-08-31-msk-korabl",
-      "date": "2026-08-31",
-      "time": "19:00",
-      "city": "Москва",
-      "country": "RU",
-      "venue": "Теплоход «РИО-1»",
-      "ticketUrl": "https://cruisefest.moscow/linda2026",
-      "status": "on_sale",
-      "source": "venue"
-    },
-    {
       "id": "2026-09-11-msk-rodnya",
       "date": "2026-09-11",
       "time": "20:00",
