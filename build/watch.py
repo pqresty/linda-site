@@ -21,6 +21,23 @@ HERE    = pathlib.Path(__file__).parent
 TOUR    = HERE / "tour.json"
 PENDING = HERE / "pending.json"
 INBOX   = HERE / "inbox.jsonl"
+DONE    = HERE / "done.json"      # когда в последний раз спрашивали и слали сводку
+
+MSK = datetime.timezone(datetime.timedelta(hours=3))
+
+def msk():
+    """Москва без перевода часов — UTC+3 круглый год."""
+    return datetime.datetime.now(MSK)
+
+
+def done_read():
+    try: return json.loads(DONE.read_text(encoding="utf-8"))
+    except Exception: return {}
+
+
+def done_write(**kw):
+    d = done_read(); d.update(kw)
+    DONE.write_text(json.dumps(d, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 TOKEN = os.environ.get("TG_TOKEN", "")
 CHAT  = os.environ.get("TG_CHAT", "")
@@ -96,7 +113,23 @@ def plural(n, one, few, many):
 
 # ------------------------------------------------------------------ спросить
 def ask():
-    today = datetime.date.today().isoformat()
+    """Спрашиваем раз в сутки, в шесть утра по Москве или при первой
+    возможности после.
+
+    Не «ровно в шесть»: расписание GitHub опаздывает непредсказуемо, и если
+    привязаться к часу на стенных часах, опоздавший прогон промахнётся мимо
+    окна и не спросит вовсе. Поэтому условие простое — наступило ли уже шесть
+    утра и не спрашивали ли сегодня. Первый же прогон после шести и сработает.
+    Раньше этого не было, оттого вопросы и приходили в случайное время: то в
+    11 утра, то в два часа дня, когда GitHub соизволял запустить задачу или
+    когда я дёргал её руками."""
+    now = msk()
+    if now.hour < 6:
+        print(f"ещё нет шести утра по Москве ({now:%H:%M}) — молчим"); return
+    if done_read().get("ask") == now.date().isoformat():
+        print("сегодня уже спрашивали"); return
+
+    today = now.date().isoformat()
     gone  = past(today)
     if not gone:
         print("прошедших дат нет — молчим"); return
@@ -120,6 +153,7 @@ def ask():
         "ids":    [e["id"] for e in gone],
         "msg_id": msg["message_id"],
     }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    done_write(ask=today)
     print(f"спросил про {len(gone)} дат")
 
 
@@ -138,12 +172,20 @@ def listen(minutes=50):
     дыру: реакция приходит за секунды, а не за три часа."""
     end = time.monotonic() + minutes * 60
     while time.monotonic() < end:
-        if once(wait=25):
+        verdict, letters = once(wait=25, detail=True)
+        if verdict:
             print("publish=1"); return
+        if letters:
+            # Выходим сразу, как что-то пришло: состояние сохраняется только
+            # в конце прогона, и держать письмо в памяти ещё сорок минут —
+            # значит рисковать им зря. Следующий часовой прогон продолжит
+            # слушать, а письмо уже будет лежать в репозитории.
+            print("письмо получено, выходим — состояние сохранится")
+            print("publish=0"); return
     print("publish=0")
 
 
-def once(wait=0):
+def once(wait=0, detail=False):
     """Разбирает чат: ответ на заданный вопрос и всё остальное — в почтовый ящик.
 
     Печатает publish=1, если сайт надо перевыложить.
@@ -194,12 +236,13 @@ def once(wait=0):
         print(f"в ящик легло {len(letters)}")
 
     if verdict is None:
-        return False
+        return (False, bool(letters)) if detail else False
 
     PENDING.unlink()
     if not verdict:
         say("Хорошо, оставляю как есть. Спрошу снова, когда появится ещё одна прошедшая дата.")
-        print("сказано «нет»"); return False
+        print("сказано «нет»")
+        return (False, bool(letters)) if detail else False
 
     # Вычёркиваем даты из самих данных. Сборка их и так не показывает, но в
     # tour.json они остаются — и тогда вопрос про них приходил бы каждое утро
@@ -216,12 +259,22 @@ def once(wait=0):
     subprocess.run([sys.executable, str(HERE / "site.py"), "build"], check=True)
     subprocess.run([sys.executable, str(HERE / "deploy.py")],        check=True)
     say("Убрал " + ", ".join(human(x) for x in p["dates"]) + ". Сайт обновлён.")
-    return True
+    return (True, bool(letters)) if detail else True
 
 
 # ------------------------------------------------------------------- сводка
 def report():
-    """Раз в неделю: чего у нас нет в афише и что перестало работать."""
+    """Раз в неделю: чего у нас нет в афише и что перестало работать.
+
+    По тому же правилу, что и вопрос: понедельник, десять утра по Москве или
+    первая возможность после."""
+    now = msk()
+    if now.weekday() != 0 or now.hour < 10:
+        print(f"не время для сводки ({now:%a %H:%M} мск)"); return
+    week = f"{now.isocalendar().year}-{now.isocalendar().week}"
+    if done_read().get("report") == week:
+        print("сводка на этой неделе уже была"); return
+
     out = []
     for cmd, title in (("scan", "Сверка с чужой афишей"), ("check", "Проверка ссылок")):
         r = subprocess.run([sys.executable, str(HERE / "site.py"), cmd],
@@ -237,6 +290,7 @@ def report():
             f'· {human(e["date"])} — {e["city"]}' + (f' · {e["venue"]}' if e.get("venue") else "")
             for e in soon))
     say("\n\n".join(out))
+    done_write(report=week)
     print("сводка отправлена")
 
 
