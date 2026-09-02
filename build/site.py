@@ -4,6 +4,7 @@
   python3 site.py build   — проверить данные и собрать index.html
   python3 site.py check   — проверить, что все ссылки живые
   python3 site.py scan    — сверить наши даты с афишей на rolld.ru
+  python3 site.py times   — сверить время начала с сайтами площадок
 
 Редактируется только tour.json. День недели считается сам — руками не вводить.
 """
@@ -260,6 +261,73 @@ def stamp(page):
         print("  файлы не найдены:", *missing, sep="\n    ")
     return out
 
+# ------------------------------------------------------------ время начала
+RU_MON = {1:"январ",2:"феврал",3:"март",4:"апрел",5:"ма",6:"июн",7:"июл",
+          8:"август",9:"сентябр",10:"октябр",11:"ноябр",12:"декабр"}
+
+def times(events):
+    """Сверяет наше время начала с тем, что написано на странице площадки.
+
+    Площадки время двигают и никого не предупреждают. Кроме того, легко
+    записать «сбор гостей» вместо начала: у «Максимилианса» так и вышло —
+    три даты стояли с 20:00, тогда как сбор в 20:00, а выступление в 21:00.
+    Поэтому ищем прямую формулировку «начало ... 21:00», а не первое попавшееся
+    время: на странице клуба их всегда много — часы работы, бронь, кухня."""
+    NACH = re.compile(
+        r'(?:[Сс]бор[^.]{0,40}?(\d{1,2}:\d{2})[^.]{0,15}?)?'
+        r'[Нн]ачал\w*\s+(?:выступлени\w*|концерта|программы|шоу|в)\s*:?\s*(?:в\s*)?(\d{1,2}:\d{2})')
+
+    def body(u):
+        """http() выше отдаёт код ответа, а не текст — здесь нужен сам текст."""
+        try:
+            return urllib.request.urlopen(
+                urllib.request.Request(u, headers=UA), timeout=25
+            ).read().decode("utf-8", "replace")
+        except Exception:
+            return ""
+
+    def look(e):
+        u = e.get("ticketUrl")
+        if not u or not e.get("time"): return e, "нет ссылки или времени", None
+        page = body(u)
+        if not page: return e, "страница не открылась", None
+        txt = re.sub(r"<script.*?</script>", " ", page, flags=re.S)
+        txt = re.sub(r"<[^>]+>", " ", txt)
+        txt = re.sub(r"&nbsp;|&#160;", " ", txt)
+        txt = re.sub(r"\s+", " ", txt)
+        m = NACH.search(txt)
+        if m: return e, None, (m.group(1), m.group(2))
+        # прямой формулировки нет — берём время рядом с датой события
+        d = datetime.date.fromisoformat(e["date"])
+        near = re.search(rf'{d.day}\s*{RU_MON[d.month]}\w*[^.]{{0,80}}?(\d{{1,2}}:\d{{2}})', txt)
+        if near: return e, None, (None, near.group(1))
+        return e, "время на странице не указано", None
+
+    today = datetime.date.today().isoformat()
+    live  = [e for e in events if e["date"] >= today]
+    diff, unknown = [], []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=6) as ex:
+        for e, why, found in ex.map(look, live):
+            if why: unknown.append((e, why)); continue
+            sbor, start = found
+            if start != e["time"]:
+                diff.append((e, e["time"], start, sbor))
+
+    if diff:
+        print("время начала разошлось с площадкой:")
+        for e, ours, theirs, sbor in sorted(diff, key=lambda x: x[0]["date"]):
+            add = f" (сбор {sbor})" if sbor else ""
+            print(f'  {e["date"]} {e["city"]} · {e.get("venue","")}: '
+                  f'у нас {ours}, на странице {theirs}{add}')
+    else:
+        print("время начала везде совпадает")
+    if unknown:
+        print(f"не удалось сверить: {len(unknown)}")
+        for e, why in sorted(unknown, key=lambda x: x[0]["date"]):
+            print(f'  {e["date"]} {e["city"]}: {why}')
+    return diff
+
+
 # ---------------------------------------------------------------- ссылки
 def http(url, tries=3):
     """Сетевую ошибку пробуем ещё раз, прежде чем звать ссылку битой.
@@ -420,6 +488,9 @@ def main():
 
     elif cmd == "scan":
         scan(events, ignored)
+
+    elif cmd == "times":
+        times(events)
 
     else:
         print(__doc__)

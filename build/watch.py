@@ -276,12 +276,18 @@ def report():
         print("сводка на этой неделе уже была"); return
 
     out = []
-    for cmd, title in (("scan", "Сверка с чужой афишей"), ("check", "Проверка ссылок")):
+    for cmd, title in (("scan",  "Сверка с чужой афишей"),
+                       ("times", "Время начала"),
+                       ("check", "Проверка ссылок")):
         r = subprocess.run([sys.executable, str(HERE / "site.py"), cmd],
                            capture_output=True, text=True)
         body = (r.stdout or r.stderr).strip()
         if cmd == "check" and "БИТАЯ" not in body:
             body = "все ссылки живые"
+        if cmd == "times":
+            # «не удалось сверить» в сводке не нужно: там площадки, которые
+            # времени вовсе не публикуют, и список не меняется неделями.
+            body = body.split("не удалось сверить")[0].strip() or "время везде совпадает"
         out.append(f"<b>{title}</b>\n<pre>{body[:1500]}</pre>")
 
     soon = [e for e in events() if e["status"] != "on_sale"]
