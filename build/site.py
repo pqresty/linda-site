@@ -359,18 +359,30 @@ def http(url, tries=3):
                 return url, type(e).__name__
             time.sleep(1.5 * (n + 1))
 
+# Площадки, которые отбиваются от автоматических запросов: живой браузер
+# страницу открывает, а curl получает 403 или висит до таймаута. Их ссылки
+# проверены руками, и объявлять их битыми — ложная тревога каждую неделю.
+# Добавлять сюда только после проверки браузером, а не «чтобы не мешало».
+BOT_SHY = {
+    "nov.ticketland.ru":      "403 автоматом; сайт клуба ссылается на этот же адрес",
+    "moscow.qtickets.events": "с рабочего Мака не открывается, снаружи 200",
+    "iframeab-pre2535.intickets.ru": "антибот servicepipe, открывается браузером",
+}
+
 def check_links():
     urls = sorted(set(re.findall(r'href="(https://[^"]+)"', OUT.read_text(encoding="utf-8"))))
-    bad = []
+    bad, shy = [], []
     with concurrent.futures.ThreadPoolExecutor(max_workers=8) as ex:
         for u, code in ex.map(http, urls):
-            if code != 200:
-                bad.append((u, code))
+            if code == 200: continue
+            (shy if host(u) in BOT_SHY else bad).append((u, code))
     print(f"ссылок проверено: {len(urls)}")
     for u, c in bad:
         print(f"  БИТАЯ [{c}] {u}")
     if not bad:
         print("  все живые")
+    for u, c in shy:
+        print(f"  не проверяется автоматом [{c}] {host(u)} — {BOT_SHY[host(u)]}")
     return bad
 
 # ---------------------------------------------------------------- сверка
