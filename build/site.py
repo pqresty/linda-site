@@ -130,7 +130,17 @@ def render(events, venues):
                     + (f'<i class="row__f">{country}</i>' if country else "")
                     + "</span>")
 
-            meta = " · ".join([WD[d.weekday()]] + ([e["time"]] if e.get("time") else []))
+            # Площадка объявляет два времени — показываем оба в строку через
+            # косую: сначала сбор, к нему приходить, следом начало концерта.
+            # Где объявлено одно — оно и стоит, без всяких пояснений.
+            # Показываем одно время — самое раннее из объявленных площадкой.
+            # Где объявлены и сбор, и начало, это сбор: к нему и приходить,
+            # заведение на том и стоит — люди успевают поесть до первой ноты.
+            # Второе время не пропадает: оно лежит в данных, уходит в машинную
+            # разметку и участвует в еженедельной сверке с сайтом площадки.
+            when = min(x for x in (e.get("doors"), e.get("time")) if x) \
+                   if (e.get("doors") or e.get("time")) else ""
+            meta = esc(" · ".join([WD[d.weekday()]] + ([when] if when else [])))
             parts.append(f'''  <div class="{cls}">
     <span class="row__d">{d.day:02d}</span>
     <span class="row__m">{meta}</span>
@@ -192,6 +202,7 @@ def jsonld(events, venues):
             # Без смещения: у нас города в пяти поясах, а местное время
             # схема допускает. Врать про +03:00 хуже, чем не указать вовсе.
             "startDate": e["date"] + ("T" + e["time"] if e.get("time") else ""),
+            **({"doorTime": e["date"] + "T" + e["doors"]} if e.get("doors") else {}),
             "eventStatus": "https://schema.org/EventScheduled",
             "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
             "location": place,

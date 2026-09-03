@@ -53,7 +53,8 @@
       "venue": "Руки Вверх! Бар (ex. Deep)",
       "ticketUrl": "https://ryazan.rvbar.ru/poster/linda-vse-hity/",
       "status": "on_sale",
-      "source": "venue"
+      "source": "venue",
+      "doors": "18:00"
     },
     {
       "id": "2026-09-27-msk-petter",
@@ -69,13 +70,14 @@
     {
       "id": "2026-09-30-ekb-maximilians",
       "date": "2026-09-30",
-      "time": "20:00",
+      "time": "21:00",
       "city": "Екатеринбург",
       "country": "RU",
       "venue": "Максимилианс",
       "ticketUrl": "https://ekb.maximilians.ru/linda-2026/",
       "status": "on_sale",
-      "source": "venue"
+      "source": "venue",
+      "doors": "20:00"
     },
     {
       "id": "2026-10-01-chel-maximilians",
@@ -86,7 +88,8 @@
       "venue": "Максимилианс",
       "ticketUrl": "https://chel.maximilians.ru/linda-2026/",
       "status": "on_sale",
-      "source": "venue"
+      "source": "venue",
+      "doors": "20:00"
     },
     {
       "id": "2026-10-03-msk-strogino-rvb",
@@ -97,7 +100,8 @@
       "venue": "Руки Вверх! Бар — Строгино",
       "ticketUrl": "https://strogino.rvbar.ru/poster/linda/",
       "status": "on_sale",
-      "source": "venue"
+      "source": "venue",
+      "doors": "18:00"
     },
     {
       "id": "2026-10-09-msk-16tonn",
@@ -124,24 +128,26 @@
     {
       "id": "2026-10-21-kazan-maximilians",
       "date": "2026-10-21",
-      "time": "20:00",
+      "time": "21:00",
       "city": "Казань",
       "country": "RU",
       "venue": "Максимилианс",
       "ticketUrl": "https://kazan.maximilians.ru/linda-2026/",
       "status": "on_sale",
-      "source": "venue"
+      "source": "venue",
+      "doors": "20:00"
     },
     {
       "id": "2026-10-22-samara-maximilians",
       "date": "2026-10-22",
-      "time": "20:00",
+      "time": "21:00",
       "city": "Самара",
       "country": "RU",
       "venue": "Максимилианс",
       "ticketUrl": "https://samara.maximilians.ru/linda-2026/",
       "status": "on_sale",
-      "source": "venue"
+      "source": "venue",
+      "doors": "20:00"
     },
     {
       "id": "2026-10-23-korolev-duplex",
@@ -195,7 +201,8 @@
       "venue": "Люстра",
       "ticketUrl": "https://www.lustrabar.ru/product/1-noyabrya-vs-linda/",
       "status": "on_sale",
-      "source": "venue"
+      "source": "venue",
+      "doors": "19:00"
     },
     {
       "id": "2026-11-03-msk-academ",
@@ -216,7 +223,8 @@
       "venue": "Руки Вверх! Бар",
       "ticketUrl": "https://yar.rvbar.ru/poster/linda-vse-hity/",
       "status": "on_sale",
-      "source": "venue"
+      "source": "venue",
+      "doors": "18:00"
     },
     {
       "id": "2026-11-08-msk-rvb-tverskaya",
@@ -226,7 +234,8 @@
       "venue": "Руки Вверх! Бар — Тверская",
       "ticketUrl": "https://tverskaya.rvbar.ru/poster/linda-vse-hity-3/",
       "status": "on_sale",
-      "source": "venue"
+      "source": "venue",
+      "doors": "18:00"
     },
     {
       "id": "2026-11-13-msk-academ",
@@ -241,12 +250,13 @@
     {
       "id": "2026-11-14-nn-rvb",
       "date": "2026-11-14",
-      "time": "19:30",
+      "time": "19:00",
       "city": "Нижний Новгород",
       "venue": "Руки Вверх! Бар",
       "ticketUrl": "https://nino.rvbar.ru/poster/linda-vse-hity-2/",
       "status": "on_sale",
-      "source": "venue"
+      "source": "venue",
+      "doors": "18:00"
     },
     {
       "id": "2026-11-19-ashdod",
@@ -289,8 +299,11 @@
       "date": "2026-11-28",
       "city": "Одинцово",
       "venue": "Руки Вверх! Бар",
-      "status": "not_on_sale",
-      "source": "agg"
+      "status": "on_sale",
+      "source": "venue",
+      "doors": "18:00",
+      "time": "19:30",
+      "ticketUrl": "https://odin.rvbar.ru/poster/konczert-lindy/"
     },
     {
       "id": "2026-11-29-almaty-concordia",
