@@ -1,0 +1,51 @@
+{
+  "домен": "lindaconcerts.ru",
+  "снято": "2026-09-07",
+  "зачем": "эталон для сверки при переезде зоны с Host-0 на отдельный DNS",
+  "записи": {
+    "lindaconcerts.ru": {
+      "A": [
+        "185.199.108.153",
+        "185.199.109.153",
+        "185.199.110.153",
+        "185.199.111.153"
+      ],
+      "MX": [
+        "10 mx1.hosting.reg.ru.",
+        "20 mx2.hosting.reg.ru."
+      ],
+      "TXT": [
+        "v=spf1 ip4:37.140.192.194 a mx include:_spf.hosting.reg.ru ~all"
+      ],
+      "NS": [
+        "ns1.hosting.reg.ru.",
+        "ns2.hosting.reg.ru."
+      ]
+    },
+    "www.lindaconcerts.ru": {
+      "CNAME": [
+        "pqresty.github.io."
+      ]
+    },
+    "mail.lindaconcerts.ru": {
+      "A": [
+        "37.140.192.194"
+      ]
+    },
+    "smtp.lindaconcerts.ru": {
+      "A": [
+        "37.140.192.194"
+      ]
+    },
+    "pop.lindaconcerts.ru": {
+      "A": [
+        "37.140.192.194"
+      ]
+    },
+    "ftp.lindaconcerts.ru": {
+      "A": [
+        "37.140.192.194"
+      ]
+    }
+  }
+}

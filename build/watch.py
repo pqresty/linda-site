@@ -276,13 +276,14 @@ def report():
         print("сводка на этой неделе уже была"); return
 
     out = []
-    for cmd, title in (("scan",  "Сверка с чужой афишей"),
-                       ("times", "Время начала"),
-                       ("check", "Проверка ссылок")):
-        r = subprocess.run([sys.executable, str(HERE / "site.py"), cmd],
+    for script, cmd, title in (("site.py", "scan",  "Сверка с чужой афишей"),
+                               ("site.py", "times", "Время начала"),
+                               ("site.py", "check", "Проверка ссылок"),
+                               ("dns.py",  "check", "Зона DNS")):
+        r = subprocess.run([sys.executable, str(HERE / script), cmd],
                            capture_output=True, text=True)
         body = (r.stdout or r.stderr).strip()
-        if cmd == "check" and "БИТАЯ" not in body:
+        if script == "site.py" and cmd == "check" and "БИТАЯ" not in body:
             body = "все ссылки живые"
         if cmd == "times":
             # «не удалось сверить» в сводке не нужно: там площадки, которые
