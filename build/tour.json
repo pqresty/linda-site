@@ -170,9 +170,11 @@
       "city": "Великий Новгород",
       "country": "RU",
       "venue": "Сердце",
-      "ticketUrl": "https://nov.ticketland.ru/kluby/klub-serdce-nn/linda-velikiy-novgorod/t_20261025_1900_p_28908163/",
+      "ticketUrl": "https://lindaspb.ru/",
       "status": "on_sale",
-      "source": "venue"
+      "source": "promoter",
+      "aggregatorOk": true,
+      "venuePage": "https://serdcevn.ru/"
     },
     {
       "id": "2026-10-29-msk-petter",
