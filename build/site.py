@@ -306,7 +306,11 @@ def times(events):
             return ""
 
     def look(e):
-        u = e.get("ticketUrl")
+        # Сверяем по странице самой площадки. Обычно это и есть ticketUrl, но
+        # там, где кнопка по договорённости ведёт в другое место — к
+        # организатору или к оператору, — нужен venuePage, иначе дата выпадет
+        # из проверки вместе с площадкой.
+        u = e.get("venuePage") or e.get("ticketUrl")
         if not u or not e.get("time"): return e, "нет ссылки или времени", None
         page = body(u)
         if not page: return e, "страница не открылась", None
@@ -386,7 +390,11 @@ BOT_SHY = {
 }
 
 def check_links():
-    urls = sorted(set(re.findall(r'href="(https://[^"]+)"', OUT.read_text(encoding="utf-8"))))
+    urls = set(re.findall(r'href="(https://[^"]+)"', OUT.read_text(encoding="utf-8")))
+    # Страницы площадок, на которые кнопка не ведёт, а сверка времени ходит.
+    # Если такая умрёт, проверка ослепнет молча — поэтому проверяем и их.
+    urls |= {e["venuePage"] for e in load()[0] if e.get("venuePage")}
+    urls = sorted(urls)
     bad, shy = [], []
     with concurrent.futures.ThreadPoolExecutor(max_workers=8) as ex:
         for u, code in ex.map(http, urls):

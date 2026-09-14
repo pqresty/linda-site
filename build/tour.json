@@ -156,9 +156,12 @@
       "city": "Санкт-Петербург",
       "country": "RU",
       "venue": "Аврора Концерт Холл",
-      "ticketUrl": "https://aurora.fm/linda",
+      "ticketUrl": "https://lindaspb.ru/",
       "status": "on_sale",
-      "source": "venue"
+      "source": "promoter",
+      "aggregatorOk": true,
+      "venuePage": "https://aurora.fm/linda",
+      "doors": "19:00"
     },
     {
       "id": "2026-10-25-vnovgorod-serdce",
