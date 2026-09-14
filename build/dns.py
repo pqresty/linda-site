@@ -13,6 +13,9 @@
 `check` ходит через DNS-over-HTTPS: он должен работать и на runner'е GitHub,
 где `dig` может быть не установлен. `at` спрашивает сервер напрямую и потому
 требует `dig` — но он и нужен только руками, до переключения.
+
+`at` не поверит серверу на слово: он требует контрольную запись, см. CANARY
+ниже. Без неё «совпало» ничего не значит.
 """
 import json, pathlib, subprocess, sys, urllib.request, urllib.parse, datetime
 
@@ -32,6 +35,19 @@ ASK = {
     "ftp":   ["A"],
 }
 DOH = "https://dns.google/resolve"
+
+# Контрольная запись. Заводится у нового провайдера вместе с остальными и
+# удаляется, когда переезд закончен.
+#
+# Зачем она вообще. Спросить новый сервер имён «отдаёшь ли ты нашу зону?» в
+# лоб нельзя: под именем `ns1.reg.ru` скрывается пул из десятков адресов, и
+# часть из них отвечает как обычный кэширующий резолвер — сходит к нынешним
+# серверам, принесёт оттуда правильный ответ и выдаст за свой. Флаг `aa` тут
+# не спасает: его не ставит и `ns1.hosting.reg.ru`, который для нашей зоны
+# как раз авторитетен. Отличить можно только записью, которой у нынешних
+# серверов нет: если сервер её отдал — значит, зона у него своя.
+CANARY_NAME = "_pereezd"
+CANARY_TEXT = "zone-ready"
 
 
 def fqdn(sub):
@@ -136,17 +152,29 @@ def cmd_check():
 
 def cmd_at(server):
     want = load()["записи"]
-    now  = collect(lambda n, k: direct(n, k, server))
-    bad  = [b for b in compare(now, want, стало=f"у {server}") if b.split()[1] != "NS:"]
+    canary = direct(f"{CANARY_NAME}.{DOMAIN}", "TXT", server)
+
     print(f"сервер {server} отдаёт:")
+    now = collect(lambda n, k: direct(n, k, server))
     for name, rec in now.items():
         for kind, vals in rec.items():
             print(f"  {name} {kind} → {', '.join(vals)}")
+
+    if CANARY_TEXT not in canary:
+        print(f"\nКОНТРОЛЬНОЙ ЗАПИСИ НЕТ. Ответ выше ничего не доказывает:")
+        print(f"  либо зоны у этого сервера ещё нет и он просто сходил за ответом")
+        print(f"  к нынешним серверам, либо ты смотришь на кэш.")
+        print(f"  Заведи у нового провайдера TXT {CANARY_NAME} = {CANARY_TEXT}")
+        print(f"  и повтори. Переключать NS нельзя.")
+        return 1
+
+    bad = [b for b in compare(now, want, стало=f"у {server}") if b.split()[1] != "NS:"]
     if bad:
         print("\nНЕ СОВПАЛО СО СЛЕПКОМ — переключать NS нельзя:")
         for b in bad: print("  " + b)
         return 1
-    print("\nвсё совпало со слепком — этот сервер готов принять делегирование")
+    print("\nконтрольная запись на месте, зона совпала со слепком —")
+    print("этот сервер готов принять делегирование")
     return 0
 
 
