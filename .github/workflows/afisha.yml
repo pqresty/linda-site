@@ -41,7 +41,7 @@ jobs:
       - name: Недельная сводка
         run: python3 build/watch.py report
 
-      # Слушаем чат до конца часа. Если пришло «да» — выходим раньше и публикуем.
+      # Слушаем чат до конца часа. Нажали «Да, убрать» — выходим раньше и публикуем.
       - name: Слушать чат
         run: |
           grep -q 'publish=1' /tmp/out.txt || python3 build/watch.py listen | tee -a /tmp/out.txt

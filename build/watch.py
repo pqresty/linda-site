@@ -7,9 +7,12 @@
   python3 watch.py report  — что изменилось у чужих афиш и не умерли ли ссылки
 
 Сборка и так не показывает прошедшее, но в tour.json оно остаётся — иначе
-вопрос про одну и ту же вчерашнюю дату приходил бы вечно. Поэтому на «да»
-дата вычёркивается из данных, а сайт пересобирается. Заказчик просил не
-делать этого молча, поэтому между «увидели» и «выложили» стоит его «да».
+вопрос про одну и ту же вчерашнюю дату приходил бы вечно. Поэтому на кнопку
+«Да, убрать» под вопросом дата вычёркивается из данных, а сайт пересобирается.
+Заказчик просил не делать этого молча, поэтому между «увидели» и «выложили»
+стоит его подтверждение — и подтверждение это только кнопка, не слово в
+тексте: свободным сообщением можно написать что угодно ещё, отдельно, и оно
+просто ляжет в ящик, не задев вопрос.
 
 Токен бота и номер чата берутся из переменных окружения TG_TOKEN и TG_CHAT.
 В коде и в репозитории их нет и быть не должно — они лежат в секретах GitHub.
@@ -45,8 +48,14 @@ CHAT  = os.environ.get("TG_CHAT", "")
 # сколько ждём ответа, прежде чем спросить заново
 PATIENCE = datetime.timedelta(days=2)
 
-YES = {"да", "да.", "ага", "давай", "убирай", "убрать", "ок", "окей", "+"}
-NO  = {"нет", "нет.", "не", "погоди", "подожди", "стой", "-"}
+# Данные двух кнопок под вопросом «убрать?». Раньше ответом был текст — «да»,
+# «ага», «убирай» и так далее, — и любое сообщение длиннее одного слова из
+# списка не совпадало и уходило в ящик как есть, вместе с самим «да» внутри
+# него. Кнопка однозначна: нажатие — это нажатие, а не потом «правильное»
+# слово в потоке текста, и текст теперь всегда идёт в ящик, что бы в нём ни
+# было — даже если это буквально «да».
+REMOVE_YES = "remove:yes"
+REMOVE_NO  = "remove:no"
 
 
 class NotSetUp(Exception):
@@ -74,9 +83,29 @@ def tg(method, **params):
     return out["result"]
 
 
-def say(text):
+def say(text, **kw):
     return tg("sendMessage", chat_id=CHAT, text=text,
-              parse_mode="HTML", disable_web_page_preview="true")
+              parse_mode="HTML", disable_web_page_preview="true", **kw)
+
+
+def remove_keyboard():
+    """Разметка двух кнопок под вопросом «убрать?»."""
+    return json.dumps({"inline_keyboard": [[
+        {"text": "Да, убрать",  "callback_data": REMOVE_YES},
+        {"text": "Нет, оставить", "callback_data": REMOVE_NO},
+    ]]})
+
+
+def clear_keyboard(message_id):
+    """Снимает кнопки с уже отвеченного вопроса — чтобы повторное нажатие
+    на старое сообщение ничего не могло сделать. Не критично для дела:
+    если Телеграм откажет (сообщение слишком старое и т.п.), просто
+    останутся видны неработающие кнопки — не повод ронять весь прогон."""
+    try:
+        tg("editMessageReplyMarkup", chat_id=CHAT, message_id=message_id,
+           reply_markup=json.dumps({"inline_keyboard": []}))
+    except SystemExit:
+        pass
 
 
 def events():
@@ -144,8 +173,8 @@ def ask():
              for e in gone]
     head = ("Этот концерт прошёл, но всё ещё висит на сайте:" if len(gone) == 1 else
             "Эти концерты прошли, но всё ещё висят на сайте:")
-    msg = say("<b>Афиша</b>\n\n" + head + "\n" + "\n".join(lines)
-              + "\n\nУбрать? Ответь <b>да</b> — пересоберу и выложу.")
+    msg = say("<b>Афиша</b>\n\n" + head + "\n" + "\n".join(lines) + "\n\nУбрать?",
+              reply_markup=remove_keyboard())
 
     PENDING.write_text(json.dumps({
         "asked":  datetime.datetime.now(datetime.timezone.utc).isoformat(),
@@ -194,22 +223,39 @@ def once(wait=0, detail=False):
     стороне телеграма и переживает что угодно. Отметка времени в файле ящика
     для этого не годится — она уже дважды подвела: сначала файл не сохранился,
     и бот четырежды отрапортовал об одном письме, а потом фильтр «новее
-    записанного» молча съел письмо, отправленное секундой раньше другого."""
-    p     = json.loads(PENDING.read_text(encoding="utf-8")) if PENDING.exists() else None
-    asked = datetime.datetime.fromisoformat(p["asked"]).timestamp() if p else None
+    записанного» молча съел письмо, отправленное секундой раньше другого.
+
+    На вопрос «убрать?» отвечают только кнопки под самим сообщением — любой
+    текст, что бы в нём ни было написано, всегда уходит в ящик как есть.
+    Кнопка проверяется по номеру сообщения, к которому приклеена: нажатие на
+    вопрос, который уже не тот, что ждём (ответили раньше, спросили заново),
+    ни на что не влияет."""
+    p = json.loads(PENDING.read_text(encoding="utf-8")) if PENDING.exists() else None
 
     verdict, letters, last_id = None, [], 0
-    for u in tg("getUpdates", timeout=wait, allowed_updates='["message"]'):
+    for u in tg("getUpdates", timeout=wait,
+                allowed_updates='["message","callback_query"]'):
         last_id = max(last_id, u.get("update_id", 0))
+
+        cq = u.get("callback_query")
+        if cq:
+            if str(cq.get("message", {}).get("chat", {}).get("id")) != str(CHAT):
+                continue
+            current = bool(p) and cq.get("message", {}).get("message_id") == p.get("msg_id")
+            tg("answerCallbackQuery", callback_query_id=cq["id"],
+               **({} if current else {"text": "Этот вопрос уже не актуален"}))
+            if current:
+                clear_keyboard(p["msg_id"])
+                if cq.get("data") == REMOVE_YES: verdict = True
+                elif cq.get("data") == REMOVE_NO: verdict = False
+            continue
+
         m = u.get("message") or {}
         if str(m.get("chat", {}).get("id")) != str(CHAT): continue
-        when = m.get("date", 0)
         t = (m.get("text") or "").strip()
-        low = t.lower()
-        if p and when >= asked and low in YES: verdict = True;  continue
-        if p and when >= asked and low in NO:  verdict = False; continue
-        # всё прочее — это правки от заказчика: концерт в уже вышедший месяц,
-        # отмена, новая ссылка. Скрипт их не понимает и понимать не должен —
+        # Всё, что пишут текстом, — это правки от заказчика: концерт в уже
+        # вышедший месяц, отмена, новая ссылка, а иногда и то же самое «да»
+        # словами, а не кнопкой. Скрипт их не понимает и понимать не должен —
         # он складывает их в ящик, разбирать буду я, когда мы сядем за сайт.
         #
         # Никаких «только то, что новее записанного»: такой фильтр однажды
@@ -217,7 +263,7 @@ def once(wait=0, detail=False):
         # уже попавшего в ящик. От повторов защищает подтверждённый offset —
         # телеграм одно и то же дважды не отдаёт, и этого достаточно.
         if t:
-            letters.append({"at": when, "text": t})
+            letters.append({"at": m.get("date", 0), "text": t})
 
     # Говорим телеграму, докуда разобрали. Всё до этого номера он больше не
     # отдаст — даже если наш файл состояния потеряется.
