@@ -12,17 +12,6 @@
       "source": "agg"
     },
     {
-      "id": "2026-09-19-msk-modnaya-sreda",
-      "date": "2026-09-19",
-      "time": "20:00",
-      "city": "Москва",
-      "country": "RU",
-      "venue": "Модная среда 1823",
-      "ticketUrl": "https://moscow.qtickets.events/246667-linda-puteshestvie-v-mir-teney-i-sveta",
-      "status": "on_sale",
-      "source": "venue"
-    },
-    {
       "id": "2026-09-25-himki-rvb",
       "date": "2026-09-25",
       "time": "20:00",
@@ -355,6 +344,12 @@
       "date": "2026-11-27",
       "city": "Москва",
       "reason": "снято по решению команды"
+    },
+    {
+      "date": "2026-09-19",
+      "city": "Москва",
+      "venue": "Модная среда 1823",
+      "reason": "снято по указанию заказчика 19 сентября; страница билетов на qtickets уже отдаёт 404"
     }
   ]
 }
