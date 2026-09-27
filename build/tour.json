@@ -1,18 +1,6 @@
 {
   "events": [
     {
-      "id": "2026-09-26-ryazan-rvb",
-      "date": "2026-09-26",
-      "time": "19:30",
-      "city": "Рязань",
-      "country": "RU",
-      "venue": "Руки Вверх! Бар (ex. Deep)",
-      "ticketUrl": "https://ryazan.rvbar.ru/poster/linda-vse-hity/",
-      "status": "on_sale",
-      "source": "venue",
-      "doors": "18:00"
-    },
-    {
       "id": "2026-09-27-msk-petter",
       "date": "2026-09-27",
       "time": "21:00",
