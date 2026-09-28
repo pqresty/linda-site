@@ -1,17 +1,6 @@
 {
   "events": [
     {
-      "id": "2026-09-27-msk-petter",
-      "date": "2026-09-27",
-      "time": "21:00",
-      "city": "Москва",
-      "country": "RU",
-      "venue": "Petter",
-      "ticketUrl": "https://iframeab-pre2535.intickets.ru/seance/68264948/",
-      "status": "on_sale",
-      "source": "venue"
-    },
-    {
       "id": "2026-09-30-ekb-maximilians",
       "date": "2026-09-30",
       "time": "21:00",
