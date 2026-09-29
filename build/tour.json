@@ -108,19 +108,6 @@
       "doors": "19:00"
     },
     {
-      "id": "2026-10-25-vnovgorod-serdce",
-      "date": "2026-10-25",
-      "time": "19:00",
-      "city": "Великий Новгород",
-      "country": "RU",
-      "venue": "Сердце",
-      "ticketUrl": "https://lindaspb.ru/",
-      "status": "on_sale",
-      "source": "promoter",
-      "aggregatorOk": true,
-      "venuePage": "https://serdcevn.ru/"
-    },
-    {
       "id": "2026-10-29-msk-petter",
       "date": "2026-10-29",
       "time": "21:00",
@@ -311,6 +298,12 @@
       "city": "Москва",
       "venue": "Академ Джаз Клуб",
       "reason": "концерт состоялся; заказчик подтвердил «да» в ответ на утренний вопрос бота 19 сентября"
+    },
+    {
+      "date": "2026-10-25",
+      "city": "Великий Новгород",
+      "venue": "Сердце",
+      "reason": "снято по указанию заказчика 29 сентября"
     }
   ]
 }
