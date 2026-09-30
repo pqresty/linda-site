@@ -1,7 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /transitions.html
-Disallow: /mobile-crop.html
-Disallow: /scrim.html
 
 Sitemap: https://lindaconcerts.ru/sitemap.xml
