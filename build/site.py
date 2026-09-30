@@ -174,7 +174,13 @@ def jsonld(events, venues):
         "alternateName": ["ЛИNДА", "Linda", "Светлана Гейман"],
         "url": SITE + "/",
         "image": SITE + "/assets/og/og-cover.jpg",
-        "sameAs": ["https://vk.com/linda_official", "https://t.me/lindamusic"],
+        # Викиданные и Википедия здесь важнее соцсетей: по ним Google и
+        # Яндекс сводят сайт с карточкой исполнителя. Сами они пока называют
+        # официальным сайтом мёртвые linda.team и lindamusic.ru — пока это не
+        # исправлено у них, связь с нашей стороны хотя бы говорит, чей сайт.
+        "sameAs": ["https://www.wikidata.org/wiki/Q469929",
+                   "https://ru.wikipedia.org/wiki/Линда_(певица)",
+                   "https://vk.com/linda_official", "https://t.me/lindamusic"],
     }
     graph = [artist, {
         "@type": "WebSite",

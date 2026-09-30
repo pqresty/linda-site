@@ -18,7 +18,9 @@ EXTRA = ["transitions.html", "mobile-crop.html", "scrim.html"]
 
 # Файлы для роботов. На них никто не ссылается — поисковик берёт их по
 # фиксированному адресу, поэтому в списке ссылок они не всплывут никогда.
-ROBOTS = ["robots.txt", "sitemap.xml"]
+# Третий — ключ IndexNow: по нему Яндекс и Bing проверяют, что пинг «переобойди
+# сайт» прислал его владелец. Имя файла и есть ключ, см. build/indexnow.py.
+ROBOTS = ["robots.txt", "sitemap.xml", "88ddeed887ff74861a022fcc99031cc1.txt"]
 
 # Свой домен. Пока пусто — GitHub раздаёт сайт по адресу вида
 # pqresty.github.io/linda-site/. Как только записи DNS будут указывать на
