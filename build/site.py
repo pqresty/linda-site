@@ -233,13 +233,11 @@ def jsonld(events, venues):
 
 def sidecars():
     """robots.txt и sitemap.xml — их никто не линкует, роботы берут по адресу."""
-    # Страницы-примерки лежат рядом и открываются по прямому адресу. В поиске
-    # им не место: это черновики, и они тянут на себя запросы про Линду.
+    # Запретов для страниц-примерок здесь больше нет: с 30 сентября 2026 их
+    # на домене нет вовсе. Запрет оставлять нельзя — пока он стоит, робот не
+    # может зайти и увидеть 404, и адрес висит в индексе как «закрыт robots».
     (ROOT / "robots.txt").write_text(
-        "User-agent: *\nAllow: /\n"
-        "Disallow: /transitions.html\n"
-        "Disallow: /mobile-crop.html\n"
-        "Disallow: /scrim.html\n\n"
+        "User-agent: *\nAllow: /\n\n"
         f"Sitemap: {SITE}/sitemap.xml\n", encoding="utf-8")
     today = datetime.date.today().isoformat()
     (ROOT / "sitemap.xml").write_text(
