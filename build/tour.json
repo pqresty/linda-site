@@ -1,30 +1,6 @@
 {
   "events": [
     {
-      "id": "2026-09-30-ekb-maximilians",
-      "date": "2026-09-30",
-      "time": "21:00",
-      "city": "Екатеринбург",
-      "country": "RU",
-      "venue": "Максимилианс",
-      "ticketUrl": "https://ekb.maximilians.ru/linda-2026/",
-      "status": "on_sale",
-      "source": "venue",
-      "doors": "20:00"
-    },
-    {
-      "id": "2026-10-01-chel-maximilians",
-      "date": "2026-10-01",
-      "time": "21:00",
-      "city": "Челябинск",
-      "country": "RU",
-      "venue": "Максимилианс",
-      "ticketUrl": "https://chel.maximilians.ru/linda-2026/",
-      "status": "on_sale",
-      "source": "venue",
-      "doors": "20:00"
-    },
-    {
       "id": "2026-10-03-msk-strogino-rvb",
       "date": "2026-10-03",
       "time": "19:30",
