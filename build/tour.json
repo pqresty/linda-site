@@ -174,6 +174,18 @@
       "aggregatorOk": true
     },
     {
+      "id": "2026-11-24-dubai-harats",
+      "date": "2026-11-24",
+      "time": "21:00",
+      "city": "Дубай",
+      "country": "AE",
+      "venue": "Harat's Republic",
+      "ticketUrl": "https://dubai.platinumlist.net/ru/event-tickets/109105/linda-at-harats-republic-in-dubai",
+      "status": "on_sale",
+      "source": "venue",
+      "doors": "19:00"
+    },
+    {
       "id": "2026-11-28-odn-rvb",
       "date": "2026-11-28",
       "city": "Одинцово",

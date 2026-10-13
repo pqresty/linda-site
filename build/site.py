@@ -23,7 +23,8 @@ MONTHS = {1:"Январь",2:"Февраль",3:"Март",4:"Апрель",5:"�
           7:"Июль",8:"Август",9:"Сентябрь",10:"Октябрь",11:"Ноябрь",12:"Декабрь"}
 STATUSES = {"on_sale", "not_on_sale", "unknown"}
 # страну показываем только для зарубежных площадок — для России она очевидна
-COUNTRY  = {"KZ": "Казахстан", "BY": "Беларусь", "IL": "Израиль", "CY": "Кипр", "TH": "Таиланд"}
+COUNTRY  = {"KZ": "Казахстан", "BY": "Беларусь", "IL": "Израиль", "CY": "Кипр", "TH": "Таиланд",
+            "AE": "ОАЭ"}
 UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
                     "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36"}
 
@@ -392,6 +393,7 @@ BOT_SHY = {
     "moscow.qtickets.events": "с рабочего Мака не открывается, снаружи 200",
     "iframeab-pre2535.intickets.ru": "антибот servicepipe, открывается браузером",
     "soldoutticketbox.com":   "Cloudflare Turnstile; заказчик открыл браузером 30.09.2026",
+    "dubai.platinumlist.net": "очередь Queue-it уводит робота на 302; открыто браузером 13.10.2026",
 }
 
 def check_links():
