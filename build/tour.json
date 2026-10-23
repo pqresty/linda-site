@@ -128,19 +128,6 @@
       "aggregatorOk": true
     },
     {
-      "id": "2026-11-24-dubai-harats",
-      "date": "2026-11-24",
-      "time": "21:00",
-      "city": "Дубай",
-      "country": "AE",
-      "venue": "Harat's Republic",
-      "ticketUrl": "https://wondermaker.us/linda-music-concert-dubai-uae-24-november-2026",
-      "status": "on_sale",
-      "source": "promoter",
-      "doors": "19:00",
-      "aggregatorOk": true
-    },
-    {
       "id": "2026-11-28-odn-rvb",
       "date": "2026-11-28",
       "city": "Одинцово",
@@ -289,6 +276,12 @@
       "city": "Астана",
       "venue": "Дворец молодёжи",
       "reason": "снято по указанию заказчика 19 октября; страница biletservice.kz с 14 октября отдавала 500"
+    },
+    {
+      "date": "2026-11-24",
+      "city": "Дубай",
+      "venue": "Harat's Republic",
+      "reason": "снято по указанию заказчика 23 октября"
     }
   ]
 }
