@@ -1,20 +1,6 @@
 {
   "events": [
     {
-      "id": "2026-10-24-spb-avrora",
-      "date": "2026-10-24",
-      "time": "20:00",
-      "city": "Санкт-Петербург",
-      "country": "RU",
-      "venue": "Аврора Концерт Холл",
-      "ticketUrl": "https://lindaspb.ru/",
-      "status": "on_sale",
-      "source": "promoter",
-      "aggregatorOk": true,
-      "venuePage": "https://aurora.fm/linda",
-      "doors": "19:00"
-    },
-    {
       "id": "2026-10-30-msk-academ",
       "date": "2026-10-30",
       "time": "20:00",
