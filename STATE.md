@@ -245,6 +245,12 @@ Platinumlist), и бронь столов через Stripe, которой на
 Исключение из правила «на площадку», как Петербург. Platinumlist в `BOT_SHY`
 оставлен: пускает роботов только через очередь Queue-it.
 
+**Пхукет: площадка сменилась на LAVA** (28 октября, по слову заказчика и по
+странице Lotus Arena). LAVA Restobar в Банг Тао, `lava-phuket.com`, адрес
+277/1 Srisoonthorn Rd. Сама LAVA билетов не продаёт — кнопка по-прежнему на
+Lotus Arena. Дата и время те же. На странице Lotus Arena в разметке остался
+старый адрес SHAMAN (2/1 Soi Cherng Taley 1) — заметить организатору.
+
 **Пхукет, 17 января 2027 — первая январская дата**, добавлена 13 октября по
 ссылке заказчика. Клуб SHAMAN в Банг Тао — лаунж-бар, у себя не продаёт:
 на `shamanphuket.com` ни афиши, ни кассы. Продаёт организатор, Art of Events,
@@ -361,7 +367,8 @@ linda.team на GitHub бессмысленно: Pages обслуживает о
 страницу открывает, а curl получает 403 или висит. Сейчас там
 `nov.ticketland.ru`, `moscow.qtickets.events`, билетные рамки Петтера
 `iframeab-pre2535.intickets.ru`, кипрский `soldoutticketbox.com` (Cloudflare
-Turnstile) и дубайский `dubai.platinumlist.net` (очередь Queue-it). Список — в `BOT_SHY` в `build/site.py`,
+Turnstile), дубайский `dubai.platinumlist.net` (очередь Queue-it) и
+`spb.qtickets.events` (как и московский — отсюда не открывается, снаружи 200). Список — в `BOT_SHY` в `build/site.py`,
 добавлять туда только после проверки браузером.
 
 Ради этого разделения всё и делалось: пока ложные тревоги шли вперемешку с

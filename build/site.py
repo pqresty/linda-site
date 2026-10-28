@@ -391,6 +391,7 @@ def http(url, tries=3):
 BOT_SHY = {
     "nov.ticketland.ru":      "403 автоматом; сайт клуба ссылается на этот же адрес",
     "moscow.qtickets.events": "с рабочего Мака не открывается, снаружи 200",
+    "spb.qtickets.events":    "с рабочего Мака висит рукопожатие TLS, снаружи 200 (28.10.2026)",
     "iframeab-pre2535.intickets.ru": "антибот servicepipe, открывается браузером",
     "soldoutticketbox.com":   "Cloudflare Turnstile; заказчик открыл браузером 30.09.2026",
     "dubai.platinumlist.net": "очередь Queue-it уводит робота на 302; открыто браузером 13.10.2026",

@@ -189,12 +189,12 @@
       "source": "venue"
     },
     {
-      "id": "2027-01-17-phuket-shaman",
+      "id": "2027-01-17-phuket-lava",
       "date": "2027-01-17",
       "time": "19:45",
       "city": "Пхукет",
       "country": "TH",
-      "venue": "SHAMAN",
+      "venue": "LAVA",
       "ticketUrl": "https://lotusarena.com/ru/events/53-linda-phuket",
       "status": "on_sale",
       "source": "promoter",
