@@ -17,8 +17,10 @@
       "city": "Москва",
       "country": "RU",
       "venue": "Sisters",
-      "status": "not_on_sale",
-      "source": "venue"
+      "time": "23:59",
+      "status": "on_sale",
+      "source": "operator",
+      "ticketUrl": "https://msk.kassir.ru/koncert/klub-sisters/nochnoy-klubnyiy-kontsert-lindyi_2026-12-05"
     },
     {
       "id": "2026-12-10-msk-16tonn",
