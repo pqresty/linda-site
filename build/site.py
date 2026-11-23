@@ -24,7 +24,7 @@ MONTHS = {1:"Январь",2:"Февраль",3:"Март",4:"Апрель",5:"�
 STATUSES = {"on_sale", "not_on_sale", "unknown"}
 # страну показываем только для зарубежных площадок — для России она очевидна
 COUNTRY  = {"KZ": "Казахстан", "BY": "Беларусь", "IL": "Израиль", "CY": "Кипр", "TH": "Таиланд",
-            "AE": "ОАЭ"}
+            "AE": "ОАЭ", "GE": "Грузия"}
 UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
                     "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36"}
 
@@ -160,7 +160,7 @@ def render(events, venues):
 SITE = "https://lindaconcerts.ru"
 # Код страны из ISO — в разметке он нужен всегда, в том числе для России,
 # где в самой афише мы его не показываем.
-ISO = {"RU": "RU", "KZ": "KZ", "BY": "BY", "IL": "IL"}
+ISO = {"RU": "RU", **{code: code for code in COUNTRY}}
 
 def jsonld(events, venues):
     """Артист и его концерты машинным языком.
