@@ -162,6 +162,89 @@
       "status": "on_sale",
       "source": "operator",
       "ticketUrl": "https://msk.kassir.ru/koncert/lyustra-bar/linda_2027-02-14"
+    },
+    {
+      "id": "2027-03-10-nsk-maximilians",
+      "date": "2027-03-10",
+      "city": "Новосибирск",
+      "venue": "Максимилианс",
+      "doors": "20:00",
+      "time": "21:00",
+      "status": "on_sale",
+      "source": "venue",
+      "venuePage": "https://nsk.maximilians.ru/linda-2027/",
+      "ticketUrl": "https://go.maximilians.ru/nsk?event=23144"
+    },
+    {
+      "id": "2027-03-11-krasnoyarsk-maximilians",
+      "date": "2027-03-11",
+      "city": "Красноярск",
+      "venue": "Максимилианс",
+      "doors": "20:00",
+      "time": "21:00",
+      "status": "on_sale",
+      "source": "venue",
+      "venuePage": "https://krs.maximilians.ru/linda-2027/",
+      "ticketUrl": "https://go.maximilians.ru/krs?event=23140"
+    },
+    {
+      "id": "2027-03-18-msk-disco-hit",
+      "date": "2027-03-18",
+      "city": "Москва",
+      "venue": "Кремлёвский дворец",
+      "title": "Диско Хит 90-х",
+      "time": "19:00",
+      "status": "on_sale",
+      "source": "venue",
+      "ticketUrl": "https://www.kremlinpalace.org/events/koncert-disko-hit-90-h-2"
+    },
+    {
+      "id": "2027-03-24-ufa-maximilians",
+      "date": "2027-03-24",
+      "city": "Уфа",
+      "venue": "Максимилианс",
+      "doors": "20:00",
+      "time": "21:00",
+      "status": "on_sale",
+      "source": "venue",
+      "venuePage": "https://ufa.maximilians.ru/linda-2027/",
+      "ticketUrl": "https://go.maximilians.ru/ufa?event=23148"
+    },
+    {
+      "id": "2027-03-25-chelyabinsk-maximilians",
+      "date": "2027-03-25",
+      "city": "Челябинск",
+      "venue": "Максимилианс",
+      "doors": "20:00",
+      "time": "21:00",
+      "status": "on_sale",
+      "source": "venue",
+      "venuePage": "https://chel.maximilians.ru/linda-2027/",
+      "ticketUrl": "https://go.maximilians.ru/chel?event=24244"
+    },
+    {
+      "id": "2027-03-31-ekb-maximilians",
+      "date": "2027-03-31",
+      "city": "Екатеринбург",
+      "venue": "Максимилианс",
+      "doors": "20:00",
+      "time": "21:00",
+      "status": "on_sale",
+      "source": "venue",
+      "venuePage": "https://ekb.maximilians.ru/linda-2027/",
+      "ticketUrl": "https://go.maximilians.ru/ekb?event=23219"
+    },
+    {
+      "id": "2027-04-01-tyumen-maximilians",
+      "date": "2027-04-01",
+      "city": "Тюмень",
+      "venue": "Максимилианс",
+      "doors": "20:00",
+      "time": "21:00",
+      "status": "on_sale",
+      "source": "venue",
+      "venuePage": "https://tyumen.maximilians.ru/linda-2027/",
+      "ticketUrl": "https://go.maximilians.ru/tyumen?event=23222"
     }
   ],
   "ignored": [

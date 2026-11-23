@@ -116,15 +116,16 @@ def render(events, venues):
                 # билетов нет — неважно, не открыли продажу или ссылка не найдена
                 act = '<span class="row__b row__b--off">Скоро</span>'
 
-            # площадки может ещё не быть — тогда в строке остаётся один город
-            vu, vn = venue_url(e, venues), e.get("venue")
-            if not vn:
+            # Название программы указываем рядом с площадкой, если оно задано.
+            vu = venue_url(e, venues)
+            label = " · ".join(filter(None, (e.get("title"), e.get("venue"))))
+            if not label:
                 venue = ""
             elif vu:
                 venue = (f'<a class="row__v" href="{esc(vu)}" target="_blank" '
-                         f'rel="noopener noreferrer">{esc(vn)}</a>')
+                         f'rel="noopener noreferrer">{esc(label)}</a>')
             else:
-                venue = f'<span class="row__v">{esc(vn)}</span>'
+                venue = f'<span class="row__v">{esc(label)}</span>'
 
             country = COUNTRY.get(e.get("country", "RU"))
             city = (f'<span class="row__city">{esc(e["city"])}'
@@ -205,7 +206,7 @@ def jsonld(events, venues):
 
         ev = {
             "@type": "MusicEvent",
-            "name": f'Линда — концерт в городе {e["city"]}',
+            "name": e.get("title") or f'Линда — концерт в городе {e["city"]}',
             # Без смещения: у нас города в пяти поясах, а местное время
             # схема допускает. Врать про +03:00 хуже, чем не указать вовсе.
             "startDate": e["date"] + ("T" + e["time"] if e.get("time") else ""),
