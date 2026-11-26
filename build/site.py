@@ -110,8 +110,11 @@ def render(events, venues):
             elif e["status"] == "unknown":   cls += " row--tbd"
 
             if e["status"] == "on_sale" and e.get("ticketUrl"):
+                whatsapp = re.fullmatch(r"https://wa\.me/([1-9][0-9]+)/?", e["ticketUrl"])
+                qr = f"assets/tickets/whatsapp-{whatsapp[1]}.png" if whatsapp else ""
+                qr_attr = f' data-whatsapp-qr="{qr}"' if qr and (ROOT / qr).is_file() else ""
                 act = (f'<a class="row__b" href="{esc(e["ticketUrl"])}" target="_blank" '
-                       f'rel="noopener noreferrer">Билеты</a>')
+                       f'rel="noopener noreferrer"{qr_attr}>Билеты</a>')
             else:
                 # билетов нет — неважно, не открыли продажу или ссылка не найдена
                 act = '<span class="row__b row__b--off">Скоро</span>'
