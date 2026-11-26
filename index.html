@@ -206,7 +206,7 @@
   {
    "@type": "MusicEvent",
    "name": "Линда — концерт в городе Владикавказ",
-   "startDate": "2026-12-17",
+   "startDate": "2026-12-17T19:00",
    "eventStatus": "https://schema.org/EventScheduled",
    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
    "location": {
@@ -1063,7 +1063,7 @@ span.row__v{border-bottom:0}
   </div>
   <div class="row">
     <span class="row__d">17</span>
-    <span class="row__m">чт</span>
+    <span class="row__m">чт · 19:00</span>
     <span class="row__c"><span class="row__city">Владикавказ</span><a class="row__v" href="https://chaletrestaurant.tilda.ws/" target="_blank" rel="noopener noreferrer">Chalet</a></span>
     <a class="row__b" href="https://wa.me/79888315561" target="_blank" rel="noopener noreferrer">Билеты</a>
   </div>
@@ -1215,6 +1215,24 @@ span.row__v{border-bottom:0}
 
 
 <script>
+(function(){
+  var mobile = (navigator.userAgentData && navigator.userAgentData.mobile)
+    || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if (mobile) return;
+
+  document.querySelectorAll('.row__b[href^="https://wa.me/"]').forEach(function(link){
+    var phone = /^\/([1-9][0-9]+)\/?$/.exec(link.pathname);
+    if (!phone) return;
+    var params = new URLSearchParams(link.search);
+    params.set('phone', phone[1]);
+    params.set('type', 'phone_number');
+    params.set('app_absent', '0');
+    link.href = 'https://web.whatsapp.com/send/?' + params.toString();
+    link.removeAttribute('target');
+  });
+})();
+
 (function(){
   var strip = document.querySelector('.strip'),
       af    = document.querySelector('.afisha'),
