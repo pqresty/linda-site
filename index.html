@@ -1233,7 +1233,7 @@ span.row__v{border-bottom:0}
   <h2 id="ticket-chat-title">Билеты через WhatsApp</h2>
   <p>Чтобы приобрести билеты, напишите нам в вотсапп по номеру <span class="ticket-chat__number"></span> или отсканируйте этот QR.</p>
   <img width="198" height="198" alt="QR-код для перехода в чат WhatsApp">
-  <a class="row__b">Открыть приложение</a>
+  <a class="row__b">Открыть чат в WhatsApp Web</a>
 </dialog>
 
 <script>
@@ -1252,7 +1252,7 @@ span.row__v{border-bottom:0}
       var phone = link.pathname.replace(/\//g, '');
       dialog.querySelector('img').src = link.dataset.whatsappQr;
       dialog.querySelector('.ticket-chat__number').textContent = '+' + phone;
-      dialog.querySelector('.row__b').href = 'whatsapp://send?phone=' + phone;
+      dialog.querySelector('.row__b').href = 'https://web.whatsapp.com/send/?phone=' + phone + '&type=phone_number&app_absent=0';
       dialog.showModal();
     });
   });
