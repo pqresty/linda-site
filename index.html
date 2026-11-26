@@ -892,6 +892,20 @@ span.row__v{border-bottom:0}
 .row__b--off:hover{background:none;border-color:rgba(237,233,225,.24);color:var(--ash)}
 .row--soon .row__d,.row--tbd .row__d{color:var(--ash)}
 
+.ticket-chat{box-sizing:border-box;width:min(400px,calc(100% - 32px));max-height:calc(100% - 32px);
+  padding:32px 24px 28px;border:1px solid rgba(237,233,225,.32);background:var(--stone);
+  color:var(--bone);text-align:center}
+.ticket-chat::backdrop{background:rgba(6,8,11,.82)}
+.ticket-chat h2{margin:0 20px 10px;font-size:24px;line-height:1.15;font-weight:600}
+.ticket-chat p{margin:0;font-size:15px;line-height:1.5;color:#A8B0BA}
+.ticket-chat img{display:block;width:min(198px,100%);height:auto;aspect-ratio:1;margin:20px auto 10px}
+.ticket-chat__number{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.ticket-chat .row__b{min-height:44px;margin-top:20px;color:var(--bone)}
+.ticket-chat .row__b:hover,.ticket-chat .row__b:focus-visible{color:#0B0603}
+.ticket-chat__close{position:absolute;top:4px;right:4px;width:44px;height:44px;
+  color:var(--bone);background:none;border:0;font:24px/1 var(--face);cursor:pointer}
+.ticket-chat__close:hover,.ticket-chat__close:focus-visible{color:var(--halo)}
+
 .tbc{position:relative;z-index:3;max-width:940px;margin:0 auto;padding:clamp(30px,5vh,54px) var(--gut) 0;
   display:flex;align-items:center;gap:18px}
 .tbc span{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--ash);white-space:nowrap}
@@ -1065,7 +1079,7 @@ span.row__v{border-bottom:0}
     <span class="row__d">17</span>
     <span class="row__m">чт · 19:00</span>
     <span class="row__c"><span class="row__city">Владикавказ</span><a class="row__v" href="https://chaletrestaurant.tilda.ws/" target="_blank" rel="noopener noreferrer">Chalet</a></span>
-    <a class="row__b" href="https://wa.me/79888315561" target="_blank" rel="noopener noreferrer">Билеты</a>
+    <a class="row__b" href="https://wa.me/79888315561" target="_blank" rel="noopener noreferrer" data-whatsapp-qr="assets/tickets/whatsapp-79888315561.png?v=97cfb68c">Билеты</a>
   </div>
   <div class="row">
     <span class="row__d">27</span>
@@ -1212,24 +1226,36 @@ span.row__v{border-bottom:0}
   </div>
 </nav>
 
-
+<dialog id="ticket-chat" class="ticket-chat" aria-labelledby="ticket-chat-title">
+  <form method="dialog">
+    <button class="ticket-chat__close" aria-label="Закрыть" autofocus>×</button>
+  </form>
+  <h2 id="ticket-chat-title">Билеты через WhatsApp</h2>
+  <p>Отсканируйте QR-код камерой телефона</p>
+  <img width="198" height="198" alt="QR-код для перехода в чат WhatsApp">
+  <p class="ticket-chat__number"></p>
+  <a class="row__b">Открыть приложение</a>
+</dialog>
 
 <script>
 (function(){
   var mobile = (navigator.userAgentData && navigator.userAgentData.mobile)
     || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
     || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  if (mobile) return;
+  var dialog = document.getElementById('ticket-chat');
+  if (mobile || typeof dialog.showModal !== 'function') return;
 
-  document.querySelectorAll('.row__b[href^="https://wa.me/"]').forEach(function(link){
-    var phone = /^\/([1-9][0-9]+)\/?$/.exec(link.pathname);
-    if (!phone) return;
-    var params = new URLSearchParams(link.search);
-    params.set('phone', phone[1]);
-    params.set('type', 'phone_number');
-    params.set('app_absent', '0');
-    link.href = 'https://web.whatsapp.com/send/?' + params.toString();
-    link.removeAttribute('target');
+  document.querySelectorAll('[data-whatsapp-qr]').forEach(function(link){
+    link.setAttribute('aria-haspopup', 'dialog');
+    link.addEventListener('click', function(event){
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      var phone = link.pathname.replace(/\//g, '');
+      dialog.querySelector('img').src = link.dataset.whatsappQr;
+      dialog.querySelector('.ticket-chat__number').textContent = '+' + phone;
+      dialog.querySelector('.row__b').href = 'whatsapp://send?phone=' + phone;
+      dialog.showModal();
+    });
   });
 })();
 
