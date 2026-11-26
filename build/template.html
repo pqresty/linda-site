@@ -221,7 +221,7 @@ span.row__v{border-bottom:0}
 .ticket-chat h2{margin:0 20px 10px;font-size:24px;line-height:1.15;font-weight:600}
 .ticket-chat p{margin:0;font-size:15px;line-height:1.5;color:#A8B0BA}
 .ticket-chat img{display:block;width:min(198px,100%);height:auto;aspect-ratio:1;margin:20px auto 10px}
-.ticket-chat__number{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.ticket-chat__number{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
 .ticket-chat .row__b{min-height:44px;margin-top:20px;color:var(--bone)}
 .ticket-chat .row__b:hover,.ticket-chat .row__b:focus-visible{color:#0B0603}
 .ticket-chat__close{position:absolute;top:4px;right:4px;width:44px;height:44px;
@@ -398,9 +398,8 @@ __ROWS__
     <button class="ticket-chat__close" aria-label="Закрыть" autofocus>×</button>
   </form>
   <h2 id="ticket-chat-title">Билеты через WhatsApp</h2>
-  <p>Отсканируйте QR-код камерой телефона</p>
+  <p>Чтобы приобрести билеты, напишите нам в вотсапп по номеру <span class="ticket-chat__number"></span> или отсканируйте этот QR.</p>
   <img width="198" height="198" alt="QR-код для перехода в чат WhatsApp">
-  <p class="ticket-chat__number"></p>
   <a class="row__b">Открыть приложение</a>
 </dialog>
 
