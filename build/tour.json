@@ -60,7 +60,8 @@
       "date": "2026-12-17",
       "city": "Владикавказ",
       "venue": "Chalet",
-      "status": "not_on_sale"
+      "status": "on_sale",
+      "ticketUrl": "https://wa.me/79888315561"
     },
     {
       "id": "2026-12-27-msk-academ",
