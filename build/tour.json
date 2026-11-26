@@ -248,6 +248,16 @@
       "source": "venue",
       "venuePage": "https://tyumen.maximilians.ru/linda-2027/",
       "ticketUrl": "https://go.maximilians.ru/tyumen?event=23222"
+    },
+    {
+      "id": "2027-04-02-omsk-angar",
+      "date": "2027-04-02",
+      "city": "Омск",
+      "venue": "Клуб «Ангар»",
+      "time": "19:00",
+      "status": "on_sale",
+      "source": "operator",
+      "ticketUrl": "https://omsk.kassy.ru/events/koncerty-i-shou/2-17967/"
     }
   ],
   "ignored": [
