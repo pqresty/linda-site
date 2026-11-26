@@ -383,6 +383,24 @@ __ROWS__
 
 <script>
 (function(){
+  var mobile = (navigator.userAgentData && navigator.userAgentData.mobile)
+    || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if (mobile) return;
+
+  document.querySelectorAll('.row__b[href^="https://wa.me/"]').forEach(function(link){
+    var phone = /^\/([1-9][0-9]+)\/?$/.exec(link.pathname);
+    if (!phone) return;
+    var params = new URLSearchParams(link.search);
+    params.set('phone', phone[1]);
+    params.set('type', 'phone_number');
+    params.set('app_absent', '0');
+    link.href = 'https://web.whatsapp.com/send/?' + params.toString();
+    link.removeAttribute('target');
+  });
+})();
+
+(function(){
   var strip = document.querySelector('.strip'),
       af    = document.querySelector('.afisha'),
       mon   = document.querySelector('.mon__h');
